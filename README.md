@@ -1,4 +1,5 @@
-catboard
-========
+# Catboard
 
-Homemade ergoromic keyboard
+English
+
+[Русский](README.ru)

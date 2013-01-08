@@ -1,0 +1,1222 @@
+   1               		.file	"usb_keyboard.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__CCP__ = 0x34
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+  15               	.Ltext0:
+  16               		.section	.text.usb_wait_in_ready,"ax",@progbits
+  18               	usb_wait_in_ready:
+  19               	.LFB5:
+  20               	.LSM0:
+  21               	/* prologue: function */
+  22               	/* frame size = 0 */
+  23               	/* stack size = 0 */
+  24               	.L__stack_usage = 0
+  25               	.L2:
+  26               	.LSM1:
+  27 0000 8091 E800 		lds r24,232
+  28 0004 80FF      		sbrs r24,0
+  29 0006 00C0      		rjmp .L2
+  30               	/* epilogue start */
+  31               	.LSM2:
+  32 0008 0895      		ret
+  33               	.LFE5:
+  35               		.section	.text.usb_init,"ax",@progbits
+  36               	.global	usb_init
+  38               	usb_init:
+  39               	.LFB0:
+  40               	.LSM3:
+  41               	/* prologue: function */
+  42               	/* frame size = 0 */
+  43               	/* stack size = 0 */
+  44               	.L__stack_usage = 0
+  45               	.LSM4:
+  46 0000 80EA      		ldi r24,lo8(-96)
+  47 0002 8093 D800 		sts 216,r24
+  48               	.LSM5:
+  49 0006 86E0      		ldi r24,lo8(6)
+  50 0008 89BD      		out 73-32,r24
+  51               	.L5:
+  52               	.LSM6:
+  53 000a 09B4      		in __tmp_reg__,73-32
+  54 000c 00FE      		sbrs __tmp_reg__,0
+  55 000e 00C0      		rjmp .L5
+  56               	.LSM7:
+  57 0010 80E8      		ldi r24,lo8(-128)
+  58 0012 8093 D800 		sts 216,r24
+  59               	.LSM8:
+  60 0016 1092 E000 		sts 224,__zero_reg__
+  61               	.LSM9:
+  62 001a 1092 0000 		sts usb_configuration,__zero_reg__
+  63               	.LSM10:
+  64 001e 8CE0      		ldi r24,lo8(12)
+  65 0020 8093 E200 		sts 226,r24
+  66               	.LSM11:
+  67               	/* #APP */
+  68               	 ;  280 "usb_keyboard.c" 1
+  69 0024 7894      		sei
+  70               	 ;  0 "" 2
+  71               	/* epilogue start */
+  72               	.LSM12:
+  73               	/* #NOAPP */
+  74 0026 0895      		ret
+  75               	.LFE0:
+  77               		.section	.text.usb_configured,"ax",@progbits
+  78               	.global	usb_configured
+  80               	usb_configured:
+  81               	.LFB1:
+  82               	.LSM13:
+  83               	/* prologue: function */
+  84               	/* frame size = 0 */
+  85               	/* stack size = 0 */
+  86               	.L__stack_usage = 0
+  87               	.LSM14:
+  88 0000 8091 0000 		lds r24,usb_configuration
+  89               	/* epilogue start */
+  90               	.LSM15:
+  91 0004 0895      		ret
+  92               	.LFE1:
+  94               		.section	.text.usb_keyboard_send,"ax",@progbits
+  95               	.global	usb_keyboard_send
+  97               	usb_keyboard_send:
+  98               	.LFB3:
+  99               	.LSM16:
+ 100               	/* prologue: function */
+ 101               	/* frame size = 0 */
+ 102               	/* stack size = 0 */
+ 103               	.L__stack_usage = 0
+ 104               	.LSM17:
+ 105 0000 8091 0000 		lds r24,usb_configuration
+ 106 0004 8823      		tst r24
+ 107 0006 01F0      		breq .L14
+ 108               	.LSM18:
+ 109 0008 8FB7      		in r24,__SREG__
+ 110               	.LVL0:
+ 111               	.LSM19:
+ 112               	/* #APP */
+ 113               	 ;  312 "usb_keyboard.c" 1
+ 114 000a F894      		cli
+ 115               	 ;  0 "" 2
+ 116               	.LSM20:
+ 117               	/* #NOAPP */
+ 118 000c 93E0      		ldi r25,lo8(3)
+ 119 000e 9093 E900 		sts 233,r25
+ 120               	.LSM21:
+ 121 0012 9091 E400 		lds r25,228
+ 122 0016 9E5C      		subi r25,lo8(-(50))
+ 123               	.LVL1:
+ 124               	.LSM22:
+ 125 0018 23E0      		ldi r18,lo8(3)
+ 126               	.L11:
+ 127               	.LSM23:
+ 128 001a 3091 E800 		lds r19,232
+ 129 001e 35FD      		sbrc r19,5
+ 130 0020 00C0      		rjmp .L10
+ 131               	.LSM24:
+ 132 0022 8FBF      		out __SREG__,r24
+ 133               	.LSM25:
+ 134 0024 8091 0000 		lds r24,usb_configuration
+ 135               	.LVL2:
+ 136 0028 8823      		tst r24
+ 137 002a 01F0      		breq .L14
+ 138               	.LSM26:
+ 139 002c 8091 E400 		lds r24,228
+ 140 0030 8917      		cp r24,r25
+ 141 0032 01F0      		breq .L15
+ 142               	.LSM27:
+ 143 0034 8FB7      		in r24,__SREG__
+ 144               	.LVL3:
+ 145               	.LSM28:
+ 146               	/* #APP */
+ 147               	 ;  325 "usb_keyboard.c" 1
+ 148 0036 F894      		cli
+ 149               	 ;  0 "" 2
+ 150               	.LSM29:
+ 151               	/* #NOAPP */
+ 152 0038 2093 E900 		sts 233,r18
+ 153               	.LSM30:
+ 154 003c 00C0      		rjmp .L11
+ 155               	.L10:
+ 156               	.LSM31:
+ 157 003e 9091 0000 		lds r25,keyboard_modifier_keys
+ 158               	.LVL4:
+ 159 0042 9093 F100 		sts 241,r25
+ 160               	.LSM32:
+ 161 0046 1092 F100 		sts 241,__zero_reg__
+ 162               	.LVL5:
+ 163 004a E0E0      		ldi r30,lo8(keyboard_keys)
+ 164 004c F0E0      		ldi r31,hi8(keyboard_keys)
+ 165               	.LVL6:
+ 166               	.L12:
+ 167               	.LSM33:
+ 168 004e 9191      		ld r25,Z+
+ 169 0050 9093 F100 		sts 241,r25
+ 170               	.LSM34:
+ 171 0054 90E0      		ldi r25,hi8(keyboard_keys+6)
+ 172 0056 E030      		cpi r30,lo8(keyboard_keys+6)
+ 173 0058 F907      		cpc r31,r25
+ 174 005a 01F4      		brne .L12
+ 175               	.LSM35:
+ 176 005c 9AE3      		ldi r25,lo8(58)
+ 177 005e 9093 E800 		sts 232,r25
+ 178               	.LSM36:
+ 179 0062 1092 0000 		sts keyboard_idle_count,__zero_reg__
+ 180               	.LSM37:
+ 181 0066 8FBF      		out __SREG__,r24
+ 182               	.LSM38:
+ 183 0068 80E0      		ldi r24,lo8(0)
+ 184               	.LVL7:
+ 185 006a 0895      		ret
+ 186               	.LVL8:
+ 187               	.L14:
+ 188               	.LSM39:
+ 189 006c 8FEF      		ldi r24,lo8(-1)
+ 190 006e 0895      		ret
+ 191               	.LVL9:
+ 192               	.L15:
+ 193               	.LSM40:
+ 194 0070 8FEF      		ldi r24,lo8(-1)
+ 195               	.LSM41:
+ 196 0072 0895      		ret
+ 197               	.LFE3:
+ 199               		.section	.text.usb_keyboard_press,"ax",@progbits
+ 200               	.global	usb_keyboard_press
+ 202               	usb_keyboard_press:
+ 203               	.LFB2:
+ 204               	.LSM42:
+ 205               	.LVL10:
+ 206               	/* prologue: function */
+ 207               	/* frame size = 0 */
+ 208               	/* stack size = 0 */
+ 209               	.L__stack_usage = 0
+ 210               	.LSM43:
+ 211 0000 6093 0000 		sts keyboard_modifier_keys,r22
+ 212               	.LSM44:
+ 213 0004 8093 0000 		sts keyboard_keys,r24
+ 214               	.LSM45:
+ 215 0008 0E94 0000 		call usb_keyboard_send
+ 216               	.LVL11:
+ 217               	.LSM46:
+ 218 000c 8823      		tst r24
+ 219 000e 01F4      		brne .L18
+ 220               	.LSM47:
+ 221 0010 1092 0000 		sts keyboard_modifier_keys,__zero_reg__
+ 222               	.LSM48:
+ 223 0014 1092 0000 		sts keyboard_keys,__zero_reg__
+ 224               	.LSM49:
+ 225 0018 0E94 0000 		call usb_keyboard_send
+ 226               	.LVL12:
+ 227               	.L18:
+ 228               	.LSM50:
+ 229 001c 0895      		ret
+ 230               	.LFE2:
+ 232               		.section	.text.__vector_11,"ax",@progbits
+ 233               	.global	__vector_11
+ 235               	__vector_11:
+ 236               	.LFB4:
+ 237               	.LSM51:
+ 238 0000 1F92      		push __zero_reg__
+ 239 0002 0F92      		push r0
+ 240 0004 0FB6      		in r0,__SREG__
+ 241 0006 0F92      		push r0
+ 242 0008 1124      		clr __zero_reg__
+ 243 000a 2F93      		push r18
+ 244 000c 8F93      		push r24
+ 245 000e 9F93      		push r25
+ 246 0010 EF93      		push r30
+ 247 0012 FF93      		push r31
+ 248               	/* prologue: Signal */
+ 249               	/* frame size = 0 */
+ 250               	/* stack size = 8 */
+ 251               	.L__stack_usage = 8
+ 252               	.LSM52:
+ 253 0014 8091 E100 		lds r24,225
+ 254               	.LVL13:
+ 255               	.LSM53:
+ 256 0018 1092 E100 		sts 225,__zero_reg__
+ 257               	.LSM54:
+ 258 001c 83FF      		sbrs r24,3
+ 259 001e 00C0      		rjmp .L20
+ 260               	.LSM55:
+ 261 0020 1092 E900 		sts 233,__zero_reg__
+ 262               	.LSM56:
+ 263 0024 91E0      		ldi r25,lo8(1)
+ 264 0026 9093 EB00 		sts 235,r25
+ 265               	.LSM57:
+ 266 002a 1092 EC00 		sts 236,__zero_reg__
+ 267               	.LSM58:
+ 268 002e 92E2      		ldi r25,lo8(34)
+ 269 0030 9093 ED00 		sts 237,r25
+ 270               	.LSM59:
+ 271 0034 98E0      		ldi r25,lo8(8)
+ 272 0036 9093 F000 		sts 240,r25
+ 273               	.LSM60:
+ 274 003a 1092 0000 		sts usb_configuration,__zero_reg__
+ 275               	.L20:
+ 276               	.LSM61:
+ 277 003e 82FF      		sbrs r24,2
+ 278 0040 00C0      		rjmp .L19
+ 279               	.LSM62:
+ 280 0042 8091 0000 		lds r24,usb_configuration
+ 281               	.LVL14:
+ 282 0046 8823      		tst r24
+ 283 0048 01F0      		breq .L19
+ 284               	.LSM63:
+ 285 004a 2091 0000 		lds r18,keyboard_idle_config
+ 286 004e 2223      		tst r18
+ 287 0050 01F0      		breq .L19
+ 288               	.LSM64:
+ 289 0052 8091 0000 		lds r24,div4.1468
+ 290 0056 8F5F      		subi r24,lo8(-(1))
+ 291 0058 8093 0000 		sts div4.1468,r24
+ 292 005c 90E0      		ldi r25,lo8(0)
+ 293 005e 8370      		andi r24,lo8(3)
+ 294 0060 9070      		andi r25,hi8(3)
+ 295 0062 0097      		sbiw r24,0
+ 296 0064 01F4      		brne .L19
+ 297               	.LSM65:
+ 298 0066 83E0      		ldi r24,lo8(3)
+ 299 0068 8093 E900 		sts 233,r24
+ 300               	.LSM66:
+ 301 006c 8091 E800 		lds r24,232
+ 302 0070 85FF      		sbrs r24,5
+ 303 0072 00C0      		rjmp .L19
+ 304               	.LSM67:
+ 305 0074 8091 0000 		lds r24,keyboard_idle_count
+ 306 0078 8F5F      		subi r24,lo8(-(1))
+ 307 007a 8093 0000 		sts keyboard_idle_count,r24
+ 308               	.LSM68:
+ 309 007e 8217      		cp r24,r18
+ 310 0080 01F4      		brne .L19
+ 311               	.LSM69:
+ 312 0082 1092 0000 		sts keyboard_idle_count,__zero_reg__
+ 313               	.LSM70:
+ 314 0086 8091 0000 		lds r24,keyboard_modifier_keys
+ 315 008a 8093 F100 		sts 241,r24
+ 316               	.LSM71:
+ 317 008e 1092 F100 		sts 241,__zero_reg__
+ 318               	.LVL15:
+ 319 0092 E0E0      		ldi r30,lo8(keyboard_keys)
+ 320 0094 F0E0      		ldi r31,hi8(keyboard_keys)
+ 321               	.LVL16:
+ 322               	.L22:
+ 323               	.LSM72:
+ 324 0096 8191      		ld r24,Z+
+ 325 0098 8093 F100 		sts 241,r24
+ 326               	.LSM73:
+ 327 009c 80E0      		ldi r24,hi8(keyboard_keys+6)
+ 328 009e E030      		cpi r30,lo8(keyboard_keys+6)
+ 329 00a0 F807      		cpc r31,r24
+ 330 00a2 01F4      		brne .L22
+ 331               	.LSM74:
+ 332 00a4 8AE3      		ldi r24,lo8(58)
+ 333 00a6 8093 E800 		sts 232,r24
+ 334               	.L19:
+ 335               	/* epilogue start */
+ 336               	.LSM75:
+ 337 00aa FF91      		pop r31
+ 338 00ac EF91      		pop r30
+ 339 00ae 9F91      		pop r25
+ 340 00b0 8F91      		pop r24
+ 341 00b2 2F91      		pop r18
+ 342 00b4 0F90      		pop r0
+ 343 00b6 0FBE      		out __SREG__,r0
+ 344 00b8 0F90      		pop r0
+ 345 00ba 1F90      		pop __zero_reg__
+ 346 00bc 1895      		reti
+ 347               	.LFE4:
+ 349               		.section	.text.__vector_12,"ax",@progbits
+ 350               	.global	__vector_12
+ 352               	__vector_12:
+ 353               	.LFB9:
+ 354               	.LSM76:
+ 355 0000 1F92      		push __zero_reg__
+ 356 0002 0F92      		push r0
+ 357 0004 0FB6      		in r0,__SREG__
+ 358 0006 0F92      		push r0
+ 359 0008 1124      		clr __zero_reg__
+ 360 000a CF92      		push r12
+ 361 000c DF92      		push r13
+ 362 000e EF92      		push r14
+ 363 0010 FF92      		push r15
+ 364 0012 0F93      		push r16
+ 365 0014 1F93      		push r17
+ 366 0016 2F93      		push r18
+ 367 0018 3F93      		push r19
+ 368 001a 4F93      		push r20
+ 369 001c 5F93      		push r21
+ 370 001e 6F93      		push r22
+ 371 0020 7F93      		push r23
+ 372 0022 8F93      		push r24
+ 373 0024 9F93      		push r25
+ 374 0026 AF93      		push r26
+ 375 0028 BF93      		push r27
+ 376 002a EF93      		push r30
+ 377 002c FF93      		push r31
+ 378 002e DF93      		push r29
+ 379 0030 CF93      		push r28
+ 380 0032 0F92      		push __tmp_reg__
+ 381 0034 CDB7      		in r28,__SP_L__
+ 382 0036 DEB7      		in r29,__SP_H__
+ 383               	/* prologue: Signal */
+ 384               	/* frame size = 1 */
+ 385               	/* stack size = 24 */
+ 386               	.L__stack_usage = 24
+ 387               	.LSM77:
+ 388 0038 1092 E900 		sts 233,__zero_reg__
+ 389               	.LSM78:
+ 390 003c 8091 E800 		lds r24,232
+ 391               	.LVL17:
+ 392               	.LSM79:
+ 393 0040 83FF      		sbrs r24,3
+ 394 0042 00C0      		rjmp .L25
+ 395               	.LSM80:
+ 396 0044 2091 F100 		lds r18,241
+ 397               	.LVL18:
+ 398               	.LSM81:
+ 399 0048 3091 F100 		lds r19,241
+ 400               	.LVL19:
+ 401               	.LSM82:
+ 402 004c 8091 F100 		lds r24,241
+ 403               	.LVL20:
+ 404 0050 C82E      		mov r12,r24
+ 405 0052 DD24      		clr r13
+ 406               	.LVL21:
+ 407               	.LSM83:
+ 408 0054 4091 F100 		lds r20,241
+ 409 0058 942F      		mov r25,r20
+ 410 005a 80E0      		ldi r24,lo8(0)
+ 411 005c C82A      		or r12,r24
+ 412 005e D92A      		or r13,r25
+ 413               	.LVL22:
+ 414               	.LSM84:
+ 415 0060 0091 F100 		lds r16,241
+ 416 0064 10E0      		ldi r17,lo8(0)
+ 417               	.LVL23:
+ 418               	.LSM85:
+ 419 0066 4091 F100 		lds r20,241
+ 420 006a 942F      		mov r25,r20
+ 421 006c 80E0      		ldi r24,lo8(0)
+ 422 006e 082B      		or r16,r24
+ 423 0070 192B      		or r17,r25
+ 424               	.LVL24:
+ 425               	.LSM86:
+ 426 0072 6091 F100 		lds r22,241
+ 427               	.LVL25:
+ 428               	.LSM87:
+ 429 0076 A091 F100 		lds r26,241
+ 430               	.LVL26:
+ 431               	.LSM88:
+ 432 007a 82EF      		ldi r24,lo8(-14)
+ 433 007c 8093 E800 		sts 232,r24
+ 434               	.LSM89:
+ 435 0080 3630      		cpi r19,lo8(6)
+ 436 0082 01F0      		breq .+2
+ 437 0084 00C0      		rjmp .L26
+ 438               	.LVL27:
+ 439               	.LSM90:
+ 440 0086 80E0      		ldi r24,lo8(descriptor_list+7)
+ 441 0088 90E0      		ldi r25,hi8(descriptor_list+7)
+ 442 008a 9C01      		movw r18,r24
+ 443               	.LVL28:
+ 444 008c 2550      		subi r18,lo8(-(-5))
+ 445 008e 3040      		sbci r19,hi8(-(-5))
+ 446               	.LVL29:
+ 447               	.L27:
+ 448               	.LSM91:
+ 449 0090 FC01      		movw r30,r24
+ 450 0092 3797      		sbiw r30,7
+ 451               	.LVL30:
+ 452               	.LBB38:
+ 453               	.LSM92:
+ 454               	/* #APP */
+ 455               	 ;  444 "usb_keyboard.c" 1
+ 456 0094 4591      		lpm r20, Z+
+ 457 0096 5491      		lpm r21, Z
+ 458               		
+ 459               	 ;  0 "" 2
+ 460               	.LVL31:
+ 461               	/* #NOAPP */
+ 462               	.LBE38:
+ 463               	.LSM93:
+ 464 0098 4C15      		cp r20,r12
+ 465 009a 5D05      		cpc r21,r13
+ 466 009c 01F4      		brne .L29
+ 467               	.LVL32:
+ 468               	.LBB39:
+ 469               	.LSM94:
+ 470 009e F901      		movw r30,r18
+ 471               	/* #APP */
+ 472               	 ;  450 "usb_keyboard.c" 1
+ 473 00a0 4591      		lpm r20, Z+
+ 474 00a2 5491      		lpm r21, Z
+ 475               		
+ 476               	 ;  0 "" 2
+ 477               	.LVL33:
+ 478               	/* #NOAPP */
+ 479               	.LBE39:
+ 480               	.LSM95:
+ 481 00a4 4017      		cp r20,r16
+ 482 00a6 5107      		cpc r21,r17
+ 483 00a8 01F4      		brne .L29
+ 484               	.LSM96:
+ 485 00aa 2E5F      		subi r18,lo8(-(2))
+ 486 00ac 3F4F      		sbci r19,hi8(-(2))
+ 487               	.LVL34:
+ 488               	.LBB40:
+ 489               	.LSM97:
+ 490 00ae F901      		movw r30,r18
+ 491               	/* #APP */
+ 492               	 ;  456 "usb_keyboard.c" 1
+ 493 00b0 8591      		lpm r24, Z+
+ 494 00b2 9491      		lpm r25, Z
+ 495               		
+ 496               	 ;  0 "" 2
+ 497               	.LVL35:
+ 498               	/* #NOAPP */
+ 499               	.LBE40:
+ 500               	.LSM98:
+ 501 00b4 2E5F      		subi r18,lo8(-(2))
+ 502 00b6 3F4F      		sbci r19,hi8(-(2))
+ 503               	.LVL36:
+ 504               	.LBB41:
+ 505               	.LSM99:
+ 506 00b8 F901      		movw r30,r18
+ 507               	/* #APP */
+ 508               	 ;  458 "usb_keyboard.c" 1
+ 509 00ba 2491      		lpm r18, Z
+ 510               		
+ 511               	 ;  0 "" 2
+ 512               	.LVL37:
+ 513               	/* #NOAPP */
+ 514               	.LBE41:
+ 515               	.LSM100:
+ 516 00bc 462F      		mov r20,r22
+ 517               	.LVL38:
+ 518 00be 50E0      		ldi r21,lo8(0)
+ 519               	.LSM101:
+ 520 00c0 7A2F      		mov r23,r26
+ 521 00c2 60E0      		ldi r22,lo8(0)
+ 522               	.LVL39:
+ 523 00c4 462B      		or r20,r22
+ 524 00c6 572B      		or r21,r23
+ 525               	.LVL40:
+ 526               	.LSM102:
+ 527 00c8 4F3F      		cpi r20,255
+ 528 00ca 5105      		cpc r21,__zero_reg__
+ 529 00cc 01F0      		breq .L30
+ 530 00ce 00F0      		brlo .L30
+ 531 00d0 4FEF      		ldi r20,lo8(255)
+ 532 00d2 50E0      		ldi r21,hi8(255)
+ 533               	.L30:
+ 534               	.LVL41:
+ 535 00d4 4217      		cp r20,r18
+ 536 00d6 00F4      		brsh .L60
+ 537 00d8 242F      		mov r18,r20
+ 538               	.LVL42:
+ 539 00da 00C0      		rjmp .L60
+ 540               	.LVL43:
+ 541               	.L29:
+ 542 00dc 0796      		adiw r24,7
+ 543 00de 295F      		subi r18,lo8(-(7))
+ 544 00e0 3F4F      		sbci r19,hi8(-(7))
+ 545               	.LSM103:
+ 546 00e2 F0E0      		ldi r31,hi8(descriptor_list+56)
+ 547 00e4 8030      		cpi r24,lo8(descriptor_list+56)
+ 548 00e6 9F07      		cpc r25,r31
+ 549 00e8 01F4      		brne .L27
+ 550 00ea 00C0      		rjmp .L25
+ 551               	.LVL44:
+ 552               	.L60:
+ 553               	.LBB42:
+ 554               	.LBB43:
+ 555               	.LSM104:
+ 556 00ec AEEF      		ldi r26,lo8(-2)
+ 557               	.LVL45:
+ 558               	.L66:
+ 559               	.LBE43:
+ 560               	.LBE42:
+ 561               	.LSM105:
+ 562 00ee 4091 E800 		lds r20,232
+ 563               	.LVL46:
+ 564               	.LSM106:
+ 565 00f2 50E0      		ldi r21,lo8(0)
+ 566 00f4 BA01      		movw r22,r20
+ 567 00f6 6570      		andi r22,lo8(5)
+ 568 00f8 7070      		andi r23,hi8(5)
+ 569 00fa 6115      		cp r22,__zero_reg__
+ 570 00fc 7105      		cpc r23,__zero_reg__
+ 571 00fe 01F0      		breq .L66
+ 572               	.LSM107:
+ 573 0100 42FD      		sbrc r20,2
+ 574 0102 00C0      		rjmp .L24
+ 575               	.LSM108:
+ 576 0104 322F      		mov r19,r18
+ 577 0106 2132      		cpi r18,lo8(33)
+ 578 0108 00F0      		brlo .L35
+ 579 010a 30E2      		ldi r19,lo8(32)
+ 580               	.L35:
+ 581               	.LVL47:
+ 582               	.LSM109:
+ 583 010c AC01      		movw r20,r24
+ 584 010e 632F      		mov r22,r19
+ 585 0110 00C0      		rjmp .L36
+ 586               	.LVL48:
+ 587               	.L37:
+ 588               	.LSM110:
+ 589 0112 FA01      		movw r30,r20
+ 590               	.LVL49:
+ 591               	.LBB45:
+ 592               	.LSM111:
+ 593 0114 4F5F      		subi r20,lo8(-(1))
+ 594 0116 5F4F      		sbci r21,hi8(-(1))
+ 595               	.LVL50:
+ 596               	/* #APP */
+ 597               	 ;  472 "usb_keyboard.c" 1
+ 598 0118 E491      		lpm r30, Z
+ 599               		
+ 600               	 ;  0 "" 2
+ 601               	.LVL51:
+ 602               	/* #NOAPP */
+ 603               	.LBE45:
+ 604 011a E093 F100 		sts 241,r30
+ 605               	.LSM112:
+ 606 011e 6150      		subi r22,lo8(-(-1))
+ 607               	.LVL52:
+ 608               	.L36:
+ 609               	.LSM113:
+ 610 0120 6623      		tst r22
+ 611 0122 01F4      		brne .L37
+ 612               	.LSM114:
+ 613 0124 830F      		add r24,r19
+ 614 0126 911D      		adc r25,__zero_reg__
+ 615               	.LSM115:
+ 616 0128 231B      		sub r18,r19
+ 617               	.LVL53:
+ 618               	.LBB46:
+ 619               	.LBB44:
+ 620               	.LSM116:
+ 621 012a A093 E800 		sts 232,r26
+ 622               	.LBE44:
+ 623               	.LBE46:
+ 624               	.LSM117:
+ 625 012e 2223      		tst r18
+ 626 0130 01F4      		brne .L66
+ 627               	.LSM118:
+ 628 0132 3032      		cpi r19,lo8(32)
+ 629 0134 01F0      		breq .L66
+ 630 0136 00C0      		rjmp .L24
+ 631               	.LVL54:
+ 632               	.L26:
+ 633               	.LSM119:
+ 634 0138 3530      		cpi r19,lo8(5)
+ 635 013a 01F4      		brne .L39
+ 636               	.LBB47:
+ 637               	.LBB48:
+ 638               	.LSM120:
+ 639 013c 8EEF      		ldi r24,lo8(-2)
+ 640 013e 8093 E800 		sts 232,r24
+ 641               	.LBE48:
+ 642               	.LBE47:
+ 643               	.LSM121:
+ 644 0142 0E94 0000 		call usb_wait_in_ready
+ 645               	.LVL55:
+ 646               	.LSM122:
+ 647 0146 8C2D      		mov r24,r12
+ 648 0148 8068      		ori r24,lo8(-128)
+ 649 014a 8093 E300 		sts 227,r24
+ 650               	.LSM123:
+ 651 014e 00C0      		rjmp .L24
+ 652               	.LVL56:
+ 653               	.L39:
+ 654               	.LSM124:
+ 655 0150 3930      		cpi r19,lo8(9)
+ 656 0152 01F4      		brne .L40
+ 657               	.LSM125:
+ 658 0154 2223      		tst r18
+ 659 0156 01F0      		breq .+2
+ 660 0158 00C0      		rjmp .L45
+ 661               	.LSM126:
+ 662 015a C092 0000 		sts usb_configuration,r12
+ 663               	.LBB49:
+ 664               	.LBB50:
+ 665               	.LSM127:
+ 666 015e 8EEF      		ldi r24,lo8(-2)
+ 667 0160 8093 E800 		sts 232,r24
+ 668               	.LVL57:
+ 669               	.LSM128:
+ 670 0164 41E0      		ldi r20,lo8(1)
+ 671               	.LSM129:
+ 672 0166 80E0      		ldi r24,lo8(endpoint_config_table)
+ 673 0168 90E0      		ldi r25,hi8(endpoint_config_table)
+ 674               	.LVL58:
+ 675               	.L43:
+ 676               	.LBE50:
+ 677               	.LBE49:
+ 678               	.LSM130:
+ 679 016a 4093 E900 		sts 233,r20
+ 680               	.LBB51:
+ 681               	.LSM131:
+ 682 016e FC01      		movw r30,r24
+ 683               	.LVL59:
+ 684 0170 0196      		adiw r24,1
+ 685               	.LVL60:
+ 686               	/* #APP */
+ 687               	 ;  491 "usb_keyboard.c" 1
+ 688 0172 E491      		lpm r30, Z
+ 689               		
+ 690               	 ;  0 "" 2
+ 691               	.LVL61:
+ 692               	/* #NOAPP */
+ 693               	.LBE51:
+ 694               	.LSM132:
+ 695 0174 E093 EB00 		sts 235,r30
+ 696               	.LSM133:
+ 697 0178 EE23      		tst r30
+ 698 017a 01F0      		breq .L42
+ 699               	.LVL62:
+ 700               	.LBB52:
+ 701               	.LSM134:
+ 702 017c 9C01      		movw r18,r24
+ 703 017e 2F5F      		subi r18,lo8(-(1))
+ 704 0180 3F4F      		sbci r19,hi8(-(1))
+ 705               	.LVL63:
+ 706 0182 FC01      		movw r30,r24
+ 707               	.LVL64:
+ 708               	/* #APP */
+ 709               	 ;  494 "usb_keyboard.c" 1
+ 710 0184 8491      		lpm r24, Z
+ 711               		
+ 712               	 ;  0 "" 2
+ 713               	.LVL65:
+ 714               	/* #NOAPP */
+ 715               	.LBE52:
+ 716 0186 8093 EC00 		sts 236,r24
+ 717               	.LVL66:
+ 718               	.LBB53:
+ 719               	.LSM135:
+ 720 018a C901      		movw r24,r18
+ 721               	.LVL67:
+ 722 018c 0196      		adiw r24,1
+ 723               	.LVL68:
+ 724 018e F901      		movw r30,r18
+ 725               	.LVL69:
+ 726               	/* #APP */
+ 727               	 ;  495 "usb_keyboard.c" 1
+ 728 0190 2491      		lpm r18, Z
+ 729               		
+ 730               	 ;  0 "" 2
+ 731               	.LVL70:
+ 732               	/* #NOAPP */
+ 733               	.LBE53:
+ 734 0192 2093 ED00 		sts 237,r18
+ 735               	.LVL71:
+ 736               	.L42:
+ 737               	.LSM136:
+ 738 0196 4F5F      		subi r20,lo8(-(1))
+ 739               	.LVL72:
+ 740 0198 4530      		cpi r20,lo8(5)
+ 741 019a 01F4      		brne .L43
+ 742               	.LSM137:
+ 743 019c 8EE1      		ldi r24,lo8(30)
+ 744               	.LVL73:
+ 745 019e 00C0      		rjmp .L68
+ 746               	.LVL74:
+ 747               	.L40:
+ 748               	.LSM138:
+ 749 01a0 3830      		cpi r19,lo8(8)
+ 750 01a2 01F4      		brne .L44
+ 751               	.LSM139:
+ 752 01a4 2038      		cpi r18,lo8(-128)
+ 753 01a6 01F0      		breq .+2
+ 754 01a8 00C0      		rjmp .L45
+ 755               	.LSM140:
+ 756 01aa 0E94 0000 		call usb_wait_in_ready
+ 757               	.LVL75:
+ 758               	.LSM141:
+ 759 01ae 8091 0000 		lds r24,usb_configuration
+ 760 01b2 00C0      		rjmp .L69
+ 761               	.LVL76:
+ 762               	.L44:
+ 763               	.LSM142:
+ 764 01b4 3323      		tst r19
+ 765 01b6 01F4      		brne .L41
+ 766               	.LSM143:
+ 767 01b8 2983      		std Y+1,r18
+ 768 01ba 0E94 0000 		call usb_wait_in_ready
+ 769               	.LVL77:
+ 770               	.LSM144:
+ 771 01be 2981      		ldd r18,Y+1
+ 772 01c0 2238      		cpi r18,lo8(-126)
+ 773 01c2 01F4      		brne .L57
+ 774               	.LSM145:
+ 775 01c4 0093 E900 		sts 233,r16
+ 776               	.LSM146:
+ 777 01c8 9091 EB00 		lds r25,235
+ 778               	.LSM147:
+ 779 01cc 81E0      		ldi r24,lo8(1)
+ 780 01ce 95FF      		sbrs r25,5
+ 781 01d0 80E0      		ldi r24,lo8(0)
+ 782               	.L47:
+ 783               	.LVL78:
+ 784               	.LSM148:
+ 785 01d2 1092 E900 		sts 233,__zero_reg__
+ 786 01d6 00C0      		rjmp .L46
+ 787               	.LVL79:
+ 788               	.L57:
+ 789               	.LSM149:
+ 790 01d8 80E0      		ldi r24,lo8(0)
+ 791               	.LVL80:
+ 792               	.L46:
+ 793               	.LSM150:
+ 794 01da 8093 F100 		sts 241,r24
+ 795               	.LSM151:
+ 796 01de 1092 F100 		sts 241,__zero_reg__
+ 797 01e2 00C0      		rjmp .L67
+ 798               	.LVL81:
+ 799               	.L41:
+ 800               	.LSM152:
+ 801 01e4 3130      		cpi r19,lo8(1)
+ 802 01e6 01F0      		breq .L48
+ 803               	.LSM153:
+ 804 01e8 3330      		cpi r19,lo8(3)
+ 805 01ea 01F4      		brne .L45
+ 806               	.L48:
+ 807               	.LSM154:
+ 808 01ec 2230      		cpi r18,lo8(2)
+ 809 01ee 01F4      		brne .L45
+ 810               	.LSM155:
+ 811 01f0 C114      		cp r12,__zero_reg__
+ 812 01f2 D104      		cpc r13,__zero_reg__
+ 813 01f4 01F4      		brne .L45
+ 814               	.LSM156:
+ 815 01f6 402F      		mov r20,r16
+ 816 01f8 4F77      		andi r20,lo8(127)
+ 817               	.LVL82:
+ 818               	.LSM157:
+ 819 01fa 842F      		mov r24,r20
+ 820 01fc 8150      		subi r24,lo8(-(-1))
+ 821 01fe 8430      		cpi r24,lo8(4)
+ 822 0200 00F4      		brsh .L45
+ 823               	.LBB54:
+ 824               	.LBB55:
+ 825               	.LSM158:
+ 826 0202 8EEF      		ldi r24,lo8(-2)
+ 827 0204 8093 E800 		sts 232,r24
+ 828               	.LBE55:
+ 829               	.LBE54:
+ 830               	.LSM159:
+ 831 0208 4093 E900 		sts 233,r20
+ 832               	.LSM160:
+ 833 020c 3330      		cpi r19,lo8(3)
+ 834 020e 01F4      		brne .+2
+ 835 0210 00C0      		rjmp .L25
+ 836               	.L49:
+ 837               	.LSM161:
+ 838 0212 89E1      		ldi r24,lo8(25)
+ 839 0214 8093 EB00 		sts 235,r24
+ 840               	.LSM162:
+ 841 0218 81E0      		ldi r24,lo8(1)
+ 842 021a 90E0      		ldi r25,hi8(1)
+ 843 021c 00C0      		rjmp 2f
+ 844 021e 880F      	1:	lsl r24
+ 845 0220 991F      		rol r25
+ 846 0222 4A95      	2:	dec r20
+ 847 0224 02F4      		brpl 1b
+ 848               	.LVL83:
+ 849               	.L68:
+ 850 0226 8093 EA00 		sts 234,r24
+ 851               	.LSM163:
+ 852 022a 1092 EA00 		sts 234,__zero_reg__
+ 853 022e 00C0      		rjmp .L24
+ 854               	.LVL84:
+ 855               	.L45:
+ 856               	.LSM164:
+ 857 0230 0115      		cp r16,__zero_reg__
+ 858 0232 1105      		cpc r17,__zero_reg__
+ 859 0234 01F0      		breq .+2
+ 860 0236 00C0      		rjmp .L25
+ 861               	.LSM165:
+ 862 0238 213A      		cpi r18,lo8(-95)
+ 863 023a 01F4      		brne .L50
+ 864               	.LSM166:
+ 865 023c 3130      		cpi r19,lo8(1)
+ 866 023e 01F4      		brne .L51
+ 867               	.LSM167:
+ 868 0240 0E94 0000 		call usb_wait_in_ready
+ 869               	.LVL85:
+ 870               	.LSM168:
+ 871 0244 8091 0000 		lds r24,keyboard_modifier_keys
+ 872 0248 8093 F100 		sts 241,r24
+ 873               	.LSM169:
+ 874 024c 1092 F100 		sts 241,__zero_reg__
+ 875               	.LVL86:
+ 876 0250 E0E0      		ldi r30,lo8(keyboard_keys)
+ 877 0252 F0E0      		ldi r31,hi8(keyboard_keys)
+ 878               	.LVL87:
+ 879               	.L52:
+ 880               	.LSM170:
+ 881 0254 8191      		ld r24,Z+
+ 882 0256 8093 F100 		sts 241,r24
+ 883               	.LSM171:
+ 884 025a 20E0      		ldi r18,hi8(keyboard_keys+6)
+ 885 025c E030      		cpi r30,lo8(keyboard_keys+6)
+ 886 025e F207      		cpc r31,r18
+ 887 0260 01F4      		brne .L52
+ 888 0262 00C0      		rjmp .L67
+ 889               	.LVL88:
+ 890               	.L51:
+ 891               	.LSM172:
+ 892 0264 3230      		cpi r19,lo8(2)
+ 893 0266 01F4      		brne .L53
+ 894               	.LSM173:
+ 895 0268 0E94 0000 		call usb_wait_in_ready
+ 896               	.LVL89:
+ 897               	.LSM174:
+ 898 026c 8091 0000 		lds r24,keyboard_idle_config
+ 899 0270 00C0      		rjmp .L69
+ 900               	.LVL90:
+ 901               	.L53:
+ 902               	.LSM175:
+ 903 0272 3330      		cpi r19,lo8(3)
+ 904 0274 01F4      		brne .L25
+ 905               	.LSM176:
+ 906 0276 0E94 0000 		call usb_wait_in_ready
+ 907               	.LVL91:
+ 908               	.LSM177:
+ 909 027a 8091 0000 		lds r24,keyboard_protocol
+ 910               	.L69:
+ 911 027e 8093 F100 		sts 241,r24
+ 912 0282 00C0      		rjmp .L67
+ 913               	.LVL92:
+ 914               	.L50:
+ 915               	.LSM178:
+ 916 0284 2132      		cpi r18,lo8(33)
+ 917 0286 01F4      		brne .L25
+ 918               	.LSM179:
+ 919 0288 3930      		cpi r19,lo8(9)
+ 920 028a 01F4      		brne .L54
+ 921               	.L61:
+ 922               	.LBB56:
+ 923               	.LBB57:
+ 924               	.LSM180:
+ 925 028c 8091 E800 		lds r24,232
+ 926 0290 82FF      		sbrs r24,2
+ 927 0292 00C0      		rjmp .L61
+ 928               	.LBE57:
+ 929               	.LBE56:
+ 930               	.LSM181:
+ 931 0294 8091 F100 		lds r24,241
+ 932 0298 8093 0000 		sts keyboard_leds,r24
+ 933               	.LBB58:
+ 934               	.LBB59:
+ 935               	.LSM182:
+ 936 029c 8BEF      		ldi r24,lo8(-5)
+ 937 029e 8093 E800 		sts 232,r24
+ 938 02a2 00C0      		rjmp .L67
+ 939               	.L54:
+ 940               	.LBE59:
+ 941               	.LBE58:
+ 942               	.LSM183:
+ 943 02a4 3A30      		cpi r19,lo8(10)
+ 944 02a6 01F4      		brne .L56
+ 945               	.LSM184:
+ 946 02a8 D092 0000 		sts keyboard_idle_config,r13
+ 947               	.LSM185:
+ 948 02ac 1092 0000 		sts keyboard_idle_count,__zero_reg__
+ 949 02b0 00C0      		rjmp .L67
+ 950               	.L56:
+ 951               	.LSM186:
+ 952 02b2 3B30      		cpi r19,lo8(11)
+ 953 02b4 01F4      		brne .L25
+ 954               	.LSM187:
+ 955 02b6 C092 0000 		sts keyboard_protocol,r12
+ 956               	.LVL93:
+ 957               	.L67:
+ 958               	.LBB60:
+ 959               	.LBB61:
+ 960               	.LSM188:
+ 961 02ba 8EEF      		ldi r24,lo8(-2)
+ 962 02bc 8093 E800 		sts 232,r24
+ 963 02c0 00C0      		rjmp .L24
+ 964               	.LVL94:
+ 965               	.L25:
+ 966               	.LBE61:
+ 967               	.LBE60:
+ 968               	.LSM189:
+ 969 02c2 81E2      		ldi r24,lo8(33)
+ 970 02c4 8093 EB00 		sts 235,r24
+ 971               	.L24:
+ 972               	/* epilogue start */
+ 973               	.LSM190:
+ 974 02c8 0F90      		pop __tmp_reg__
+ 975 02ca CF91      		pop r28
+ 976 02cc DF91      		pop r29
+ 977 02ce FF91      		pop r31
+ 978 02d0 EF91      		pop r30
+ 979 02d2 BF91      		pop r27
+ 980 02d4 AF91      		pop r26
+ 981 02d6 9F91      		pop r25
+ 982 02d8 8F91      		pop r24
+ 983 02da 7F91      		pop r23
+ 984 02dc 6F91      		pop r22
+ 985 02de 5F91      		pop r21
+ 986 02e0 4F91      		pop r20
+ 987 02e2 3F91      		pop r19
+ 988 02e4 2F91      		pop r18
+ 989 02e6 1F91      		pop r17
+ 990 02e8 0F91      		pop r16
+ 991 02ea FF90      		pop r15
+ 992 02ec EF90      		pop r14
+ 993 02ee DF90      		pop r13
+ 994 02f0 CF90      		pop r12
+ 995 02f2 0F90      		pop r0
+ 996 02f4 0FBE      		out __SREG__,r0
+ 997 02f6 0F90      		pop r0
+ 998 02f8 1F90      		pop __zero_reg__
+ 999 02fa 1895      		reti
+ 1000               	.LFE9:
+ 1002               	.global	keyboard_modifier_keys
+ 1003               	.global	keyboard_modifier_keys
+ 1004               		.section .bss
+ 1007               	keyboard_modifier_keys:
+ 1008 0000 00        		.skip 1,0
+ 1009               	.global	keyboard_keys
+ 1010               	.global	keyboard_keys
+ 1013               	keyboard_keys:
+ 1014 0001 0000 0000 		.skip 6,0
+ 1014      0000 
+ 1015               	.global	keyboard_leds
+ 1016               	.global	keyboard_leds
+ 1019               	keyboard_leds:
+ 1020 0007 00        		.skip 1,0
+ 1021               		.section	.progmem.data,"a",@progbits
+ 1024               	descriptor_list:
+ 1025 0000 0001      		.word	256
+ 1026 0002 0000      		.word	0
+ 1027 0004 0000      		.word	device_descriptor
+ 1028 0006 12        		.byte	18
+ 1029 0007 0002      		.word	512
+ 1030 0009 0000      		.word	0
+ 1031 000b 0000      		.word	config1_descriptor
+ 1032 000d 22        		.byte	34
+ 1033 000e 0022      		.word	8704
+ 1034 0010 0000      		.word	0
+ 1035 0012 0000      		.word	keyboard_hid_report_desc
+ 1036 0014 3F        		.byte	63
+ 1037 0015 0021      		.word	8448
+ 1038 0017 0000      		.word	0
+ 1039 0019 0000      		.word	config1_descriptor+18
+ 1040 001b 09        		.byte	9
+ 1041 001c 0003      		.word	768
+ 1042 001e 0000      		.word	0
+ 1043 0020 0000      		.word	string0
+ 1044 0022 04        		.byte	4
+ 1045 0023 0103      		.word	769
+ 1046 0025 0904      		.word	1033
+ 1047 0027 0000      		.word	string1
+ 1048 0029 0E        		.byte	14
+ 1049 002a 0203      		.word	770
+ 1050 002c 0904      		.word	1033
+ 1051 002e 0000      		.word	string2
+ 1052 0030 12        		.byte	18
+ 1053               		.lcomm usb_configuration,1
+ 1056               	endpoint_config_table:
+ 1057 0031 00        		.byte	0
+ 1058 0032 00        		.byte	0
+ 1059 0033 01        		.byte	1
+ 1060 0034 C1        		.byte	-63
+ 1061 0035 06        		.byte	6
+ 1062 0036 00        		.byte	0
+ 1063               		.data
+ 1066               	keyboard_idle_config:
+ 1067 0000 7D        		.byte	125
+ 1070               	keyboard_protocol:
+ 1071 0001 01        		.byte	1
+ 1072               		.lcomm keyboard_idle_count,1
+ 1073               		.lcomm div4.1468,1
+ 1074               		.section	.progmem.data
+ 1077               	device_descriptor:
+ 1078 0037 12        		.byte	18
+ 1079 0038 01        		.byte	1
+ 1080 0039 00        		.byte	0
+ 1081 003a 02        		.byte	2
+ 1082 003b 00        		.byte	0
+ 1083 003c 00        		.byte	0
+ 1084 003d 00        		.byte	0
+ 1085 003e 20        		.byte	32
+ 1086 003f C0        		.byte	-64
+ 1087 0040 16        		.byte	22
+ 1088 0041 7C        		.byte	124
+ 1089 0042 04        		.byte	4
+ 1090 0043 00        		.byte	0
+ 1091 0044 01        		.byte	1
+ 1092 0045 01        		.byte	1
+ 1093 0046 02        		.byte	2
+ 1094 0047 00        		.byte	0
+ 1095 0048 01        		.byte	1
+ 1098               	config1_descriptor:
+ 1099 0049 09        		.byte	9
+ 1100 004a 02        		.byte	2
+ 1101 004b 22        		.byte	34
+ 1102 004c 00        		.byte	0
+ 1103 004d 01        		.byte	1
+ 1104 004e 01        		.byte	1
+ 1105 004f 00        		.byte	0
+ 1106 0050 C0        		.byte	-64
+ 1107 0051 32        		.byte	50
+ 1108 0052 09        		.byte	9
+ 1109 0053 04        		.byte	4
+ 1110 0054 00        		.byte	0
+ 1111 0055 00        		.byte	0
+ 1112 0056 01        		.byte	1
+ 1113 0057 03        		.byte	3
+ 1114 0058 01        		.byte	1
+ 1115 0059 01        		.byte	1
+ 1116 005a 00        		.byte	0
+ 1117 005b 09        		.byte	9
+ 1118 005c 21        		.byte	33
+ 1119 005d 11        		.byte	17
+ 1120 005e 01        		.byte	1
+ 1121 005f 00        		.byte	0
+ 1122 0060 01        		.byte	1
+ 1123 0061 22        		.byte	34
+ 1124 0062 3F        		.byte	63
+ 1125 0063 00        		.byte	0
+ 1126 0064 07        		.byte	7
+ 1127 0065 05        		.byte	5
+ 1128 0066 83        		.byte	-125
+ 1129 0067 03        		.byte	3
+ 1130 0068 08        		.byte	8
+ 1131 0069 00        		.byte	0
+ 1132 006a 01        		.byte	1
+ 1135               	keyboard_hid_report_desc:
+ 1136 006b 05        		.byte	5
+ 1137 006c 01        		.byte	1
+ 1138 006d 09        		.byte	9
+ 1139 006e 06        		.byte	6
+ 1140 006f A1        		.byte	-95
+ 1141 0070 01        		.byte	1
+ 1142 0071 75        		.byte	117
+ 1143 0072 01        		.byte	1
+ 1144 0073 95        		.byte	-107
+ 1145 0074 08        		.byte	8
+ 1146 0075 05        		.byte	5
+ 1147 0076 07        		.byte	7
+ 1148 0077 19        		.byte	25
+ 1149 0078 E0        		.byte	-32
+ 1150 0079 29        		.byte	41
+ 1151 007a E7        		.byte	-25
+ 1152 007b 15        		.byte	21
+ 1153 007c 00        		.byte	0
+ 1154 007d 25        		.byte	37
+ 1155 007e 01        		.byte	1
+ 1156 007f 81        		.byte	-127
+ 1157 0080 02        		.byte	2
+ 1158 0081 95        		.byte	-107
+ 1159 0082 01        		.byte	1
+ 1160 0083 75        		.byte	117
+ 1161 0084 08        		.byte	8
+ 1162 0085 81        		.byte	-127
+ 1163 0086 03        		.byte	3
+ 1164 0087 95        		.byte	-107
+ 1165 0088 05        		.byte	5
+ 1166 0089 75        		.byte	117
+ 1167 008a 01        		.byte	1
+ 1168 008b 05        		.byte	5
+ 1169 008c 08        		.byte	8
+ 1170 008d 19        		.byte	25
+ 1171 008e 01        		.byte	1
+ 1172 008f 29        		.byte	41
+ 1173 0090 05        		.byte	5
+ 1174 0091 91        		.byte	-111
+ 1175 0092 02        		.byte	2
+ 1176 0093 95        		.byte	-107
+ 1177 0094 01        		.byte	1
+ 1178 0095 75        		.byte	117
+ 1179 0096 03        		.byte	3
+ 1180 0097 91        		.byte	-111
+ 1181 0098 03        		.byte	3
+ 1182 0099 95        		.byte	-107
+ 1183 009a 06        		.byte	6
+ 1184 009b 75        		.byte	117
+ 1185 009c 08        		.byte	8
+ 1186 009d 15        		.byte	21
+ 1187 009e 00        		.byte	0
+ 1188 009f 25        		.byte	37
+ 1189 00a0 68        		.byte	104
+ 1190 00a1 05        		.byte	5
+ 1191 00a2 07        		.byte	7
+ 1192 00a3 19        		.byte	25
+ 1193 00a4 00        		.byte	0
+ 1194 00a5 29        		.byte	41
+ 1195 00a6 68        		.byte	104
+ 1196 00a7 81        		.byte	-127
+ 1197 00a8 00        		.byte	0
+ 1198 00a9 C0        		.byte	-64
+ 1201               	string0:
+ 1202 00aa 04        		.byte	4
+ 1203 00ab 03        		.byte	3
+ 1204 00ac 0904      		.word	1033
+ 1207               	string1:
+ 1208 00ae 0E        		.byte	14
+ 1209 00af 03        		.byte	3
+ 1210 00b0 6900      		.string	"i"
+ 1211 00b2 6200      		.string	"b"
+ 1212 00b4 6E00      		.string	"n"
+ 1213 00b6 5400      		.string	"T"
+ 1214 00b8 6500      		.string	"e"
+ 1215 00ba 6F00      		.string	"o"
+ 1216 00bc 00        		.string	""
+ 1217 00bd 00        		.string	""
+ 1220               	string2:
+ 1221 00be 12        		.byte	18
+ 1222 00bf 03        		.byte	3
+ 1223 00c0 4300      		.string	"C"
+ 1224 00c2 6100      		.string	"a"
+ 1225 00c4 7400      		.string	"t"
+ 1226 00c6 6200      		.string	"b"
+ 1227 00c8 6F00      		.string	"o"
+ 1228 00ca 6100      		.string	"a"
+ 1229 00cc 7200      		.string	"r"
+ 1230 00ce 6400      		.string	"d"
+ 1231 00d0 00        		.string	""
+ 1232 00d1 00        		.string	""
+ 1305               	.Letext0:
+DEFINED SYMBOLS
+                            *ABS*:00000000 usb_keyboard.c
+     /tmp/cc3ePLLZ.s:2      *ABS*:0000003f __SREG__
+     /tmp/cc3ePLLZ.s:3      *ABS*:0000003e __SP_H__
+     /tmp/cc3ePLLZ.s:4      *ABS*:0000003d __SP_L__
+     /tmp/cc3ePLLZ.s:5      *ABS*:00000034 __CCP__
+     /tmp/cc3ePLLZ.s:6      *ABS*:00000000 __tmp_reg__
+     /tmp/cc3ePLLZ.s:7      *ABS*:00000001 __zero_reg__
+     /tmp/cc3ePLLZ.s:18     .text.usb_wait_in_ready:00000000 usb_wait_in_ready
+     /tmp/cc3ePLLZ.s:38     .text.usb_init:00000000 usb_init
+                             .bss:00000008 usb_configuration
+     /tmp/cc3ePLLZ.s:80     .text.usb_configured:00000000 usb_configured
+     /tmp/cc3ePLLZ.s:97     .text.usb_keyboard_send:00000000 usb_keyboard_send
+     /tmp/cc3ePLLZ.s:1007   .bss:00000000 keyboard_modifier_keys
+     /tmp/cc3ePLLZ.s:1013   .bss:00000001 keyboard_keys
+     /tmp/cc3ePLLZ.s:1053   .bss:00000009 keyboard_idle_count
+     /tmp/cc3ePLLZ.s:202    .text.usb_keyboard_press:00000000 usb_keyboard_press
+     /tmp/cc3ePLLZ.s:235    .text.__vector_11:00000000 __vector_11
+     /tmp/cc3ePLLZ.s:1066   .data:00000000 keyboard_idle_config
+     /tmp/cc3ePLLZ.s:1072   .bss:0000000a div4.1468
+     /tmp/cc3ePLLZ.s:352    .text.__vector_12:00000000 __vector_12
+     /tmp/cc3ePLLZ.s:1024   .progmem.data:00000000 descriptor_list
+     /tmp/cc3ePLLZ.s:1056   .progmem.data:00000031 endpoint_config_table
+     /tmp/cc3ePLLZ.s:1070   .data:00000001 keyboard_protocol
+     /tmp/cc3ePLLZ.s:1019   .bss:00000007 keyboard_leds
+     /tmp/cc3ePLLZ.s:1077   .progmem.data:00000037 device_descriptor
+     /tmp/cc3ePLLZ.s:1098   .progmem.data:00000049 config1_descriptor
+     /tmp/cc3ePLLZ.s:1135   .progmem.data:0000006b keyboard_hid_report_desc
+     /tmp/cc3ePLLZ.s:1201   .progmem.data:000000aa string0
+     /tmp/cc3ePLLZ.s:1207   .progmem.data:000000ae string1
+     /tmp/cc3ePLLZ.s:1220   .progmem.data:000000be string2
+
+UNDEFINED SYMBOLS
+__do_copy_data
+__do_clear_bss
