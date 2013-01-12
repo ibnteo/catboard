@@ -1,6 +1,6 @@
-/* Keyboard example for Teensy USB Development Board
- * http://www.pjrc.com/teensy/usb_keyboard.html
- * Copyright (c) 2008 PJRC.COM, LLC
+/* Mouse example with debug channel, for Teensy USB Development Board
+ * http://www.pjrc.com/teensy/usb_mouse.html
+ * Copyright (c) 2009 PJRC.COM, LLC
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,35 +23,25 @@
 
 #include <avr/io.h>
 #include <avr/pgmspace.h>
-#include <avr/interrupt.h>
 #include <util/delay.h>
-#include "usb_keyboard.h"
+#include "usb_mouse.h"
 
 #define LED_CONFIG	(DDRD |= (1<<6))
 #define LED_ON		(PORTD &= ~(1<<6))
 #define LED_OFF		(PORTD |= (1<<6))
 #define CPU_PRESCALE(n)	(CLKPR = 0x80, CLKPR = (n))
 
-uint8_t number_keys[10]=
-	{KEY_0,KEY_1,KEY_2,KEY_3,KEY_4,KEY_5,KEY_6,KEY_7,KEY_8,KEY_9};
-
-uint16_t idle_count=0;
+int8_t circle[];
 
 int main(void)
 {
-	uint8_t b, d, mask, i, reset_idle;
-	uint8_t b_prev=0xFF, d_prev=0xFF;
+	int8_t x, y, *p;
+	uint8_t i;
 
 	// set for 16 MHz clock
 	CPU_PRESCALE(0);
-
-	// Configure all port B and port D pins as inputs with pullup resistors.
-	// See the "Using I/O Pins" page for details.
-	// http://www.pjrc.com/teensy/pins.html
-	DDRD = 0x00;
-	DDRB = 0x00;
-	PORTB = 0xFF;
-	PORTD = 0xFF;
+	LED_CONFIG;
+	LED_OFF;
 
 	// Initialize the USB, and then wait for the host to set configuration.
 	// If the Teensy is powered without a PC connected to the USB port,
@@ -63,62 +53,61 @@ int main(void)
 	// and do whatever it does to actually be ready for input
 	_delay_ms(1000);
 
-	// Configure timer 0 to generate a timer overflow interrupt every
-	// 256*1024 clock cycles, or approx 61 Hz when using 16 MHz clock
-	// This demonstrates how to use interrupts to implement a simple
-	// inactivity timeout.
-	TCCR0A = 0x00;
-	TCCR0B = 0x05;
-	TIMSK0 = (1<<TOIE0);
-
 	while (1) {
-		// read all port B and port D pins
-		b = PINB;
-		d = PIND;
-		// check if any pins are low, but were high previously
-		mask = 1;
-		reset_idle = 0;
-		for (i=0; i<8; i++) {
-			if (((b & mask) == 0) && (b_prev & mask) != 0) {
-				usb_keyboard_press(KEY_B, KEY_SHIFT);
-				usb_keyboard_press(number_keys[i], 0);
-				reset_idle = 1;
-			}
-			if (((d & mask) == 0) && (d_prev & mask) != 0) {
-				usb_keyboard_press(KEY_D, KEY_SHIFT);
-				usb_keyboard_press(number_keys[i], 0);
-				reset_idle = 1;
-			}
-			mask = mask << 1;
+		_delay_ms(1000);
+		LED_ON;  // turn the LED on while moving the mouse
+		p = circle;
+		for (i=0; i<36; i++) {
+			x = pgm_read_byte(p++);
+			y = pgm_read_byte(p++);
+			usb_mouse_move(x, y, 0);
+			_delay_ms(20);
 		}
-		// if any keypresses were detected, reset the idle counter
-		if (reset_idle) {
-			// variables shared with interrupt routines must be
-			// accessed carefully so the interrupt routine doesn't
-			// try to use the variable in the middle of our access
-			cli();
-			idle_count = 0;
-			sei();
-		}
-		// now the current pins will be the previous, and
-		// wait a short delay so we're not highly sensitive
-		// to mechanical "bounce".
-		b_prev = b;
-		d_prev = d;
-		_delay_ms(2);
-	}
-}
-
-// This interrupt routine is run approx 61 times per second.
-// A very simple inactivity timeout is implemented, where we
-// will send a space character.
-ISR(TIMER0_OVF_vect)
-{
-	idle_count++;
-	if (idle_count > 61 * 8) {
-		idle_count = 0;
-		usb_keyboard_press(KEY_SPACE, 0);
+		LED_OFF;
+		_delay_ms(9000);
+		// This sequence creates a right click
+		//usb_mouse_buttons(0, 0, 1);
+		//_delay_ms(10);
+		//usb_mouse_buttons(0, 0, 0);
 	}
 }
 
 
+int8_t PROGMEM circle[] = {
+16, -1,
+15, -4,
+14, -7,
+13, -9,
+11, -11,
+9, -13,
+7, -14,
+4, -15,
+1, -16,
+-1, -16,
+-4, -15,
+-7, -14,
+-9, -13,
+-11, -11,
+-13, -9,
+-14, -7,
+-15, -4,
+-16, -1,
+-16, 1,
+-15, 4,
+-14, 7,
+-13, 9,
+-11, 11,
+-9, 13,
+-7, 14,
+-4, 15,
+-1, 16,
+1, 16,
+4, 15,
+7, 14,
+9, 13,
+11, 11,
+13, 9,
+14, 7,
+15, 4,
+16, 1
+};
