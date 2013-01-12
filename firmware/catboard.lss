@@ -17,21 +17,21 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING
   6 .debug_pubnames 0000020f  00000000  00000000  00001568  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_info   00000ef8  00000000  00000000  00001777  2**0
+  7 .debug_info   00000ef6  00000000  00000000  00001777  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_abbrev 00000445  00000000  00000000  0000266f  2**0
+  8 .debug_abbrev 00000445  00000000  00000000  0000266d  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_line   00000e48  00000000  00000000  00002ab4  2**0
+  9 .debug_line   00000e46  00000000  00000000  00002ab2  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_frame  00000110  00000000  00000000  000038fc  2**2
+ 10 .debug_frame  00000110  00000000  00000000  000038f8  2**2
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_str    0000051a  00000000  00000000  00003a0c  2**0
+ 11 .debug_str    0000051a  00000000  00000000  00003a08  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_loc    00000ab7  00000000  00000000  00003f26  2**0
+ 12 .debug_loc    00000ab7  00000000  00000000  00003f22  2**0
                   CONTENTS, READONLY, DEBUGGING
- 13 .debug_pubtypes 000000d1  00000000  00000000  000049dd  2**0
+ 13 .debug_pubtypes 000000d1  00000000  00000000  000049d9  2**0
                   CONTENTS, READONLY, DEBUGGING
- 14 .debug_ranges 000000a0  00000000  00000000  00004aae  2**0
+ 14 .debug_ranges 000000a0  00000000  00000000  00004aaa  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -299,7 +299,7 @@ uint8_t get_code(uint8_t key_id) {
  200:	91 30       	cpi	r25, 0x01	; 1
  202:	41 f4       	brne	.+16     	; 0x214 <get_code+0x24>
 			if (layer_fn[key_id]>0 && layer_fn[key_id]<0x80) {
- 204:	28 58       	subi	r18, 0x88	; 136
+ 204:	26 58       	subi	r18, 0x86	; 134
  206:	3e 4f       	sbci	r19, 0xFE	; 254
  208:	f9 01       	movw	r30, r18
  20a:	80 81       	ld	r24, Z
@@ -319,17 +319,17 @@ uint8_t get_code(uint8_t key_id) {
 				key_code = layer_fn[key_id];
 			}
 		} else if (layout!=layer_fn && pressed[key_id]==KEY_PRESSED_MODS) { // keyboard shortcuts from layer1
- 214:	40 91 b4 01 	lds	r20, 0x01B4
- 218:	50 91 b5 01 	lds	r21, 0x01B5
+ 214:	40 91 3c 01 	lds	r20, 0x013C
+ 218:	50 91 3d 01 	lds	r21, 0x013D
  21c:	f1 e0       	ldi	r31, 0x01	; 1
- 21e:	48 37       	cpi	r20, 0x78	; 120
+ 21e:	4a 37       	cpi	r20, 0x7A	; 122
  220:	5f 07       	cpc	r21, r31
  222:	31 f0       	breq	.+12     	; 0x230 <get_code+0x40>
  224:	92 30       	cpi	r25, 0x02	; 2
  226:	21 f4       	brne	.+8      	; 0x230 <get_code+0x40>
 			key_code = (KEY_SHORTCUTS_LAYER1 ? layer1[key_id] : layer2[key_id]);
- 228:	20 50       	subi	r18, 0x00	; 0
- 22a:	3f 4f       	sbci	r19, 0xFF	; 255
+ 228:	22 5c       	subi	r18, 0xC2	; 194
+ 22a:	3e 4f       	sbci	r19, 0xFE	; 254
  22c:	f9 01       	movw	r30, r18
  22e:	03 c0       	rjmp	.+6      	; 0x236 <get_code+0x46>
 		} else {
@@ -426,26 +426,25 @@ void key_release(uint8_t key_id) {
 	if(pressed_key_id==1 && layer_fn[key_id]>=0x80) { // Fn+Mod_keys release
  28c:	91 30       	cpi	r25, 0x01	; 1
  28e:	81 f4       	brne	.+32     	; 0x2b0 <key_release+0x3c>
- 290:	28 58       	subi	r18, 0x88	; 136
+ 290:	26 58       	subi	r18, 0x86	; 134
  292:	3e 4f       	sbci	r19, 0xFE	; 254
  294:	f9 01       	movw	r30, r18
  296:	20 81       	ld	r18, Z
  298:	27 ff       	sbrs	r18, 7
  29a:	02 c0       	rjmp	.+4      	; 0x2a0 <key_release+0x2c>
-		//mod_keys &= ~((layer_fn[key_id]!=0x80) ? (layer_fn[key_id] & 0x7F) : layer_fn[key_id]);
 		mod_keys &= ~(layer_fn[key_id] & 0x7F);
  29c:	92 2f       	mov	r25, r18
  29e:	2e c0       	rjmp	.+92     	; 0x2fc <key_release+0x88>
 		send();
 	} else if((pressed_key_id!=KEY_PRESSED_FN || layout==layer_fn) && layout[key_id]>0xF0) { // Catboard keys release
- 2a0:	20 91 b4 01 	lds	r18, 0x01B4
- 2a4:	30 91 b5 01 	lds	r19, 0x01B5
+ 2a0:	20 91 3c 01 	lds	r18, 0x013C
+ 2a4:	30 91 3d 01 	lds	r19, 0x013D
  2a8:	f1 e0       	ldi	r31, 0x01	; 1
- 2aa:	28 37       	cpi	r18, 0x78	; 120
+ 2aa:	2a 37       	cpi	r18, 0x7A	; 122
  2ac:	3f 07       	cpc	r19, r31
  2ae:	a9 f4       	brne	.+42     	; 0x2da <key_release+0x66>
- 2b0:	e0 91 b4 01 	lds	r30, 0x01B4
- 2b4:	f0 91 b5 01 	lds	r31, 0x01B5
+ 2b0:	e0 91 3c 01 	lds	r30, 0x013C
+ 2b4:	f0 91 3d 01 	lds	r31, 0x013D
  2b8:	e8 0f       	add	r30, r24
  2ba:	f1 1d       	adc	r31, r1
  2bc:	20 81       	ld	r18, Z
@@ -462,28 +461,24 @@ void key_release(uint8_t key_id) {
  2ce:	80 91 f2 01 	lds	r24, 0x01F2
  2d2:	8b 7f       	andi	r24, 0xFB	; 251
  2d4:	18 c0       	rjmp	.+48     	; 0x306 <__stack+0x7>
+			send();
 		}
-	/*} else if(pressed_key_id==2 && layer_fn[key_id]==(KEY_CTRL+KEY_MOD)) { // Fn+KEY_CTRL release
-		//mod_keys &= ~((layer_fn[key_id]!=0x80) ? (layer_fn[key_id] & 0x7F) : layer_fn[key_id]);
-		mod_keys &= ~(KEY_SHIFT);
-		send();*/
 	} else if((pressed_key_id!=KEY_PRESSED_FN || layout==layer_fn) && layout[key_id]>=0x80) { // Mod_keys release
  2d6:	91 30       	cpi	r25, 0x01	; 1
  2d8:	41 f4       	brne	.+16     	; 0x2ea <key_release+0x76>
- 2da:	20 91 b4 01 	lds	r18, 0x01B4
- 2de:	30 91 b5 01 	lds	r19, 0x01B5
+ 2da:	20 91 3c 01 	lds	r18, 0x013C
+ 2de:	30 91 3d 01 	lds	r19, 0x013D
  2e2:	41 e0       	ldi	r20, 0x01	; 1
- 2e4:	28 37       	cpi	r18, 0x78	; 120
+ 2e4:	2a 37       	cpi	r18, 0x7A	; 122
  2e6:	34 07       	cpc	r19, r20
  2e8:	91 f4       	brne	.+36     	; 0x30e <__stack+0xf>
- 2ea:	e0 91 b4 01 	lds	r30, 0x01B4
- 2ee:	f0 91 b5 01 	lds	r31, 0x01B5
+ 2ea:	e0 91 3c 01 	lds	r30, 0x013C
+ 2ee:	f0 91 3d 01 	lds	r31, 0x013D
  2f2:	e8 0f       	add	r30, r24
  2f4:	f1 1d       	adc	r31, r1
  2f6:	90 81       	ld	r25, Z
  2f8:	97 ff       	sbrs	r25, 7
  2fa:	09 c0       	rjmp	.+18     	; 0x30e <__stack+0xf>
-		//mod_keys &= ~((layout[key_id]!=0x80) ? (layout[key_id] & 0x7F) : layout[key_id]);
 		mod_keys &= ~(layout[key_id] & 0x7F);
  2fc:	9f 77       	andi	r25, 0x7F	; 127
  2fe:	90 95       	com	r25
@@ -493,14 +488,13 @@ void key_release(uint8_t key_id) {
 		send();
  30a:	99 df       	rcall	.-206    	; 0x23e <send>
  30c:	37 c0       	rjmp	.+110    	; 0x37c <__stack+0x7d>
+	} else if((pressed_key_id!=KEY_PRESSED_FN || layout==layer_fn) && layout[key_id]>0xF0) { // Catboard keys release
+		if (layout[key_id]==KEY_ALT_TAB && pressed_key_id!=KEY_PRESSED_ALT) { // ALT_TAB release
+			mod_keys &= ~(KEY_ALT);
+			send();
 		}
-	/*} else if(pressed_key_id==2 && layer_fn[key_id]==(KEY_CTRL+KEY_MOD)) { // Fn+KEY_CTRL release
-		//mod_keys &= ~((layer_fn[key_id]!=0x80) ? (layer_fn[key_id] & 0x7F) : layer_fn[key_id]);
-		mod_keys &= ~(KEY_SHIFT);
-		send();*/
 	} else if((pressed_key_id!=KEY_PRESSED_FN || layout==layer_fn) && layout[key_id]>=0x80) { // Mod_keys release
  30e:	90 e0       	ldi	r25, 0x00	; 0
-		//mod_keys &= ~((layout[key_id]!=0x80) ? (layout[key_id] & 0x7F) : layout[key_id]);
 		mod_keys &= ~(layout[key_id] & 0x7F);
 		send();
 	} else {
@@ -513,8 +507,8 @@ void key_release(uint8_t key_id) {
  318:	20 81       	ld	r18, Z
  31a:	28 17       	cp	r18, r24
  31c:	59 f0       	breq	.+22     	; 0x334 <__stack+0x35>
+		}
 	} else if((pressed_key_id!=KEY_PRESSED_FN || layout==layer_fn) && layout[key_id]>=0x80) { // Mod_keys release
-		//mod_keys &= ~((layout[key_id]!=0x80) ? (layout[key_id] & 0x7F) : layout[key_id]);
 		mod_keys &= ~(layout[key_id] & 0x7F);
 		send();
 	} else {
@@ -605,7 +599,6 @@ void key_press(uint8_t key_id) {
  38a:	cd b7       	in	r28, 0x3d	; 61
  38c:	de b7       	in	r29, 0x3e	; 62
 	uint8_t i;
-	//pressed[key_id] = (pressed[FN_KEY_ID] ? 1 : -1);
 	uint8_t mods_pressed = (mod_keys & (KEY_CTRL|KEY_RIGHT_CTRL|KEY_ALT|KEY_RIGHT_ALT));
  38e:	90 91 f2 01 	lds	r25, 0x01F2
 	pressed[key_id] = (pressed[FN_KEY_ID] ? KEY_PRESSED_FN : (mods_pressed ? KEY_PRESSED_MODS : -1));
@@ -614,11 +607,11 @@ void key_press(uint8_t key_id) {
  396:	20 91 2c 02 	lds	r18, 0x022C
  39a:	22 23       	and	r18, r18
  39c:	29 f4       	brne	.+10     	; 0x3a8 <key_press+0x24>
+	}	
 }
 
 void key_press(uint8_t key_id) {
 	uint8_t i;
-	//pressed[key_id] = (pressed[FN_KEY_ID] ? 1 : -1);
 	uint8_t mods_pressed = (mod_keys & (KEY_CTRL|KEY_RIGHT_CTRL|KEY_ALT|KEY_RIGHT_ALT));
  39e:	29 2f       	mov	r18, r25
  3a0:	25 75       	andi	r18, 0x55	; 85
@@ -638,7 +631,7 @@ void key_press(uint8_t key_id) {
  3ba:	77 23       	and	r23, r23
  3bc:	79 f1       	breq	.+94     	; 0x41c <key_press+0x98>
  3be:	fa 01       	movw	r30, r20
- 3c0:	e8 58       	subi	r30, 0x88	; 136
+ 3c0:	e6 58       	subi	r30, 0x86	; 134
  3c2:	fe 4f       	sbci	r31, 0xFE	; 254
  3c4:	20 81       	ld	r18, Z
  3c6:	27 ff       	sbrs	r18, 7
@@ -669,16 +662,16 @@ void key_press(uint8_t key_id) {
 					LED_OFF;
 				} else { // FnLock On
 					prev_layer = layout;
- 3ee:	80 91 b4 01 	lds	r24, 0x01B4
- 3f2:	90 91 b5 01 	lds	r25, 0x01B5
+ 3ee:	80 91 3c 01 	lds	r24, 0x013C
+ 3f2:	90 91 3d 01 	lds	r25, 0x013D
  3f6:	90 93 f4 01 	sts	0x01F4, r25
  3fa:	80 93 f3 01 	sts	0x01F3, r24
  3fe:	6b c0       	rjmp	.+214    	; 0x4d6 <key_press+0x152>
-			//mod_keys |= ((layer_fn[key_id]!=0x80) ? (layer_fn[key_id] & 0x7F) : layer_fn[key_id]);
-			/*if (layer_fn[key_id]==(KEY_CTRL+KEY_MOD) && (mod_keys & KEY_CTRL)) { // Fn+KEY_CTRL press
-				pressed[key_id] = 2;
-				mod_keys |= KEY_SHIFT;
-			}*/
+					layout = layer_fn;
+					LED_ON;
+				}
+			}
+		} else { // Fn+Mod_keys
 			mod_keys |= (layer_fn[key_id] & 0x7F);
  400:	2f 77       	andi	r18, 0x7F	; 127
  402:	29 2b       	or	r18, r25
@@ -687,15 +680,15 @@ void key_press(uint8_t key_id) {
 			send();
 		}
 	} else if(((! pressed[FN_KEY_ID]) || layout==layer_fn) && layout[key_id]>0xF0) { // Catboard keys
- 40a:	20 91 b4 01 	lds	r18, 0x01B4
- 40e:	30 91 b5 01 	lds	r19, 0x01B5
+ 40a:	20 91 3c 01 	lds	r18, 0x013C
+ 40e:	30 91 3d 01 	lds	r19, 0x013D
  412:	61 e0       	ldi	r22, 0x01	; 1
- 414:	28 37       	cpi	r18, 0x78	; 120
+ 414:	2a 37       	cpi	r18, 0x7A	; 122
  416:	36 07       	cpc	r19, r22
  418:	09 f0       	breq	.+2      	; 0x41c <key_press+0x98>
  41a:	67 c0       	rjmp	.+206    	; 0x4ea <key_press+0x166>
- 41c:	20 91 b4 01 	lds	r18, 0x01B4
- 420:	30 91 b5 01 	lds	r19, 0x01B5
+ 41c:	20 91 3c 01 	lds	r18, 0x013C
+ 420:	30 91 3d 01 	lds	r19, 0x013D
  424:	f9 01       	movw	r30, r18
  426:	e8 0f       	add	r30, r24
  428:	f1 1d       	adc	r31, r1
@@ -707,11 +700,11 @@ void key_press(uint8_t key_id) {
  432:	61 3f       	cpi	r22, 0xF1	; 241
  434:	39 f4       	brne	.+14     	; 0x444 <key_press+0xc0>
  436:	81 e0       	ldi	r24, 0x01	; 1
- 438:	20 30       	cpi	r18, 0x00	; 0
+ 438:	2e 33       	cpi	r18, 0x3E	; 62
  43a:	38 07       	cpc	r19, r24
  43c:	89 f1       	breq	.+98     	; 0x4a0 <key_press+0x11c>
 			layout = layer1;
- 43e:	80 e0       	ldi	r24, 0x00	; 0
+ 43e:	8e e3       	ldi	r24, 0x3E	; 62
  440:	91 e0       	ldi	r25, 0x01	; 1
  442:	08 c0       	rjmp	.+16     	; 0x454 <key_press+0xd0>
 			change_layout();
@@ -719,14 +712,14 @@ void key_press(uint8_t key_id) {
  444:	62 3f       	cpi	r22, 0xF2	; 242
  446:	61 f4       	brne	.+24     	; 0x460 <key_press+0xdc>
  448:	91 e0       	ldi	r25, 0x01	; 1
- 44a:	2c 33       	cpi	r18, 0x3C	; 60
+ 44a:	20 30       	cpi	r18, 0x00	; 0
  44c:	39 07       	cpc	r19, r25
  44e:	41 f1       	breq	.+80     	; 0x4a0 <key_press+0x11c>
 			layout = layer2;
- 450:	8c e3       	ldi	r24, 0x3C	; 60
+ 450:	80 e0       	ldi	r24, 0x00	; 0
  452:	91 e0       	ldi	r25, 0x01	; 1
- 454:	90 93 b5 01 	sts	0x01B5, r25
- 458:	80 93 b4 01 	sts	0x01B4, r24
+ 454:	90 93 3d 01 	sts	0x013D, r25
+ 458:	80 93 3c 01 	sts	0x013C, r24
 			change_layout();
  45c:	90 de       	rcall	.-736    	; 0x17e <change_layout>
 		}
@@ -775,13 +768,10 @@ void key_press(uint8_t key_id) {
  49a:	00 c0       	rjmp	.+0      	; 0x49c <key_press+0x118>
  49c:	00 00       	nop
  49e:	59 c0       	rjmp	.+178    	; 0x552 <key_press+0x1ce>
+			_delay_ms(50);
 			send();
-		/*} else if (layout[key_id]==KEY_MULT1) { // ups :(
-			usb_keyboard_press(KEY_MEDIA_VOLUME_INC, mod_keys);
-		} else if (layout[key_id]==KEY_MULT2) {
-			usb_keyboard_press(KEY_MEDIA_VOLUME_DEC, mod_keys);*/
 		} else if (layer_fn[key_id]==KEY_FN_LOCK) { // Fn + FnLock
- 4a0:	48 58       	subi	r20, 0x88	; 136
+ 4a0:	46 58       	subi	r20, 0x86	; 134
  4a2:	5e 4f       	sbci	r21, 0xFE	; 254
  4a4:	da 01       	movw	r26, r20
  4a6:	8c 91       	ld	r24, X
@@ -794,8 +784,8 @@ void key_press(uint8_t key_id) {
  4b6:	00 97       	sbiw	r24, 0x00	; 0
  4b8:	51 f0       	breq	.+20     	; 0x4ce <key_press+0x14a>
 				layout = prev_layer;
- 4ba:	90 93 b5 01 	sts	0x01B5, r25
- 4be:	80 93 b4 01 	sts	0x01B4, r24
+ 4ba:	90 93 3d 01 	sts	0x013D, r25
+ 4be:	80 93 3c 01 	sts	0x013C, r24
 				prev_layer = 0;
  4c2:	10 92 f4 01 	sts	0x01F4, r1
  4c6:	10 92 f3 01 	sts	0x01F3, r1
@@ -807,10 +797,10 @@ void key_press(uint8_t key_id) {
  4ce:	30 93 f4 01 	sts	0x01F4, r19
  4d2:	20 93 f3 01 	sts	0x01F3, r18
 				layout = layer_fn;
- 4d6:	88 e7       	ldi	r24, 0x78	; 120
+ 4d6:	8a e7       	ldi	r24, 0x7A	; 122
  4d8:	91 e0       	ldi	r25, 0x01	; 1
- 4da:	90 93 b5 01 	sts	0x01B5, r25
- 4de:	80 93 b4 01 	sts	0x01B4, r24
+ 4da:	90 93 3d 01 	sts	0x013D, r25
+ 4de:	80 93 3c 01 	sts	0x013C, r24
 				LED_ON;
  4e2:	5c 9a       	sbi	0x0b, 4	; 11
  4e4:	53 c0       	rjmp	.+166    	; 0x58c <key_press+0x208>
@@ -819,20 +809,19 @@ void key_press(uint8_t key_id) {
 	} else if(((! pressed[FN_KEY_ID]) || layout==layer_fn) && layout[key_id]>=0x80) { // Mod keys
  4e6:	77 23       	and	r23, r23
  4e8:	41 f0       	breq	.+16     	; 0x4fa <key_press+0x176>
- 4ea:	20 91 b4 01 	lds	r18, 0x01B4
- 4ee:	30 91 b5 01 	lds	r19, 0x01B5
+ 4ea:	20 91 3c 01 	lds	r18, 0x013C
+ 4ee:	30 91 3d 01 	lds	r19, 0x013D
  4f2:	b1 e0       	ldi	r27, 0x01	; 1
- 4f4:	28 37       	cpi	r18, 0x78	; 120
+ 4f4:	2a 37       	cpi	r18, 0x7A	; 122
  4f6:	3b 07       	cpc	r19, r27
  4f8:	49 f4       	brne	.+18     	; 0x50c <key_press+0x188>
- 4fa:	e0 91 b4 01 	lds	r30, 0x01B4
- 4fe:	f0 91 b5 01 	lds	r31, 0x01B5
+ 4fa:	e0 91 3c 01 	lds	r30, 0x013C
+ 4fe:	f0 91 3d 01 	lds	r31, 0x013D
  502:	e8 0f       	add	r30, r24
  504:	f1 1d       	adc	r31, r1
  506:	20 81       	ld	r18, Z
  508:	27 fd       	sbrc	r18, 7
  50a:	1e c0       	rjmp	.+60     	; 0x548 <key_press+0x1c4>
-		//mod_keys |= ((layer_fn[key_id]!=0x80) ? (layer_fn[key_id] & 0x7F) : layer_fn[key_id]);
 		mod_keys |= (layout[key_id] & 0x7F);
 		send();
 	} else {
@@ -859,11 +848,11 @@ void key_press(uint8_t key_id) {
  542:	98 17       	cp	r25, r24
  544:	79 f4       	brne	.+30     	; 0x564 <key_press+0x1e0>
  546:	07 c0       	rjmp	.+14     	; 0x556 <key_press+0x1d2>
+				layout = layer_fn;
 				LED_ON;
 			}
 		}
 	} else if(((! pressed[FN_KEY_ID]) || layout==layer_fn) && layout[key_id]>=0x80) { // Mod keys
-		//mod_keys |= ((layer_fn[key_id]!=0x80) ? (layer_fn[key_id] & 0x7F) : layer_fn[key_id]);
 		mod_keys |= (layout[key_id] & 0x7F);
  548:	82 2f       	mov	r24, r18
  54a:	8f 77       	andi	r24, 0x7F	; 127
@@ -943,7 +932,7 @@ void poll() {
 
 void poll() {
 	uint8_t row, col, key_id;
-	for(row=0; row<ROWS; row++) {
+	for(row=0; row<ROWS; row++) { // scan rows
  5b4:	99 24       	eor	r9, r9
 		*row_port[row] &= ~row_bit[row];
  5b6:	d8 01       	movw	r26, r16
@@ -957,7 +946,7 @@ void poll() {
 void poll() {
  5bc:	5e 01       	movw	r10, r28
 	uint8_t row, col, key_id;
-	for(row=0; row<ROWS; row++) {
+	for(row=0; row<ROWS; row++) { // scan rows
 		*row_port[row] &= ~row_bit[row];
  5be:	98 81       	ld	r25, Y
  5c0:	90 95       	com	r25
@@ -989,12 +978,12 @@ void poll() {
 
 void poll() {
  5e0:	89 2c       	mov	r8, r9
-	for(row=0; row<ROWS; row++) {
+	for(row=0; row<ROWS; row++) { // scan rows
 		*row_port[row] &= ~row_bit[row];
 		_delay_us(1);
-		for(col=0; col<COLS; col++) {
+		for(col=0; col<COLS; col++) { // read columns
 			key_id = col*ROWS+row;
-			if(!(*col_pin[col] & col_bit[col])) {
+			if(!(*col_pin[col] & col_bit[col])) { // press key
  5e2:	d7 01       	movw	r26, r14
  5e4:	ed 91       	ld	r30, X+
  5e6:	fd 91       	ld	r31, X+
@@ -1019,7 +1008,7 @@ void poll() {
  608:	bd de       	rcall	.-646    	; 0x384 <key_press>
  60a:	08 c0       	rjmp	.+16     	; 0x61c <poll+0x88>
 				}
-			} else if(pressed[key_id]) {
+			} else if(pressed[key_id]) { // release key
  60c:	27 5f       	subi	r18, 0xF7	; 247
  60e:	3d 4f       	sbci	r19, 0xFD	; 253
  610:	d9 01       	movw	r26, r18
@@ -1033,17 +1022,17 @@ void poll() {
  61e:	8b 0e       	add	r8, r27
 void poll() {
 	uint8_t row, col, key_id;
-	for(row=0; row<ROWS; row++) {
+	for(row=0; row<ROWS; row++) { // scan rows
 		*row_port[row] &= ~row_bit[row];
 		_delay_us(1);
-		for(col=0; col<COLS; col++) {
+		for(col=0; col<COLS; col++) { // read columns
  620:	ed ed       	ldi	r30, 0xDD	; 221
  622:	ee 16       	cp	r14, r30
  624:	e1 e0       	ldi	r30, 0x01	; 1
  626:	fe 06       	cpc	r15, r30
  628:	e1 f6       	brne	.-72     	; 0x5e2 <poll+0x4e>
 				}
-			} else if(pressed[key_id]) {
+			} else if(pressed[key_id]) { // release key
 				key_release(key_id);
 			}
 		}
@@ -1063,7 +1052,7 @@ void poll() {
 
 void poll() {
 	uint8_t row, col, key_id;
-	for(row=0; row<ROWS; row++) {
+	for(row=0; row<ROWS; row++) { // scan rows
  63e:	93 94       	inc	r9
  640:	b9 2d       	mov	r27, r9
  642:	b5 30       	cpi	r27, 0x05	; 5

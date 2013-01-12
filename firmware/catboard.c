@@ -1,12 +1,12 @@
 /*
 * Project: CatBoard (http://ibnteo.klava.org/tag/catboard)
-* Version: 0.33 beta
+* Version: 0.34 beta
 * Date: 2013-01-12
 * Author: Vladimir Romanovich <ibnteo@gmail.com>
 * 
 * Based on: http://geekhack.org/index.php?topic=15542.0
 * 
-* Board: AVR-USB162 (http://microsin.ru/content/view/685/44/)
+* Board: AVR-USB162 (http://microsin.ru/content/view/685/44/) analogue Teensy
 */
 
 #include <avr/io.h>
@@ -39,8 +39,6 @@
 #define NA				0
 #define KEY_LAYER1		0xF1
 #define KEY_LAYER2		0xF2
-#define KEY_MULT1		0xFB
-#define KEY_MULT2		0xFC
 #define KEY_ALT_TAB		0xFD
 #define KEY_FN_LOCK		0xFE
 #define KEY_FN			0xFF
@@ -51,14 +49,23 @@
 #define KEY_PRESSED_MODS	2
 #define KEY_PRESSED_ALT		3
 
-/*#define KEY_MEDIA_VOLUME_INC	0xE9
-#define KEY_MEDIA_VOLUME_DEC	0xEA
-#define KEY_MEDIA_MUTE			0xE2
-#define KEY_MEDIA_PLAY_PAUSE	0xCD
-#define KEY_MEDIA_NEXT_TRACK	0xB5
-#define KEY_MEDIA_PREV_TRACK	0xB6
-#define KEY_MEDIA_STOP			0xB7
-#define KEY_MEDIA_EJECT			0xB8*/
+// 0 - shorcuts my layout; 1 - shorcuts qwerty layout
+#define KEY_SHORTCUTS_LAYER1	1
+
+// Nonstandart hardware layout
+#define KEY_LAYOUT_ALT_SHIFT	1
+#define KEY_LAYOUT_CTRL_SHIFT	2
+#define KEY_LAYOUT_GUI_SPACE	3
+
+#define KEY_LAYOUT		KEY_LAYOUT_ALT_SHIFT
+
+#include "jcuken.h"
+//#include "dvorak.h"
+
+// Start layout
+//uint8_t *layout = layer1;
+uint8_t *layout = layer2;
+
 
 // 0x00-0x7F - normal keys
 // 0x80-0xF0 - mod_keys + 0x80 (TODO: not KEY_RIGHT_GUI)
@@ -80,17 +87,6 @@ const uint8_t layer1[KEYS] = {
 	KEY_EQUAL,			KEY_LAYER2,			KEY_QUOTE,		KEY_LEFT_BRACE,	KEY_MINUS		// COL11
 };
 
-// 0 - shorcuts my layout; 1 - shorcuts qwerty layout
-#define KEY_SHORTCUTS_LAYER1	1
-
-// Nonstandart hardware layout
-#define KEY_LAYOUT_ALT_SHIFT	1
-#define KEY_LAYOUT_CTRL_SHIFT	2
-#define KEY_LAYOUT_GUI_SPACE	3
-#define KEY_LAYOUT				0
-
-#include "jcuken.h"
-//#include "dvorak.h"
 
 const uint8_t layer_fn[KEYS] = {
 	//ROW0				ROW1				ROW2			ROW3			ROW4
@@ -108,7 +104,6 @@ const uint8_t layer_fn[KEYS] = {
 	KEY_F12,			NULL,				NULL,			KEY_ESC,		KEY_F11			// COL11
 };
 
-uint8_t *layout = layer2;
 
 uint8_t *const	row_port[ROWS]	= { _PORTC,	_PORTC,	_PORTC,	_PORTC,	_PORTC};
 const uint8_t	row_bit[ROWS]	= { (1<<7),	(1<<6),	(1<<5),	(1<<4),	(1<<2)};
@@ -171,16 +166,16 @@ void init(void) {
 
 void poll() {
 	uint8_t row, col, key_id;
-	for(row=0; row<ROWS; row++) {
+	for(row=0; row<ROWS; row++) { // scan rows
 		*row_port[row] &= ~row_bit[row];
 		_delay_us(1);
-		for(col=0; col<COLS; col++) {
+		for(col=0; col<COLS; col++) { // read columns
 			key_id = col*ROWS+row;
-			if(!(*col_pin[col] & col_bit[col])) {
+			if(!(*col_pin[col] & col_bit[col])) { // press key
 				if(!pressed[key_id]) {
 					key_press(key_id);
 				}
-			} else if(pressed[key_id]) {
+			} else if(pressed[key_id]) { // release key
 				key_release(key_id);
 			}
 		}
@@ -228,7 +223,6 @@ void poll() {
 
 void key_press(uint8_t key_id) {
 	uint8_t i;
-	//pressed[key_id] = (pressed[FN_KEY_ID] ? 1 : -1);
 	uint8_t mods_pressed = (mod_keys & (KEY_CTRL|KEY_RIGHT_CTRL|KEY_ALT|KEY_RIGHT_ALT));
 	pressed[key_id] = (pressed[FN_KEY_ID] ? KEY_PRESSED_FN : (mods_pressed ? KEY_PRESSED_MODS : -1));
 	if(pressed[FN_KEY_ID] && layer_fn[key_id]>=0x80) {
@@ -247,12 +241,6 @@ void key_press(uint8_t key_id) {
 				}
 			}
 		} else { // Fn+Mod_keys
-			// TODO: not work KEY_RIGHT_GUI
-			//mod_keys |= ((layer_fn[key_id]!=0x80) ? (layer_fn[key_id] & 0x7F) : layer_fn[key_id]);
-			/*if (layer_fn[key_id]==(KEY_CTRL+KEY_MOD) && (mod_keys & KEY_CTRL)) { // Fn+KEY_CTRL press
-				pressed[key_id] = 2;
-				mod_keys |= KEY_SHIFT;
-			}*/
 			mod_keys |= (layer_fn[key_id] & 0x7F);
 			send();
 		}
@@ -274,10 +262,6 @@ void key_press(uint8_t key_id) {
 			usb_keyboard_send();
 			_delay_ms(50);
 			send();
-		/*} else if (layout[key_id]==KEY_MULT1) { // ups :(
-			usb_keyboard_press(KEY_MEDIA_VOLUME_INC, mod_keys);
-		} else if (layout[key_id]==KEY_MULT2) {
-			usb_keyboard_press(KEY_MEDIA_VOLUME_DEC, mod_keys);*/
 		} else if (layer_fn[key_id]==KEY_FN_LOCK) { // Fn + FnLock
 			if (prev_layer) { // FnLock Off
 				layout = prev_layer;
@@ -290,7 +274,6 @@ void key_press(uint8_t key_id) {
 			}
 		}
 	} else if(((! pressed[FN_KEY_ID]) || layout==layer_fn) && layout[key_id]>=0x80) { // Mod keys
-		//mod_keys |= ((layer_fn[key_id]!=0x80) ? (layer_fn[key_id] & 0x7F) : layer_fn[key_id]);
 		mod_keys |= (layout[key_id] & 0x7F);
 		send();
 	} else {
@@ -316,7 +299,6 @@ void key_release(uint8_t key_id) {
 	int8_t pressed_key_id = pressed[key_id];
 	pressed[key_id] = 0;
 	if(pressed_key_id==1 && layer_fn[key_id]>=0x80) { // Fn+Mod_keys release
-		//mod_keys &= ~((layer_fn[key_id]!=0x80) ? (layer_fn[key_id] & 0x7F) : layer_fn[key_id]);
 		mod_keys &= ~(layer_fn[key_id] & 0x7F);
 		send();
 	} else if((pressed_key_id!=KEY_PRESSED_FN || layout==layer_fn) && layout[key_id]>0xF0) { // Catboard keys release
@@ -324,12 +306,7 @@ void key_release(uint8_t key_id) {
 			mod_keys &= ~(KEY_ALT);
 			send();
 		}
-	/*} else if(pressed_key_id==2 && layer_fn[key_id]==(KEY_CTRL+KEY_MOD)) { // Fn+KEY_CTRL release
-		//mod_keys &= ~((layer_fn[key_id]!=0x80) ? (layer_fn[key_id] & 0x7F) : layer_fn[key_id]);
-		mod_keys &= ~(KEY_SHIFT);
-		send();*/
 	} else if((pressed_key_id!=KEY_PRESSED_FN || layout==layer_fn) && layout[key_id]>=0x80) { // Mod_keys release
-		//mod_keys &= ~((layout[key_id]!=0x80) ? (layout[key_id] & 0x7F) : layout[key_id]);
 		mod_keys &= ~(layout[key_id] & 0x7F);
 		send();
 	} else {

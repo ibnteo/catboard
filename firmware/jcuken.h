@@ -1,5 +1,3 @@
-#define KEY_LAYOUT		KEY_LAYOUT_ALT_SHIFT
-
 const uint8_t layer2[KEYS] = {
 	//ROW0				ROW1				ROW2			ROW3			ROW4
 	KEY_ESC,			KEY_LAYER1,			KEY_BACKSPACE,	KEY_TAB,		KEY_TILDE,		// COL0

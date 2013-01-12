@@ -300,10 +300,10 @@ LOAD /usr/lib/gcc/avr/4.5.3/avr35/libgcc.a
                 0x00800100                PROVIDE (__data_start, .)
  *(.data)
  .data          0x00800100       0xf0 catboard.o
-                0x00800100                layer1
-                0x0080013c                layer2
-                0x00800178                layer_fn
-                0x008001b4                layout
+                0x00800100                layer2
+                0x0080013c                layout
+                0x0080013e                layer1
+                0x0080017a                layer_fn
                 0x008001b6                row_port
                 0x008001c0                row_bit
                 0x008001c5                col_pin
@@ -414,10 +414,10 @@ LOAD /usr/lib/gcc/avr/4.5.3/avr35/libgcc.a
  .debug_pubnames
                 0x00000151       0xbe usb_keyboard.o
 
-.debug_info     0x00000000      0xef8
+.debug_info     0x00000000      0xef6
  *(.debug_info)
- .debug_info    0x00000000      0x7f4 catboard.o
- .debug_info    0x000007f4      0x704 usb_keyboard.o
+ .debug_info    0x00000000      0x7f2 catboard.o
+ .debug_info    0x000007f2      0x704 usb_keyboard.o
  *(.gnu.linkonce.wi.*)
 
 .debug_abbrev   0x00000000      0x445
@@ -425,10 +425,10 @@ LOAD /usr/lib/gcc/avr/4.5.3/avr35/libgcc.a
  .debug_abbrev  0x00000000      0x270 catboard.o
  .debug_abbrev  0x00000270      0x1d5 usb_keyboard.o
 
-.debug_line     0x00000000      0xe48
+.debug_line     0x00000000      0xe46
  *(.debug_line)
- .debug_line    0x00000000      0x73c catboard.o
- .debug_line    0x0000073c      0x70c usb_keyboard.o
+ .debug_line    0x00000000      0x73a catboard.o
+ .debug_line    0x0000073a      0x70c usb_keyboard.o
 
 .debug_frame    0x00000000      0x110
  *(.debug_frame)

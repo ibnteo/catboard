@@ -1055,7 +1055,7 @@
  1077               	.LSM174:
  1078 0006 88E1      		ldi r24,lo8(24)
  1079               	/* #APP */
- 1080               	 ;  139 "catboard.c" 1
+ 1080               	 ;  134 "catboard.c" 1
  1081 0008 0FB6      		in __tmp_reg__, __SREG__
  1082 000a F894      		cli
  1083 000c 8093 6000 		sts 96, r24
@@ -1088,196 +1088,196 @@
  1110 002c 0E94 0000 		call poll
  1111 0030 00C0      		rjmp .L87
  1112               	.LFE7:
- 1114               	.global	layer1
+ 1114               	.global	layer2
  1115               		.data
- 1118               	layer1:
+ 1118               	layer2:
  1119 0000 29        		.byte	41
  1120 0001 F1        		.byte	-15
  1121 0002 2A        		.byte	42
  1122 0003 2B        		.byte	43
  1123 0004 35        		.byte	53
  1124 0005 FD        		.byte	-3
- 1125 0006 1D        		.byte	29
- 1126 0007 04        		.byte	4
- 1127 0008 14        		.byte	20
+ 1125 0006 14        		.byte	20
+ 1126 0007 09        		.byte	9
+ 1127 0008 0D        		.byte	13
  1128 0009 1E        		.byte	30
  1129 000a 28        		.byte	40
- 1130 000b 1B        		.byte	27
- 1131 000c 16        		.byte	22
- 1132 000d 1A        		.byte	26
+ 1130 000b 38        		.byte	56
+ 1131 000c 1C        		.byte	28
+ 1132 000d 06        		.byte	6
  1133 000e 1F        		.byte	31
  1134 000f 84        		.byte	-124
- 1135 0010 06        		.byte	6
- 1136 0011 07        		.byte	7
- 1137 0012 08        		.byte	8
+ 1135 0010 16        		.byte	22
+ 1136 0011 19        		.byte	25
+ 1137 0012 18        		.byte	24
  1138 0013 20        		.byte	32
  1139 0014 81        		.byte	-127
- 1140 0015 19        		.byte	25
- 1141 0016 09        		.byte	9
- 1142 0017 15        		.byte	21
+ 1140 0015 10        		.byte	16
+ 1141 0016 04        		.byte	4
+ 1142 0017 0E        		.byte	14
  1143 0018 21        		.byte	33
  1144 0019 82        		.byte	-126
- 1145 001a 05        		.byte	5
- 1146 001b 0A        		.byte	10
- 1147 001c 17        		.byte	23
+ 1145 001a 0C        		.byte	12
+ 1146 001b 13        		.byte	19
+ 1147 001c 08        		.byte	8
  1148 001d 22        		.byte	34
  1149 001e 2C        		.byte	44
- 1150 001f 11        		.byte	17
- 1151 0020 0B        		.byte	11
- 1152 0021 1C        		.byte	28
+ 1150 001f 17        		.byte	23
+ 1151 0020 15        		.byte	21
+ 1152 0021 11        		.byte	17
  1153 0022 23        		.byte	35
  1154 0023 FF        		.byte	-1
- 1155 0024 10        		.byte	16
- 1156 0025 0D        		.byte	13
- 1157 0026 18        		.byte	24
+ 1155 0024 1B        		.byte	27
+ 1156 0025 12        		.byte	18
+ 1157 0026 0A        		.byte	10
  1158 0027 24        		.byte	36
  1159 0028 C0        		.byte	-64
- 1160 0029 36        		.byte	54
- 1161 002a 0E        		.byte	14
- 1162 002b 0C        		.byte	12
+ 1160 0029 05        		.byte	5
+ 1161 002a 0F        		.byte	15
+ 1162 002b 0B        		.byte	11
  1163 002c 25        		.byte	37
  1164 002d 31        		.byte	49
- 1165 002e 37        		.byte	55
- 1166 002f 0F        		.byte	15
- 1167 0030 12        		.byte	18
+ 1165 002e 36        		.byte	54
+ 1166 002f 07        		.byte	7
+ 1167 0030 1A        		.byte	26
  1168 0031 26        		.byte	38
  1169 0032 30        		.byte	48
- 1170 0033 38        		.byte	56
+ 1170 0033 37        		.byte	55
  1171 0034 33        		.byte	51
- 1172 0035 13        		.byte	19
+ 1172 0035 1D        		.byte	29
  1173 0036 27        		.byte	39
  1174 0037 2E        		.byte	46
  1175 0038 F2        		.byte	-14
  1176 0039 34        		.byte	52
  1177 003a 2F        		.byte	47
  1178 003b 2D        		.byte	45
- 1179               	.global	layer2
- 1182               	layer2:
- 1183 003c 29        		.byte	41
- 1184 003d F1        		.byte	-15
- 1185 003e 2A        		.byte	42
- 1186 003f 2B        		.byte	43
- 1187 0040 35        		.byte	53
- 1188 0041 FD        		.byte	-3
- 1189 0042 14        		.byte	20
- 1190 0043 09        		.byte	9
- 1191 0044 0D        		.byte	13
- 1192 0045 1E        		.byte	30
- 1193 0046 28        		.byte	40
- 1194 0047 38        		.byte	56
- 1195 0048 1C        		.byte	28
- 1196 0049 06        		.byte	6
- 1197 004a 1F        		.byte	31
- 1198 004b 84        		.byte	-124
- 1199 004c 16        		.byte	22
- 1200 004d 19        		.byte	25
- 1201 004e 18        		.byte	24
- 1202 004f 20        		.byte	32
- 1203 0050 81        		.byte	-127
- 1204 0051 10        		.byte	16
- 1205 0052 04        		.byte	4
- 1206 0053 0E        		.byte	14
- 1207 0054 21        		.byte	33
- 1208 0055 82        		.byte	-126
- 1209 0056 0C        		.byte	12
- 1210 0057 13        		.byte	19
- 1211 0058 08        		.byte	8
- 1212 0059 22        		.byte	34
- 1213 005a 2C        		.byte	44
- 1214 005b 17        		.byte	23
- 1215 005c 15        		.byte	21
- 1216 005d 11        		.byte	17
- 1217 005e 23        		.byte	35
- 1218 005f FF        		.byte	-1
- 1219 0060 1B        		.byte	27
- 1220 0061 12        		.byte	18
- 1221 0062 0A        		.byte	10
- 1222 0063 24        		.byte	36
- 1223 0064 C0        		.byte	-64
- 1224 0065 05        		.byte	5
- 1225 0066 0F        		.byte	15
- 1226 0067 0B        		.byte	11
- 1227 0068 25        		.byte	37
- 1228 0069 31        		.byte	49
- 1229 006a 36        		.byte	54
- 1230 006b 07        		.byte	7
- 1231 006c 1A        		.byte	26
- 1232 006d 26        		.byte	38
- 1233 006e 30        		.byte	48
- 1234 006f 37        		.byte	55
- 1235 0070 33        		.byte	51
- 1236 0071 1D        		.byte	29
- 1237 0072 27        		.byte	39
- 1238 0073 2E        		.byte	46
- 1239 0074 F2        		.byte	-14
- 1240 0075 34        		.byte	52
- 1241 0076 2F        		.byte	47
- 1242 0077 2D        		.byte	45
- 1243               	.global	layer_fn
- 1246               	layer_fn:
- 1247 0078 29        		.byte	41
- 1248 0079 00        		.byte	0
- 1249 007a 2A        		.byte	42
- 1250 007b 2B        		.byte	43
- 1251 007c 46        		.byte	70
- 1252 007d 53        		.byte	83
- 1253 007e 62        		.byte	98
- 1254 007f 55        		.byte	85
- 1255 0080 54        		.byte	84
- 1256 0081 3A        		.byte	58
- 1257 0082 28        		.byte	40
- 1258 0083 59        		.byte	89
- 1259 0084 5C        		.byte	92
- 1260 0085 5F        		.byte	95
- 1261 0086 3B        		.byte	59
- 1262 0087 84        		.byte	-124
- 1263 0088 5A        		.byte	90
- 1264 0089 5D        		.byte	93
- 1265 008a 60        		.byte	96
- 1266 008b 3C        		.byte	60
- 1267 008c 81        		.byte	-127
- 1268 008d 5B        		.byte	91
- 1269 008e 5E        		.byte	94
- 1270 008f 61        		.byte	97
- 1271 0090 3D        		.byte	61
- 1272 0091 82        		.byte	-126
- 1273 0092 63        		.byte	99
- 1274 0093 57        		.byte	87
- 1275 0094 56        		.byte	86
- 1276 0095 3E        		.byte	62
- 1277 0096 2C        		.byte	44
- 1278 0097 2A        		.byte	42
- 1279 0098 28        		.byte	40
- 1280 0099 FD        		.byte	-3
- 1281 009a 3F        		.byte	63
- 1282 009b FF        		.byte	-1
- 1283 009c 4C        		.byte	76
- 1284 009d 50        		.byte	80
- 1285 009e 4A        		.byte	74
- 1286 009f 40        		.byte	64
- 1287 00a0 FE        		.byte	-2
- 1288 00a1 49        		.byte	73
- 1289 00a2 51        		.byte	81
- 1290 00a3 52        		.byte	82
- 1291 00a4 41        		.byte	65
- 1292 00a5 00        		.byte	0
- 1293 00a6 00        		.byte	0
- 1294 00a7 4F        		.byte	79
- 1295 00a8 4D        		.byte	77
- 1296 00a9 42        		.byte	66
- 1297 00aa 00        		.byte	0
- 1298 00ab 00        		.byte	0
- 1299 00ac 4E        		.byte	78
- 1300 00ad 4B        		.byte	75
- 1301 00ae 43        		.byte	67
- 1302 00af 45        		.byte	69
- 1303 00b0 00        		.byte	0
- 1304 00b1 00        		.byte	0
- 1305 00b2 29        		.byte	41
- 1306 00b3 44        		.byte	68
- 1307               	.global	layout
- 1310               	layout:
- 1311 00b4 0000      		.word	layer2
+ 1179               	.global	layout
+ 1182               	layout:
+ 1183 003c 0000      		.word	layer2
+ 1184               	.global	layer1
+ 1187               	layer1:
+ 1188 003e 29        		.byte	41
+ 1189 003f F1        		.byte	-15
+ 1190 0040 2A        		.byte	42
+ 1191 0041 2B        		.byte	43
+ 1192 0042 35        		.byte	53
+ 1193 0043 FD        		.byte	-3
+ 1194 0044 1D        		.byte	29
+ 1195 0045 04        		.byte	4
+ 1196 0046 14        		.byte	20
+ 1197 0047 1E        		.byte	30
+ 1198 0048 28        		.byte	40
+ 1199 0049 1B        		.byte	27
+ 1200 004a 16        		.byte	22
+ 1201 004b 1A        		.byte	26
+ 1202 004c 1F        		.byte	31
+ 1203 004d 84        		.byte	-124
+ 1204 004e 06        		.byte	6
+ 1205 004f 07        		.byte	7
+ 1206 0050 08        		.byte	8
+ 1207 0051 20        		.byte	32
+ 1208 0052 81        		.byte	-127
+ 1209 0053 19        		.byte	25
+ 1210 0054 09        		.byte	9
+ 1211 0055 15        		.byte	21
+ 1212 0056 21        		.byte	33
+ 1213 0057 82        		.byte	-126
+ 1214 0058 05        		.byte	5
+ 1215 0059 0A        		.byte	10
+ 1216 005a 17        		.byte	23
+ 1217 005b 22        		.byte	34
+ 1218 005c 2C        		.byte	44
+ 1219 005d 11        		.byte	17
+ 1220 005e 0B        		.byte	11
+ 1221 005f 1C        		.byte	28
+ 1222 0060 23        		.byte	35
+ 1223 0061 FF        		.byte	-1
+ 1224 0062 10        		.byte	16
+ 1225 0063 0D        		.byte	13
+ 1226 0064 18        		.byte	24
+ 1227 0065 24        		.byte	36
+ 1228 0066 C0        		.byte	-64
+ 1229 0067 36        		.byte	54
+ 1230 0068 0E        		.byte	14
+ 1231 0069 0C        		.byte	12
+ 1232 006a 25        		.byte	37
+ 1233 006b 31        		.byte	49
+ 1234 006c 37        		.byte	55
+ 1235 006d 0F        		.byte	15
+ 1236 006e 12        		.byte	18
+ 1237 006f 26        		.byte	38
+ 1238 0070 30        		.byte	48
+ 1239 0071 38        		.byte	56
+ 1240 0072 33        		.byte	51
+ 1241 0073 13        		.byte	19
+ 1242 0074 27        		.byte	39
+ 1243 0075 2E        		.byte	46
+ 1244 0076 F2        		.byte	-14
+ 1245 0077 34        		.byte	52
+ 1246 0078 2F        		.byte	47
+ 1247 0079 2D        		.byte	45
+ 1248               	.global	layer_fn
+ 1251               	layer_fn:
+ 1252 007a 29        		.byte	41
+ 1253 007b 00        		.byte	0
+ 1254 007c 2A        		.byte	42
+ 1255 007d 2B        		.byte	43
+ 1256 007e 46        		.byte	70
+ 1257 007f 53        		.byte	83
+ 1258 0080 62        		.byte	98
+ 1259 0081 55        		.byte	85
+ 1260 0082 54        		.byte	84
+ 1261 0083 3A        		.byte	58
+ 1262 0084 28        		.byte	40
+ 1263 0085 59        		.byte	89
+ 1264 0086 5C        		.byte	92
+ 1265 0087 5F        		.byte	95
+ 1266 0088 3B        		.byte	59
+ 1267 0089 84        		.byte	-124
+ 1268 008a 5A        		.byte	90
+ 1269 008b 5D        		.byte	93
+ 1270 008c 60        		.byte	96
+ 1271 008d 3C        		.byte	60
+ 1272 008e 81        		.byte	-127
+ 1273 008f 5B        		.byte	91
+ 1274 0090 5E        		.byte	94
+ 1275 0091 61        		.byte	97
+ 1276 0092 3D        		.byte	61
+ 1277 0093 82        		.byte	-126
+ 1278 0094 63        		.byte	99
+ 1279 0095 57        		.byte	87
+ 1280 0096 56        		.byte	86
+ 1281 0097 3E        		.byte	62
+ 1282 0098 2C        		.byte	44
+ 1283 0099 2A        		.byte	42
+ 1284 009a 28        		.byte	40
+ 1285 009b FD        		.byte	-3
+ 1286 009c 3F        		.byte	63
+ 1287 009d FF        		.byte	-1
+ 1288 009e 4C        		.byte	76
+ 1289 009f 50        		.byte	80
+ 1290 00a0 4A        		.byte	74
+ 1291 00a1 40        		.byte	64
+ 1292 00a2 FE        		.byte	-2
+ 1293 00a3 49        		.byte	73
+ 1294 00a4 51        		.byte	81
+ 1295 00a5 52        		.byte	82
+ 1296 00a6 41        		.byte	65
+ 1297 00a7 00        		.byte	0
+ 1298 00a8 00        		.byte	0
+ 1299 00a9 4F        		.byte	79
+ 1300 00aa 4D        		.byte	77
+ 1301 00ab 42        		.byte	66
+ 1302 00ac 00        		.byte	0
+ 1303 00ad 00        		.byte	0
+ 1304 00ae 4E        		.byte	78
+ 1305 00af 4B        		.byte	75
+ 1306 00b0 43        		.byte	67
+ 1307 00b1 45        		.byte	69
+ 1308 00b2 00        		.byte	0
+ 1309 00b3 00        		.byte	0
+ 1310 00b4 29        		.byte	41
+ 1311 00b5 44        		.byte	68
  1312               	.global	row_port
  1315               	row_port:
  1316 00b6 2800      		.word	40
@@ -1362,37 +1362,37 @@
  1497               	.Letext0:
 DEFINED SYMBOLS
                             *ABS*:00000000 catboard.c
-     /tmp/cckD8yNg.s:2      *ABS*:0000003f __SREG__
-     /tmp/cckD8yNg.s:3      *ABS*:0000003e __SP_H__
-     /tmp/cckD8yNg.s:4      *ABS*:0000003d __SP_L__
-     /tmp/cckD8yNg.s:5      *ABS*:00000034 __CCP__
-     /tmp/cckD8yNg.s:6      *ABS*:00000000 __tmp_reg__
-     /tmp/cckD8yNg.s:7      *ABS*:00000001 __zero_reg__
-     /tmp/cckD8yNg.s:19     .text.change_layout:00000000 change_layout
-     /tmp/cckD8yNg.s:60     .text.init:00000000 init
+     /tmp/ccaP8Bzb.s:2      *ABS*:0000003f __SREG__
+     /tmp/ccaP8Bzb.s:3      *ABS*:0000003e __SP_H__
+     /tmp/ccaP8Bzb.s:4      *ABS*:0000003d __SP_L__
+     /tmp/ccaP8Bzb.s:5      *ABS*:00000034 __CCP__
+     /tmp/ccaP8Bzb.s:6      *ABS*:00000000 __tmp_reg__
+     /tmp/ccaP8Bzb.s:7      *ABS*:00000001 __zero_reg__
+     /tmp/ccaP8Bzb.s:19     .text.change_layout:00000000 change_layout
+     /tmp/ccaP8Bzb.s:60     .text.init:00000000 init
                             *COM*:0000003c pressed
-     /tmp/cckD8yNg.s:135    .text.get_code:00000000 get_code
-     /tmp/cckD8yNg.s:1246   .data:00000078 layer_fn
-     /tmp/cckD8yNg.s:1310   .data:000000b4 layout
-     /tmp/cckD8yNg.s:1118   .data:00000000 layer1
-     /tmp/cckD8yNg.s:208    .text.send:00000000 send
-     /tmp/cckD8yNg.s:1365   .data:000000e9 queue
-     /tmp/cckD8yNg.s:1378   .bss:00000000 mod_keys
-     /tmp/cckD8yNg.s:255    .text.key_release:00000000 key_release
-     /tmp/cckD8yNg.s:1390   .bss:00000003 last_key
-     /tmp/cckD8yNg.s:1402   .bss:00000006 press_time2
-     /tmp/cckD8yNg.s:1408   .bss:00000008 release_time
-     /tmp/cckD8yNg.s:1396   .bss:00000004 press_time
-     /tmp/cckD8yNg.s:1414   .bss:0000000a repeat_time
-     /tmp/cckD8yNg.s:439    .text.key_press:00000000 key_press
-     /tmp/cckD8yNg.s:1384   .bss:00000001 prev_layer
-     /tmp/cckD8yNg.s:1182   .data:0000003c layer2
-     /tmp/cckD8yNg.s:775    .text.poll:00000000 poll
-     /tmp/cckD8yNg.s:1315   .data:000000b6 row_port
-     /tmp/cckD8yNg.s:1324   .data:000000c0 row_bit
-     /tmp/cckD8yNg.s:1333   .data:000000c5 col_pin
-     /tmp/cckD8yNg.s:1349   .data:000000dd col_bit
-     /tmp/cckD8yNg.s:1066   .text.main:00000000 main
+     /tmp/ccaP8Bzb.s:135    .text.get_code:00000000 get_code
+     /tmp/ccaP8Bzb.s:1251   .data:0000007a layer_fn
+     /tmp/ccaP8Bzb.s:1182   .data:0000003c layout
+     /tmp/ccaP8Bzb.s:1187   .data:0000003e layer1
+     /tmp/ccaP8Bzb.s:208    .text.send:00000000 send
+     /tmp/ccaP8Bzb.s:1365   .data:000000e9 queue
+     /tmp/ccaP8Bzb.s:1378   .bss:00000000 mod_keys
+     /tmp/ccaP8Bzb.s:255    .text.key_release:00000000 key_release
+     /tmp/ccaP8Bzb.s:1390   .bss:00000003 last_key
+     /tmp/ccaP8Bzb.s:1402   .bss:00000006 press_time2
+     /tmp/ccaP8Bzb.s:1408   .bss:00000008 release_time
+     /tmp/ccaP8Bzb.s:1396   .bss:00000004 press_time
+     /tmp/ccaP8Bzb.s:1414   .bss:0000000a repeat_time
+     /tmp/ccaP8Bzb.s:439    .text.key_press:00000000 key_press
+     /tmp/ccaP8Bzb.s:1384   .bss:00000001 prev_layer
+     /tmp/ccaP8Bzb.s:1118   .data:00000000 layer2
+     /tmp/ccaP8Bzb.s:775    .text.poll:00000000 poll
+     /tmp/ccaP8Bzb.s:1315   .data:000000b6 row_port
+     /tmp/ccaP8Bzb.s:1324   .data:000000c0 row_bit
+     /tmp/ccaP8Bzb.s:1333   .data:000000c5 col_pin
+     /tmp/ccaP8Bzb.s:1349   .data:000000dd col_bit
+     /tmp/ccaP8Bzb.s:1066   .text.main:00000000 main
 
 UNDEFINED SYMBOLS
 keyboard_modifier_keys

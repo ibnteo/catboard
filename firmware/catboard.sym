@@ -82,10 +82,10 @@
 00000c1a T _etext
 00000d0c A __data_load_end
 00800100 D __data_start
-00800100 D layer1
-0080013c D layer2
-00800178 D layer_fn
-008001b4 D layout
+00800100 D layer2
+0080013c D layout
+0080013e D layer1
+0080017a D layer_fn
 008001b6 D row_port
 008001c0 D row_bit
 008001c5 D col_pin
