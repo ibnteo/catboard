@@ -455,6 +455,7 @@ program: $(TARGET).hex $(TARGET).eep
 
 # Program the device.  
 flash: $(TARGET).hex
+	sleep 3
 	$(DFU) $(MCU) erase
 	$(DFU) $(MCU) flash $(TAGRET).hex
 	$(DFU) $(MCU) start
