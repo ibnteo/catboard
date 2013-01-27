@@ -1,7 +1,7 @@
 /*
 * Project: CatBoard (http://ibnteo.klava.org/tag/catboard)
-* Version: 0.5 beta
-* Date: 2013-01-20
+* Version: 0.6 beta
+* Date: 2013-01-27
 * Author: Vladimir Romanovich <ibnteo@gmail.com>
 * License: GPL2
 * 
@@ -46,10 +46,13 @@
 #define KEY_FN				0xFF
 #define FN_KEY_ID			7*5
 #define KEY_MOD				0x80
+#define KEY_NULL			0
 
 #define KEY_PRESSED_FN		1
 #define KEY_PRESSED_MODS	2
 #define KEY_PRESSED_ALT		3
+#define KEY_PRESSED_SHIFT	4
+#define KEY_PRESSED_PREV	5
 
 // 0 - shorcuts my layout; 1 - shorcuts qwerty layout
 #define KEY_SHORTCUTS_LAYER1	1
@@ -73,7 +76,7 @@ uint8_t *layout = layer2;
 uint8_t mac_mode = 0;
 
 // 0x00-0x7F - normal keys
-// 0x80-0xF0 - mod_keys + 0x80 (TODO: not KEY_RIGHT_GUI)
+// 0x80-0xF0 - mod_keys | 0x80
 // 0xF1-0xFF - catboard keys
 
 const uint8_t layer1[KEYS] = {
@@ -95,18 +98,34 @@ const uint8_t layer1[KEYS] = {
 
 const uint8_t layer_fn[KEYS] = {
 	//ROW0				ROW1				ROW2			ROW3			ROW4
-	KEY_ESC,			KEY_LAYER1,		NULL,			KEY_TAB,		KEY_PRINTSCREEN,// COL0
-	KEY_NUM_LOCK,		KEYPAD_0,			KEYPAD_ASTERIX,	KEYPAD_SLASH,	KEY_F1,			// COL1
-	KEY_BACKSPACE,		KEYPAD_1,			KEYPAD_4,		KEYPAD_7,		KEY_F2,			// COL2
-	KEY_ALT|KEY_MOD,	KEYPAD_2,			KEYPAD_5,		KEYPAD_8,		KEY_F3,			// COL3
-	KEY_CTRL|KEY_MOD,	KEYPAD_3,			KEYPAD_6,		KEYPAD_9,		KEY_F4,			// COL4
-	KEY_SHIFT|KEY_MOD,	KEYPAD_PERIOD,		KEYPAD_PLUS,	KEY_TILDE,		KEY_F5,			// COL5
-	KEY_MAC_MODE,		KEY_BACKSPACE,		KEY_ENTER,		KEY_ALT_TAB,	KEY_F6,			// COL6 
+	KEY_ESC,			KEY_SHIFT|KEY_MOD,	NULL,			KEY_TAB,		KEY_PRINTSCREEN,// COL0
+	KEY_ALT_TAB,		NULL,				NULL,			NULL,			KEY_F1,			// COL1
+	KEY_BACKSPACE,		NULL,				NULL,			NULL,			KEY_F2,			// COL2
+	KEY_ALT|KEY_MOD,	NULL,				NULL,			NULL,			KEY_F3,			// COL3
+	KEY_CTRL|KEY_MOD,	NULL,				NULL,			NULL,			KEY_F4,			// COL4
+	KEY_SHIFT|KEY_MOD,	NULL,				NULL,			KEY_TILDE,		KEY_F5,			// COL5
+	KEY_MAC_MODE,		KEY_BACKSPACE,		KEY_ENTER,		KEY_ENTER,		KEY_F6,			// COL6 
 	KEY_FN,				KEY_DELETE,			KEY_LEFT,		KEY_HOME,		KEY_F7,			// COL7
 	KEY_FN_LOCK,		KEY_INSERT,			KEY_DOWN,		KEY_UP,			KEY_F8,			// COL8
 	KEY_ENTER,			NULL,				KEY_RIGHT,		KEY_END,		KEY_F9,			// COL9
-	NULL,				NULL,				KEY_PAGE_DOWN,	KEY_PAGE_UP,	KEY_F10,		// COL10
-	KEY_F12,			KEY_LAYER2,			NULL,			KEY_ESC,		KEY_F11			// COL11
+	KEY_SCROLL_LOCK,	NULL,				KEY_PAGE_DOWN,	KEY_PAGE_UP,	KEY_F10,		// COL10
+	KEY_F12,			KEY_RIGHT_SHIFT|KEY_MOD,KEY_PAUSE,	KEY_ESC,		KEY_F11			// COL11
+};
+
+const uint8_t layer_fnlock[KEYS] = {
+	//ROW0				ROW1				ROW2			ROW3			ROW4
+	KEY_ESC,			KEY_SHIFT|KEY_MOD,	KEY_ENTER,		KEY_TAB,		KEY_TILDE,		// COL0
+	KEY_ALT_TAB,		NULL,				KEY_PAGE_DOWN,	KEY_PAGE_UP,	KEY_1,			// COL1
+	KEY_BACKSPACE,		NULL,				KEY_LEFT,		KEY_HOME,		KEY_2,			// COL2
+	KEY_ALT|KEY_MOD,	NULL,				KEY_DOWN,		KEY_UP,			KEY_3,			// COL3
+	KEY_CTRL|KEY_MOD,	NULL,				KEY_RIGHT,		KEY_END,		KEY_4,			// COL4
+	KEY_SPACE,			NULL,				KEY_ENTER,		KEY_TILDE,		KEY_5,			// COL5
+	KEY_SPACE,			KEYPAD_0,			KEYPAD_ASTERIX,	KEYPAD_SLASH,	KEY_6,			// COL6 
+	KEY_FN,				KEYPAD_1,			KEYPAD_4,		KEYPAD_7,		KEY_7,			// COL7
+	KEY_RIGHT_ALT|KEY_MOD,KEYPAD_2,			KEYPAD_5,		KEYPAD_8,		KEY_8,			// COL8
+	KEY_ENTER,			KEYPAD_3,			KEYPAD_6,		KEYPAD_9,		KEY_9,			// COL9
+	KEY_NUM_LOCK,		KEYPAD_PERIOD,		KEYPAD_PLUS,	KEYPAD_MINUS,	KEY_0,			// COL10
+	KEY_EQUAL,			KEY_RIGHT_SHIFT|KEY_MOD,KEY_ENTER,	KEY_ESC,		KEY_MINUS		// COL11
 };
 
 // Pins keyboard matrix (have to properly initialize ports)
@@ -143,7 +162,7 @@ int main(void) {
 	clock_prescale_set(clock_div_1);
 
 	init();
-	for(;;) {
+	for (;;) {
 		poll();
 	}
 }
@@ -159,7 +178,7 @@ void init(void) {
 	LED_CONFIG;
 	LED_ON;
 
-	for(uint8_t i=0; i<KEYS; i++) {
+	for (uint8_t i=0; i<KEYS; i++) {
 		pressed[i] = 0;
 	}
 
@@ -188,7 +207,7 @@ void poll() {
 		}
 		*row_port[row] |= row_bit[row];
 	}
-	repeat_tick();
+	if (layout!=layer_fnlock || pressed[FN_KEY_ID]) repeat_tick();
 	_delay_ms(5);
 }
 
@@ -237,13 +256,21 @@ void key_press(uint8_t key_id) {
 	pressed[key_id] = (pressed[FN_KEY_ID] ? KEY_PRESSED_FN : (mods_pressed ? KEY_PRESSED_MODS : -1));
 	
 	uint8_t key_code = ((pressed[key_id]==KEY_PRESSED_FN) ? layer_fn[key_id] : layout[key_id]);
+	if (key_code==NULL) {
+		key_code = layout[key_id];
+		pressed[key_id] = (mods_pressed ? KEY_PRESSED_MODS : -1);
+		if (key_code==NULL && prev_layer && ! mod_keys) {
+			key_code = prev_layer[key_id];
+			pressed[key_id] = KEY_PRESSED_PREV;
+		}
+	}
 	
 	if (key_code>0xF0) { // Catboard keys
 		if (key_code==KEY_ALT_TAB) { // AltTab press
 			if (pressed[key_id]==KEY_PRESSED_FN) { // Fn + AltTab
 				usb_keyboard_press(KEY_TAB, KEY_ALT);
 			} else { // Alt press, Tab press and release
-				if (! (mod_keys & (KEY_ALT|KEY_RIGHT_ALT))) {
+				if (! (mod_keys & (KEY_ALT|KEY_RIGHT_ALT|KEY_CTRL|KEY_RIGHT_CTRL|KEY_GUI|KEY_RIGHT_GUI))) {
 					mod_keys |= (KEY_ALT);
 				} else {
 					pressed[key_id] = KEY_PRESSED_ALT;
@@ -258,22 +285,33 @@ void key_press(uint8_t key_id) {
 			if (prev_layer) { // FnLock Off
 				layout = prev_layer;
 				prev_layer = 0;
-				LED_OFF;
 			} else { // FnLock On
 				prev_layer = layout;
-				layout = layer_fn;
-				LED_ON;
+				layout = layer_fnlock;
 			}
-		} else if (key_code==KEY_MAC_MODE) { // Mac mode
-			mac_mode = ! mac_mode;
-			if (mac_mode) {
+			if (prev_layer || mac_mode) {
 				LED_ON;
 			} else {
 				LED_OFF;
 			}
+		} else if (key_code==KEY_MAC_MODE) { // Mac mode
+			if (pressed[key_id]==KEY_PRESSED_FN) {
+				mac_mode = ! mac_mode;
+				if (mac_mode || prev_layer) {
+					LED_ON;
+				} else {
+					LED_OFF;
+				}
+			} else { // TODO: Exclusion, press Space
+				usb_keyboard_press(KEY_SPACE, mod_keys);
+			}
+		} else if ((key_code==KEY_LAYER1 || key_code==KEY_LAYER2) && (mod_keys & (KEY_ALT|KEY_RIGHT_ALT|KEY_CTRL|KEY_RIGHT_CTRL|KEY_GUI|KEY_RIGHT_GUI))) { // Mods + Layer = Shift
+			pressed[key_id] = KEY_PRESSED_SHIFT;
+			mod_keys |= KEY_SHIFT;
+			send();
 		} else if (key_code==KEY_LAYER1) { // KEY_LAYOUT1
 			if (layout!=layer1) {
-				if (layout == layer_fn) {
+				if (layout==layer_fn) {
 					prev_layer = layer1;
 				} else {
 					layout = layer1;
@@ -282,7 +320,7 @@ void key_press(uint8_t key_id) {
 			}
 		} else if (key_code==KEY_LAYER2) { // KEY_LAYOUT2
 			if (layout!=layer2) {
-				if (layout == layer_fn) {
+				if (layout==layer_fn) {
 					prev_layer = layer2;
 				} else {
 					layout = layer2;	
@@ -300,7 +338,7 @@ void key_press(uint8_t key_id) {
 		}
 		send();
 	} else {
-		for(i=5; i>0; i--) queue[i] = queue[i-1];
+		for (i=5; i>0; i--) queue[i] = queue[i-1];
 		queue[0] = key_id;
 		send();
 		// Autorepeat
@@ -321,10 +359,16 @@ void key_release(uint8_t key_id) {
 	uint8_t i;
 	int8_t pressed_key_id = pressed[key_id];
 	uint8_t key_code = ((pressed_key_id==KEY_PRESSED_FN) ? layer_fn[key_id] : layout[key_id]);
+	if (pressed_key_id==KEY_PRESSED_PREV && prev_layer) {
+		key_code = prev_layer[key_id];
+	}
 	pressed[key_id] = 0;
 	if (key_code>0xF0) { // Catboard keys release
 		if (key_code==KEY_ALT_TAB && pressed_key_id!=KEY_PRESSED_ALT) { // AltTab: Alt release
 			mod_keys &= ~(KEY_ALT);
+			send();
+		} else if ((key_code==KEY_LAYER1 || key_code==KEY_LAYER2) && pressed_key_id==KEY_PRESSED_SHIFT) { // Mod + Layer = Shift
+			mod_keys &= ~(KEY_SHIFT);
 			send();
 		}
 	} else if (key_code>=0x80) { // Mod keys release
