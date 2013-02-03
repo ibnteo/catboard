@@ -1,7 +1,7 @@
 /*
 * Project: CatBoard (http://ibnteo.klava.org/tag/catboard)
-* Version: 0.6 beta
-* Date: 2013-01-27
+* Version: 0.7 beta
+* Date: 2013-02-04
 * Author: Vladimir Romanovich <ibnteo@gmail.com>
 * License: GPL2
 * 
@@ -40,7 +40,8 @@
 #define NA					0
 #define KEY_LAYER1			0xF1
 #define KEY_LAYER2			0xF2
-#define KEY_MAC_MODE		0xFC
+#define KEY_TURBO_REPEAT	0xFB
+#define KEY_MAC_MODE		0xFC // (+Shift)
 #define KEY_ALT_TAB			0xFD
 #define KEY_FN_LOCK			0xFE
 #define KEY_FN				0xFF
@@ -98,7 +99,7 @@ const uint8_t layer1[KEYS] = {
 
 const uint8_t layer_fn[KEYS] = {
 	//ROW0				ROW1				ROW2			ROW3			ROW4
-	KEY_ESC,			KEY_SHIFT|KEY_MOD,	NULL,			KEY_TAB,		KEY_PRINTSCREEN,// COL0
+	KEY_TURBO_REPEAT,	KEY_SHIFT|KEY_MOD,	NULL,			KEY_TAB,		KEY_PRINTSCREEN,// COL0
 	KEY_ALT_TAB,		NULL,				NULL,			NULL,			KEY_F1,			// COL1
 	KEY_BACKSPACE,		NULL,				NULL,			NULL,			KEY_F2,			// COL2
 	KEY_ALT|KEY_MOD,	NULL,				NULL,			NULL,			KEY_F3,			// COL3
@@ -138,6 +139,8 @@ int8_t pressed[KEYS];
 uint8_t queue[7] = {0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF};
 uint8_t mod_keys = 0;
 uint8_t *prev_layer = 0;
+
+uint8_t turbo_repeat = 1;
 
 uint8_t last_key = 0;
 uint16_t press_time = 0;
@@ -207,7 +210,8 @@ void poll() {
 		}
 		*row_port[row] |= row_bit[row];
 	}
-	if (layout!=layer_fnlock || pressed[FN_KEY_ID]) repeat_tick();
+	//if (layout!=layer_fnlock || pressed[FN_KEY_ID]) repeat_tick();
+	if (turbo_repeat) repeat_tick();
 	_delay_ms(5);
 }
 
@@ -295,7 +299,7 @@ void key_press(uint8_t key_id) {
 				LED_OFF;
 			}
 		} else if (key_code==KEY_MAC_MODE) { // Mac mode
-			if (pressed[key_id]==KEY_PRESSED_FN) {
+			if (pressed[key_id]==KEY_PRESSED_FN && (mod_keys & (KEY_SHIFT|KEY_RIGHT_SHIFT))) {
 				mac_mode = ! mac_mode;
 				if (mac_mode || prev_layer) {
 					LED_ON;
@@ -327,6 +331,8 @@ void key_press(uint8_t key_id) {
 				}
 				change_layout();
 			}
+		} else if (key_code==KEY_TURBO_REPEAT) { // TURBO_REPEAT ON/OFF
+			turbo_repeat = ! turbo_repeat;
 		}
 	} else if (key_code>=0x80) { // Mod keys
 		if (mac_mode && key_code==(KEY_CTRL|KEY_MOD)) {
