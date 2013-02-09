@@ -210,7 +210,7 @@ void poll() {
 		}
 		*row_port[row] |= row_bit[row];
 	}
-	if (turbo_repeat) repeat_tick();
+	repeat_tick();
 	_delay_ms(5);
 }
 
@@ -220,12 +220,13 @@ void repeat_tick(void) {
 			repeat_time++;
 		} else { // repeat press
 			repeat_time = 1;
-
-			keyboard_modifier_keys = mod_keys;
-			keyboard_keys[0] = get_code(last_key);
-			if (! usb_keyboard_send()) { // repeat release
-				keyboard_keys[0] = 0;
-				usb_keyboard_send();
+			if (turbo_repeat) {
+				keyboard_modifier_keys = mod_keys;
+				keyboard_keys[0] = get_code(last_key);
+				if (! usb_keyboard_send()) { // repeat release
+					keyboard_keys[0] = 0;
+					usb_keyboard_send();
+				}
 			}
 		}
 	} else if (press_time2) { // press2 pause
