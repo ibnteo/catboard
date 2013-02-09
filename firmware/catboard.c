@@ -1,7 +1,7 @@
 /*
 * Project: CatBoard (http://ibnteo.klava.org/tag/catboard)
-* Version: 0.7 beta
-* Date: 2013-02-04
+* Version: 0.8 beta
+* Date: 2013-02-09
 * Author: Vladimir Romanovich <ibnteo@gmail.com>
 * License: GPL2
 * 
@@ -210,7 +210,6 @@ void poll() {
 		}
 		*row_port[row] |= row_bit[row];
 	}
-	//if (layout!=layer_fnlock || pressed[FN_KEY_ID]) repeat_tick();
 	if (turbo_repeat) repeat_tick();
 	_delay_ms(5);
 }
@@ -344,9 +343,11 @@ void key_press(uint8_t key_id) {
 		}
 		send();
 	} else {
-		for (i=5; i>0; i--) queue[i] = queue[i-1];
-		queue[0] = key_id;
-		send();
+		if (! (last_key==key_id && release_time<10)) { // debounce
+			for (i=5; i>0; i--) queue[i] = queue[i-1];
+			queue[0] = key_id;
+			send();
+		}
 		// Autorepeat
 		if (last_key==key_id) { // calc press2
 			press_time2 = 1;

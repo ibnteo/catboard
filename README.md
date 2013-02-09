@@ -60,10 +60,10 @@ Ability to use different keys on the thumb, it is convenient and Shift on the le
 	| pd7  | p22 + sw2       | -                           |
 	+------+-----------------+-----------------------------+
 
-PC - scan port
+PC - scan port  
 PB, PD - read port
 
-`pc2 <--- \-+`
+`pc2 <--- \-+`  
 `pb0 <--|>|-+`
 
     p1  p2  p3  p4  p5  p6          p12 p13 p14 p15 p17 p18
