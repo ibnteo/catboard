@@ -1,7 +1,7 @@
 /*
 * Project: CatBoard (http://ibnteo.klava.org/tag/catboard)
-* Version: 0.8 beta
-* Date: 2013-02-09
+* Version: 0.81 beta
+* Date: 2013-02-26
 * Author: Vladimir Romanovich <ibnteo@gmail.com>
 * License: GPL2
 * 
