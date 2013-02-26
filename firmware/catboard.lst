@@ -1319,7 +1319,7 @@
  1346               	layer2:
  1347 0000 29        		.byte	41
  1348 0001 F1        		.byte	-15
- 1349 0002 31        		.byte	49
+ 1349 0002 90        		.byte	-112
  1350 0003 2B        		.byte	43
  1351 0004 35        		.byte	53
  1352 0005 FD        		.byte	-3
@@ -1327,7 +1327,7 @@
  1354 0007 09        		.byte	9
  1355 0008 0D        		.byte	13
  1356 0009 1E        		.byte	30
- 1357 000a 2A        		.byte	42
+ 1357 000a 84        		.byte	-124
  1358 000b 38        		.byte	56
  1359 000c 1C        		.byte	28
  1360 000d 06        		.byte	6
@@ -1362,7 +1362,7 @@
  1389 002a 0F        		.byte	15
  1390 002b 0B        		.byte	11
  1391 002c 25        		.byte	37
- 1392 002d 28        		.byte	40
+ 1392 002d 31        		.byte	49
  1393 002e 36        		.byte	54
  1394 002f 07        		.byte	7
  1395 0030 1A        		.byte	26
@@ -1390,7 +1390,7 @@
  1423               	layer1:
  1424 003e 29        		.byte	41
  1425 003f F1        		.byte	-15
- 1426 0040 31        		.byte	49
+ 1426 0040 90        		.byte	-112
  1427 0041 2B        		.byte	43
  1428 0042 35        		.byte	53
  1429 0043 FD        		.byte	-3
@@ -1398,7 +1398,7 @@
  1431 0045 04        		.byte	4
  1432 0046 14        		.byte	20
  1433 0047 1E        		.byte	30
- 1434 0048 2A        		.byte	42
+ 1434 0048 84        		.byte	-124
  1435 0049 1B        		.byte	27
  1436 004a 16        		.byte	22
  1437 004b 1A        		.byte	26
@@ -1433,7 +1433,7 @@
  1466 0068 0E        		.byte	14
  1467 0069 0C        		.byte	12
  1468 006a 25        		.byte	37
- 1469 006b 28        		.byte	40
+ 1469 006b 31        		.byte	49
  1470 006c 37        		.byte	55
  1471 006d 0F        		.byte	15
  1472 006e 12        		.byte	18
@@ -1452,7 +1452,7 @@
  1487               	layer_fn:
  1488 007a FB        		.byte	-5
  1489 007b 82        		.byte	-126
- 1490 007c 00        		.byte	0
+ 1490 007c 90        		.byte	-112
  1491 007d 2B        		.byte	43
  1492 007e 46        		.byte	70
  1493 007f FD        		.byte	-3
@@ -1460,7 +1460,7 @@
  1495 0081 00        		.byte	0
  1496 0082 00        		.byte	0
  1497 0083 3A        		.byte	58
- 1498 0084 2A        		.byte	42
+ 1498 0084 84        		.byte	-124
  1499 0085 00        		.byte	0
  1500 0086 00        		.byte	0
  1501 0087 00        		.byte	0
@@ -1495,7 +1495,7 @@
  1530 00a4 51        		.byte	81
  1531 00a5 52        		.byte	82
  1532 00a6 41        		.byte	65
- 1533 00a7 28        		.byte	40
+ 1533 00a7 00        		.byte	0
  1534 00a8 00        		.byte	0
  1535 00a9 4F        		.byte	79
  1536 00aa 4D        		.byte	77
@@ -1514,7 +1514,7 @@
  1551               	layer_fnlock:
  1552 00b6 29        		.byte	41
  1553 00b7 82        		.byte	-126
- 1554 00b8 28        		.byte	40
+ 1554 00b8 90        		.byte	-112
  1555 00b9 2B        		.byte	43
  1556 00ba 35        		.byte	53
  1557 00bb FD        		.byte	-3
@@ -1522,7 +1522,7 @@
  1559 00bd 4E        		.byte	78
  1560 00be 4B        		.byte	75
  1561 00bf 1E        		.byte	30
- 1562 00c0 2A        		.byte	42
+ 1562 00c0 84        		.byte	-124
  1563 00c1 00        		.byte	0
  1564 00c2 50        		.byte	80
  1565 00c3 4A        		.byte	74
@@ -1661,41 +1661,41 @@
  1812               	.Letext0:
 DEFINED SYMBOLS
                             *ABS*:00000000 catboard.c
-     /tmp/ccACneCJ.s:2      *ABS*:0000003f __SREG__
-     /tmp/ccACneCJ.s:3      *ABS*:0000003e __SP_H__
-     /tmp/ccACneCJ.s:4      *ABS*:0000003d __SP_L__
-     /tmp/ccACneCJ.s:5      *ABS*:00000034 __CCP__
-     /tmp/ccACneCJ.s:6      *ABS*:00000000 __tmp_reg__
-     /tmp/ccACneCJ.s:7      *ABS*:00000001 __zero_reg__
-     /tmp/ccACneCJ.s:19     .text.change_layout:00000000 change_layout
-     /tmp/ccACneCJ.s:1417   .bss:00000000 mac_mode
-     /tmp/ccACneCJ.s:92     .text.init:00000000 init
+     /tmp/ccnZG3k1.s:2      *ABS*:0000003f __SREG__
+     /tmp/ccnZG3k1.s:3      *ABS*:0000003e __SP_H__
+     /tmp/ccnZG3k1.s:4      *ABS*:0000003d __SP_L__
+     /tmp/ccnZG3k1.s:5      *ABS*:00000034 __CCP__
+     /tmp/ccnZG3k1.s:6      *ABS*:00000000 __tmp_reg__
+     /tmp/ccnZG3k1.s:7      *ABS*:00000001 __zero_reg__
+     /tmp/ccnZG3k1.s:19     .text.change_layout:00000000 change_layout
+     /tmp/ccnZG3k1.s:1417   .bss:00000000 mac_mode
+     /tmp/ccnZG3k1.s:92     .text.init:00000000 init
                             *COM*:0000003c pressed
-     /tmp/ccACneCJ.s:167    .text.get_code:00000000 get_code
-     /tmp/ccACneCJ.s:1487   .data:0000007a layer_fn
-     /tmp/ccACneCJ.s:1410   .data:0000003c layout
-     /tmp/ccACneCJ.s:1423   .data:0000003e layer1
-     /tmp/ccACneCJ.s:240    .text.send:00000000 send
-     /tmp/ccACneCJ.s:1665   .data:00000125 queue
-     /tmp/ccACneCJ.s:1678   .bss:00000001 mod_keys
-     /tmp/ccACneCJ.s:287    .text.key_release:00000000 key_release
-     /tmp/ccACneCJ.s:1684   .bss:00000002 prev_layer
-     /tmp/ccACneCJ.s:1697   .bss:00000004 last_key
-     /tmp/ccACneCJ.s:1709   .bss:00000007 press_time2
-     /tmp/ccACneCJ.s:1715   .bss:00000009 release_time
-     /tmp/ccACneCJ.s:1703   .bss:00000005 press_time
-     /tmp/ccACneCJ.s:1721   .bss:0000000b repeat_time
-     /tmp/ccACneCJ.s:501    .text.key_press:00000000 key_press
-     /tmp/ccACneCJ.s:1551   .data:000000b6 layer_fnlock
-     /tmp/ccACneCJ.s:1346   .data:00000000 layer2
-     /tmp/ccACneCJ.s:1690   .data:0000012c turbo_repeat
-     /tmp/ccACneCJ.s:983    .text.repeat_tick:00000000 repeat_tick
-     /tmp/ccACneCJ.s:1131   .text.poll:00000000 poll
-     /tmp/ccACneCJ.s:1615   .data:000000f2 row_port
-     /tmp/ccACneCJ.s:1624   .data:000000fc row_bit
-     /tmp/ccACneCJ.s:1633   .data:00000101 col_pin
-     /tmp/ccACneCJ.s:1649   .data:00000119 col_bit
-     /tmp/ccACneCJ.s:1294   .text.main:00000000 main
+     /tmp/ccnZG3k1.s:167    .text.get_code:00000000 get_code
+     /tmp/ccnZG3k1.s:1487   .data:0000007a layer_fn
+     /tmp/ccnZG3k1.s:1410   .data:0000003c layout
+     /tmp/ccnZG3k1.s:1423   .data:0000003e layer1
+     /tmp/ccnZG3k1.s:240    .text.send:00000000 send
+     /tmp/ccnZG3k1.s:1665   .data:00000125 queue
+     /tmp/ccnZG3k1.s:1678   .bss:00000001 mod_keys
+     /tmp/ccnZG3k1.s:287    .text.key_release:00000000 key_release
+     /tmp/ccnZG3k1.s:1684   .bss:00000002 prev_layer
+     /tmp/ccnZG3k1.s:1697   .bss:00000004 last_key
+     /tmp/ccnZG3k1.s:1709   .bss:00000007 press_time2
+     /tmp/ccnZG3k1.s:1715   .bss:00000009 release_time
+     /tmp/ccnZG3k1.s:1703   .bss:00000005 press_time
+     /tmp/ccnZG3k1.s:1721   .bss:0000000b repeat_time
+     /tmp/ccnZG3k1.s:501    .text.key_press:00000000 key_press
+     /tmp/ccnZG3k1.s:1551   .data:000000b6 layer_fnlock
+     /tmp/ccnZG3k1.s:1346   .data:00000000 layer2
+     /tmp/ccnZG3k1.s:1690   .data:0000012c turbo_repeat
+     /tmp/ccnZG3k1.s:983    .text.repeat_tick:00000000 repeat_tick
+     /tmp/ccnZG3k1.s:1131   .text.poll:00000000 poll
+     /tmp/ccnZG3k1.s:1615   .data:000000f2 row_port
+     /tmp/ccnZG3k1.s:1624   .data:000000fc row_bit
+     /tmp/ccnZG3k1.s:1633   .data:00000101 col_pin
+     /tmp/ccnZG3k1.s:1649   .data:00000119 col_bit
+     /tmp/ccnZG3k1.s:1294   .text.main:00000000 main
 
 UNDEFINED SYMBOLS
 keyboard_modifier_keys
