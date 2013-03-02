@@ -333,15 +333,15 @@ void key_press(uint8_t key_id) {
 				change_layout();
 			}*/
 		} else if (key_code==KEY_LAYER2) { // KEY_LAYOUT2
-			if (mod_keys & (KEY_SHIFT|KEY_RIGHT_SHIFT)) {
+			/*if (mod_keys & (KEY_SHIFT|KEY_RIGHT_SHIFT)) {
 				pressed[key_id] = KEY_PRESSED_CTRL;
 				mod_keys |= KEY_RIGHT_CTRL;
 				send();
-			} else {
-				if (mod_keys) pressed[key_id] = KEY_PRESSED_SHIFT;
+			} else {*/
+				//if (mod_keys) pressed[key_id] = KEY_PRESSED_SHIFT;
 				mod_keys |= KEY_RIGHT_SHIFT;
 				send();
-			}
+			//}
 			/*if (layout!=layer2) {
 				if (layout==layer_fn) {
 					prev_layer = layer2;
