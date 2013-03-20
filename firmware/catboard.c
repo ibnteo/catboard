@@ -1,7 +1,7 @@
 /*
 * Project: CatBoard (http://ibnteo.klava.org/tag/catboard)
-* Version: 0.9 pre-release
-* Date: 2013-03-02
+* Version: 0.91 pre-release
+* Date: 2013-03-20
 * Author: Vladimir Romanovich <ibnteo@gmail.com>
 * License: GPL2
 * 
@@ -143,7 +143,7 @@ uint8_t *prev_layer = 0;
 
 uint8_t turbo_repeat = 1;
 
-uint8_t last_key = 0;
+uint8_t last_key = 0xFF;
 uint16_t press_time = 0;
 uint16_t press_time2 = 0;
 uint16_t release_time = 0;
@@ -240,7 +240,7 @@ void repeat_tick(void) {
 		if (release_time<(press_time+50)) {
 			release_time++;
 		} else {
-			last_key = 0;
+			last_key = 0xFF;
 			release_time = 0;
 			press_time = 0;
 			press_time2 = 0;
