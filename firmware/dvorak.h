@@ -5,7 +5,7 @@ const uint8_t layer2[KEYS] = {
 	KEY_ALT|KEY_MOD,	KEY_Q,			KEY_O,			KEY_COMMA,		KEY_2,			// COL2
 	KEY_ALT|KEY_MOD,	KEY_J,				KEY_E,			KEY_PERIOD,		KEY_3,			// COL3
 	KEY_CTRL|KEY_MOD,	KEY_K,				KEY_U,			KEY_P,			KEY_4,			// COL4
-	KEY_SHIFT|KEY_MOD,	KEY_X,				KEY_I,			KEY_Y,			KEY_5,			// COL5
+	KEY_MY_SHIFT,		KEY_X,				KEY_I,			KEY_Y,			KEY_5,			// COL5
 	KEY_SPACE,			KEY_B,				KEY_D,			KEY_F,			KEY_6,			// COL6 
 	KEY_FN,				KEY_M,				KEY_H,			KEY_G,			KEY_7,			// COL7
 	KEY_RIGHT_ALT|KEY_MOD,KEY_W,			KEY_T,			KEY_C,			KEY_8,			// COL8
