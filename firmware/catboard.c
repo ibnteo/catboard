@@ -1,7 +1,7 @@
 /*
 * Project: CatBoard (http://ibnteo.klava.org/tag/catboard)
-* Version: 0.92 pre-release
-* Date: 2013-03-20
+* Version: 1.1
+* Date: 2013-04-08
 * Author: Vladimir Romanovich <ibnteo@gmail.com>
 * License: GPL2
 * 
@@ -102,7 +102,7 @@ const uint8_t layer1[KEYS] = {
 const uint8_t layer_fn[KEYS] = {
 	//ROW0				ROW1				ROW2			ROW3			ROW4
 	KEY_TURBO_REPEAT,	KEY_LAYER1,			KEY_RIGHT_CTRL|KEY_MOD,KEY_TAB,	KEY_PRINTSCREEN,// COL0
-	KEY_ALT_TAB,		NULL,				NULL,			NULL,			KEY_F1,			// COL1
+	KEY_TAB,			NULL,				NULL,			NULL,			KEY_F1,			// COL1
 	KEY_ALT|KEY_MOD,	NULL,				NULL,			NULL,			KEY_F2,			// COL2
 	KEY_ALT|KEY_MOD,	NULL,				NULL,			NULL,			KEY_F3,			// COL3
 	KEY_CTRL|KEY_MOD,	NULL,				NULL,			NULL,			KEY_F4,			// COL4
@@ -307,7 +307,8 @@ void key_press(uint8_t key_id) {
 			if (pressed[key_id]==KEY_PRESSED_FN) { // Fn + AltTab
 				usb_keyboard_press(KEY_TAB, KEY_ALT);
 			} else { // Alt press, Tab press and release
-				if (! (mod_keys & (KEY_ALT|KEY_RIGHT_ALT|KEY_CTRL|KEY_RIGHT_CTRL|KEY_GUI|KEY_RIGHT_GUI))) {
+				//if (! (mod_keys & (KEY_ALT|KEY_RIGHT_ALT|KEY_CTRL|KEY_RIGHT_CTRL|KEY_GUI|KEY_RIGHT_GUI))) {
+				if (! mod_keys) {
 					mod_keys |= (KEY_ALT);
 				} else {
 					pressed[key_id] = KEY_PRESSED_ALT;
@@ -358,7 +359,13 @@ void key_press(uint8_t key_id) {
 		} else if (key_code==KEY_TURBO_REPEAT) { // TURBO_REPEAT ON/OFF
 			turbo_repeat = ! turbo_repeat;
 		} else if (key_code==KEY_MY_SHIFT) { // My Shift
-			mod_keys |= KEY_SHIFT;
+			/*if (mod_keys & (KEY_SHIFT|KEY_RIGHT_SHIFT)) { // Ctrl key
+				pressed[key_id] = KEY_PRESSED_CTRL;
+				mod_keys |= KEY_CTRL;
+			} else { // Shift key*/
+				//if (mod_keys) pressed[key_id] = KEY_PRESSED_MODS;
+				mod_keys |= KEY_SHIFT;
+			//}
 			send();
 		}
 	} else if (key_code>=0x80) { // Mod keys
@@ -408,7 +415,9 @@ void key_release(uint8_t key_id) {
 		} else if (key_code==KEY_LAYER1) {
 			mod_keys &= ~(KEY_SHIFT);
 			send();
-			if (last_key==key_id && pressed_key_id!=KEY_PRESSED_SHIFT) {
+
+			if (last_key==key_id && press_time && pressed_key_id!=KEY_PRESSED_SHIFT && ! mod_keys) {
+			//if (last_key==key_id && pressed_key_id!=KEY_PRESSED_SHIFT) {
 				if (layout!=layer1) {
 					if (layout==layer_fn) {
 						prev_layer = layer1;
@@ -418,13 +427,19 @@ void key_release(uint8_t key_id) {
 					change_layout();
 				}
 			}
+			last_key = 0xFF;
+			press_time = 0;
+			press_time2 = 0;
+			release_time = 0;
+			repeat_time = 0;
 		} else if (key_code==KEY_LAYER2 && pressed_key_id==KEY_PRESSED_CTRL) {
 			mod_keys &= ~(KEY_RIGHT_CTRL);
 			send();
 		} else if (key_code==KEY_LAYER2) {
 			mod_keys &= ~(KEY_RIGHT_SHIFT);
 			send();
-			if (last_key==key_id && pressed_key_id!=KEY_PRESSED_SHIFT) {
+			if (last_key==key_id && press_time && pressed_key_id!=KEY_PRESSED_SHIFT && ! mod_keys) {
+			//if (last_key==key_id && pressed_key_id!=KEY_PRESSED_SHIFT) {
 				if (layout!=layer2) {
 					if (layout==layer_fn) {
 						prev_layer = layer2;
@@ -434,10 +449,19 @@ void key_release(uint8_t key_id) {
 					change_layout();
 				}
 			}
+			last_key = 0xFF;
+			press_time = 0;
+			press_time2 = 0;
+			release_time = 0;
+			repeat_time = 0;
 		} else if (key_code==KEY_MY_SHIFT) { // My Shift
-			mod_keys &= ~KEY_SHIFT;
+			/*if (pressed_key_id==KEY_PRESSED_CTRL) { // Ctrl key
+				mod_keys &= ~KEY_CTRL;
+			} else { // Shift key*/
+				mod_keys &= ~KEY_SHIFT;
+			//}
 			send();
-			if (last_key==key_id && press_time) {
+			if (last_key==key_id && press_time && pressed_key_id!=KEY_PRESSED_MODS && ! mod_keys) {
 				usb_keyboard_press(KEY_SPACE, mod_keys);
 			}
 			last_key = 0xFF;

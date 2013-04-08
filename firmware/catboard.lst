@@ -13,8 +13,8 @@
   14               		.file 1 "catboard.c"
    1:catboard.c    **** /*
    2:catboard.c    **** * Project: CatBoard (http://ibnteo.klava.org/tag/catboard)
-   3:catboard.c    **** * Version: 0.92 pre-release
-   4:catboard.c    **** * Date: 2013-03-20
+   3:catboard.c    **** * Version: 1.1
+   4:catboard.c    **** * Date: 2013-03-23
    5:catboard.c    **** * Author: Vladimir Romanovich <ibnteo@gmail.com>
    6:catboard.c    **** * License: GPL2
    7:catboard.c    **** * 
@@ -115,7 +115,7 @@
  102:catboard.c    **** const uint8_t layer_fn[KEYS] = {
  103:catboard.c    **** 	//ROW0				ROW1				ROW2			ROW3			ROW4
  104:catboard.c    **** 	KEY_TURBO_REPEAT,	KEY_LAYER1,			KEY_RIGHT_CTRL|KEY_MOD,KEY_TAB,	KEY_PRINTSCREEN,// COL0
- 105:catboard.c    **** 	KEY_ALT_TAB,		NULL,				NULL,			NULL,			KEY_F1,			// COL1
+ 105:catboard.c    **** 	KEY_TAB,			NULL,				NULL,			NULL,			KEY_F1,			// COL1
  106:catboard.c    **** 	KEY_ALT|KEY_MOD,	NULL,				NULL,			NULL,			KEY_F2,			// COL2
  107:catboard.c    **** 	KEY_ALT|KEY_MOD,	NULL,				NULL,			NULL,			KEY_F3,			// COL3
  108:catboard.c    **** 	KEY_CTRL|KEY_MOD,	NULL,				NULL,			NULL,			KEY_F4,			// COL4
@@ -645,200 +645,224 @@
  307:catboard.c    **** 			if (pressed[key_id]==KEY_PRESSED_FN) { // Fn + AltTab
  308:catboard.c    **** 				usb_keyboard_press(KEY_TAB, KEY_ALT);
  309:catboard.c    **** 			} else { // Alt press, Tab press and release
- 310:catboard.c    **** 				if (! (mod_keys & (KEY_ALT|KEY_RIGHT_ALT|KEY_CTRL|KEY_RIGHT_CTRL|KEY_GUI|KEY_RIGHT_GUI))) {
- 311:catboard.c    **** 					mod_keys |= (KEY_ALT);
- 312:catboard.c    **** 				} else {
- 313:catboard.c    **** 					pressed[key_id] = KEY_PRESSED_ALT;
- 314:catboard.c    **** 				}
- 315:catboard.c    **** 				keyboard_modifier_keys = mod_keys;
- 316:catboard.c    **** 				keyboard_keys[0] = KEY_TAB;
- 317:catboard.c    **** 				usb_keyboard_send();
- 318:catboard.c    **** 				_delay_ms(50);
- 319:catboard.c    **** 				send();
- 320:catboard.c    **** 			}
- 321:catboard.c    **** 		} else if (key_code==KEY_FN_LOCK) { // FnLock
- 322:catboard.c    **** 			if (prev_layer) { // FnLock Off
- 323:catboard.c    **** 				layout = prev_layer;
- 324:catboard.c    **** 				prev_layer = 0;
- 325:catboard.c    **** 			} else { // FnLock On
- 326:catboard.c    **** 				prev_layer = layout;
- 327:catboard.c    **** 				layout = layer_fnlock;
- 328:catboard.c    **** 			}
- 329:catboard.c    **** 			if (prev_layer || mac_mode) {
- 330:catboard.c    **** 				LED_ON;
- 331:catboard.c    **** 			} else {
- 332:catboard.c    **** 				LED_OFF;
- 333:catboard.c    **** 			}
- 334:catboard.c    **** 		} else if (key_code==KEY_MAC_MODE) { // Mac mode
- 335:catboard.c    **** 			if (pressed[key_id]==KEY_PRESSED_FN && (mod_keys & (KEY_SHIFT|KEY_RIGHT_SHIFT))) {
- 336:catboard.c    **** 				mac_mode = ! mac_mode;
- 337:catboard.c    **** 				if (mac_mode || prev_layer) {
- 338:catboard.c    **** 					LED_ON;
- 339:catboard.c    **** 				} else {
- 340:catboard.c    **** 					LED_OFF;
- 341:catboard.c    **** 				}
- 342:catboard.c    **** 			} else { // Press Space
- 343:catboard.c    **** 				usb_keyboard_press(KEY_SPACE, mod_keys);
- 344:catboard.c    **** 			}
- 345:catboard.c    **** 		} else if (key_code==KEY_LAYER1) { // KEY_LAYOUT1
- 346:catboard.c    **** 			if (mod_keys & (KEY_SHIFT|KEY_RIGHT_SHIFT)) {
- 347:catboard.c    **** 				pressed[key_id] = KEY_PRESSED_CTRL;
- 348:catboard.c    **** 				mod_keys |= KEY_CTRL;
- 349:catboard.c    **** 				send();
- 350:catboard.c    **** 			} else {
- 351:catboard.c    **** 				if (mod_keys) pressed[key_id] = KEY_PRESSED_SHIFT;
- 352:catboard.c    **** 				mod_keys |= KEY_SHIFT;
- 353:catboard.c    **** 				send();
- 354:catboard.c    **** 			}
- 355:catboard.c    **** 		} else if (key_code==KEY_LAYER2) { // KEY_LAYOUT2
- 356:catboard.c    **** 			mod_keys |= KEY_RIGHT_SHIFT;
- 357:catboard.c    **** 			send();
- 358:catboard.c    **** 		} else if (key_code==KEY_TURBO_REPEAT) { // TURBO_REPEAT ON/OFF
- 359:catboard.c    **** 			turbo_repeat = ! turbo_repeat;
- 360:catboard.c    **** 		} else if (key_code==KEY_MY_SHIFT) { // My Shift
- 361:catboard.c    **** 			mod_keys |= KEY_SHIFT;
- 362:catboard.c    **** 			send();
- 363:catboard.c    **** 		}
- 364:catboard.c    **** 	} else if (key_code>=0x80) { // Mod keys
- 365:catboard.c    **** 		if (mac_mode && key_code==(KEY_CTRL|KEY_MOD)) {
- 366:catboard.c    **** 			mod_keys |= KEY_GUI;
- 367:catboard.c    **** 		} else if ((mac_mode && key_code==(KEY_RIGHT_CTRL|KEY_MOD)) || key_code==(KEY_RIGHT_GUI|KEY_MOD))
- 368:catboard.c    **** 			mod_keys |= KEY_RIGHT_GUI;
- 369:catboard.c    **** 		} else {
- 370:catboard.c    **** 			mod_keys |= (key_code & 0x7F);
- 371:catboard.c    **** 		}
- 372:catboard.c    **** 		send();
- 373:catboard.c    **** 	} else {
- 374:catboard.c    **** 		if (! (last_key==key_id && release_time<10)) { // debounce
- 375:catboard.c    **** 			for (i=5; i>0; i--) queue[i] = queue[i-1];
- 376:catboard.c    **** 			queue[0] = key_id;
- 377:catboard.c    **** 			send();
+ 310:catboard.c    **** 				//if (! (mod_keys & (KEY_ALT|KEY_RIGHT_ALT|KEY_CTRL|KEY_RIGHT_CTRL|KEY_GUI|KEY_RIGHT_GUI))) {
+ 311:catboard.c    **** 				if (! mod_keys) {
+ 312:catboard.c    **** 					mod_keys |= (KEY_ALT);
+ 313:catboard.c    **** 				} else {
+ 314:catboard.c    **** 					pressed[key_id] = KEY_PRESSED_ALT;
+ 315:catboard.c    **** 				}
+ 316:catboard.c    **** 				keyboard_modifier_keys = mod_keys;
+ 317:catboard.c    **** 				keyboard_keys[0] = KEY_TAB;
+ 318:catboard.c    **** 				usb_keyboard_send();
+ 319:catboard.c    **** 				_delay_ms(50);
+ 320:catboard.c    **** 				send();
+ 321:catboard.c    **** 			}
+ 322:catboard.c    **** 		} else if (key_code==KEY_FN_LOCK) { // FnLock
+ 323:catboard.c    **** 			if (prev_layer) { // FnLock Off
+ 324:catboard.c    **** 				layout = prev_layer;
+ 325:catboard.c    **** 				prev_layer = 0;
+ 326:catboard.c    **** 			} else { // FnLock On
+ 327:catboard.c    **** 				prev_layer = layout;
+ 328:catboard.c    **** 				layout = layer_fnlock;
+ 329:catboard.c    **** 			}
+ 330:catboard.c    **** 			if (prev_layer || mac_mode) {
+ 331:catboard.c    **** 				LED_ON;
+ 332:catboard.c    **** 			} else {
+ 333:catboard.c    **** 				LED_OFF;
+ 334:catboard.c    **** 			}
+ 335:catboard.c    **** 		} else if (key_code==KEY_MAC_MODE) { // Mac mode
+ 336:catboard.c    **** 			if (pressed[key_id]==KEY_PRESSED_FN && (mod_keys & (KEY_SHIFT|KEY_RIGHT_SHIFT))) {
+ 337:catboard.c    **** 				mac_mode = ! mac_mode;
+ 338:catboard.c    **** 				if (mac_mode || prev_layer) {
+ 339:catboard.c    **** 					LED_ON;
+ 340:catboard.c    **** 				} else {
+ 341:catboard.c    **** 					LED_OFF;
+ 342:catboard.c    **** 				}
+ 343:catboard.c    **** 			} else { // Press Space
+ 344:catboard.c    **** 				usb_keyboard_press(KEY_SPACE, mod_keys);
+ 345:catboard.c    **** 			}
+ 346:catboard.c    **** 		} else if (key_code==KEY_LAYER1) { // KEY_LAYOUT1
+ 347:catboard.c    **** 			if (mod_keys & (KEY_SHIFT|KEY_RIGHT_SHIFT)) {
+ 348:catboard.c    **** 				pressed[key_id] = KEY_PRESSED_CTRL;
+ 349:catboard.c    **** 				mod_keys |= KEY_CTRL;
+ 350:catboard.c    **** 				send();
+ 351:catboard.c    **** 			} else {
+ 352:catboard.c    **** 				if (mod_keys) pressed[key_id] = KEY_PRESSED_SHIFT;
+ 353:catboard.c    **** 				mod_keys |= KEY_SHIFT;
+ 354:catboard.c    **** 				send();
+ 355:catboard.c    **** 			}
+ 356:catboard.c    **** 		} else if (key_code==KEY_LAYER2) { // KEY_LAYOUT2
+ 357:catboard.c    **** 			mod_keys |= KEY_RIGHT_SHIFT;
+ 358:catboard.c    **** 			send();
+ 359:catboard.c    **** 		} else if (key_code==KEY_TURBO_REPEAT) { // TURBO_REPEAT ON/OFF
+ 360:catboard.c    **** 			turbo_repeat = ! turbo_repeat;
+ 361:catboard.c    **** 		} else if (key_code==KEY_MY_SHIFT) { // My Shift
+ 362:catboard.c    **** 			/*if (mod_keys & (KEY_SHIFT|KEY_RIGHT_SHIFT)) { // Ctrl key
+ 363:catboard.c    **** 				pressed[key_id] = KEY_PRESSED_CTRL;
+ 364:catboard.c    **** 				mod_keys |= KEY_CTRL;
+ 365:catboard.c    **** 			} else { // Shift key*/
+ 366:catboard.c    **** 				//if (mod_keys) pressed[key_id] = KEY_PRESSED_MODS;
+ 367:catboard.c    **** 				mod_keys |= KEY_SHIFT;
+ 368:catboard.c    **** 			//}
+ 369:catboard.c    **** 			send();
+ 370:catboard.c    **** 		}
+ 371:catboard.c    **** 	} else if (key_code>=0x80) { // Mod keys
+ 372:catboard.c    **** 		if (mac_mode && key_code==(KEY_CTRL|KEY_MOD)) {
+ 373:catboard.c    **** 			mod_keys |= KEY_GUI;
+ 374:catboard.c    **** 		} else if ((mac_mode && key_code==(KEY_RIGHT_CTRL|KEY_MOD)) || key_code==(KEY_RIGHT_GUI|KEY_MOD))
+ 375:catboard.c    **** 			mod_keys |= KEY_RIGHT_GUI;
+ 376:catboard.c    **** 		} else {
+ 377:catboard.c    **** 			mod_keys |= (key_code & 0x7F);
  378:catboard.c    **** 		}
- 379:catboard.c    **** 	}
- 380:catboard.c    **** 	// Autorepeat
- 381:catboard.c    **** 	if (last_key==key_id) { // calc press2
- 382:catboard.c    **** 		press_time2 = 1;
- 383:catboard.c    **** 		repeat_time = 0;
- 384:catboard.c    **** 	} else { // calc press1
- 385:catboard.c    **** 		last_key = key_id;
- 386:catboard.c    **** 		press_time = 1;
- 387:catboard.c    **** 		press_time2 = 0;
- 388:catboard.c    **** 		release_time = 0;
- 389:catboard.c    **** 		repeat_time = 0;
- 390:catboard.c    **** 	}
- 391:catboard.c    **** }
- 392:catboard.c    **** 
- 393:catboard.c    **** void key_release(uint8_t key_id) {
- 394:catboard.c    **** 	uint8_t i;
- 395:catboard.c    **** 	int8_t pressed_key_id = pressed[key_id];
- 396:catboard.c    **** 	uint8_t key_code = ((pressed_key_id==KEY_PRESSED_FN) ? layer_fn[key_id] : layout[key_id]);
- 397:catboard.c    **** 	if (pressed_key_id==KEY_PRESSED_PREV && prev_layer) {
- 398:catboard.c    **** 		key_code = prev_layer[key_id];
- 399:catboard.c    **** 	}
- 400:catboard.c    **** 	pressed[key_id] = 0;
- 401:catboard.c    **** 	if (key_code>0xF0) { // Catboard keys release
- 402:catboard.c    **** 		if (key_code==KEY_ALT_TAB && pressed_key_id!=KEY_PRESSED_ALT) { // AltTab: Alt release
- 403:catboard.c    **** 			mod_keys &= ~(KEY_ALT);
- 404:catboard.c    **** 			send();
- 405:catboard.c    **** 		} else if (key_code==KEY_LAYER1 && pressed_key_id==KEY_PRESSED_CTRL) {
- 406:catboard.c    **** 			mod_keys &= ~(KEY_CTRL);
- 407:catboard.c    **** 			send();
- 408:catboard.c    **** 		} else if (key_code==KEY_LAYER1) {
- 409:catboard.c    **** 			mod_keys &= ~(KEY_SHIFT);
- 410:catboard.c    **** 			send();
- 411:catboard.c    **** 			if (last_key==key_id && pressed_key_id!=KEY_PRESSED_SHIFT) {
- 412:catboard.c    **** 				if (layout!=layer1) {
- 413:catboard.c    **** 					if (layout==layer_fn) {
- 414:catboard.c    **** 						prev_layer = layer1;
- 415:catboard.c    **** 					} else {
- 416:catboard.c    **** 						layout = layer1;
- 417:catboard.c    **** 					}
- 418:catboard.c    **** 					change_layout();
- 419:catboard.c    **** 				}
- 420:catboard.c    **** 			}
- 421:catboard.c    **** 		} else if (key_code==KEY_LAYER2 && pressed_key_id==KEY_PRESSED_CTRL) {
- 422:catboard.c    **** 			mod_keys &= ~(KEY_RIGHT_CTRL);
- 423:catboard.c    **** 			send();
- 424:catboard.c    **** 		} else if (key_code==KEY_LAYER2) {
- 425:catboard.c    **** 			mod_keys &= ~(KEY_RIGHT_SHIFT);
- 426:catboard.c    **** 			send();
- 427:catboard.c    **** 			if (last_key==key_id && pressed_key_id!=KEY_PRESSED_SHIFT) {
- 428:catboard.c    **** 				if (layout!=layer2) {
- 429:catboard.c    **** 					if (layout==layer_fn) {
- 430:catboard.c    **** 						prev_layer = layer2;
- 431:catboard.c    **** 					} else {
- 432:catboard.c    **** 						layout = layer2;
- 433:catboard.c    **** 					}
- 434:catboard.c    **** 					change_layout();
- 435:catboard.c    **** 				}
- 436:catboard.c    **** 			}
- 437:catboard.c    **** 		} else if (key_code==KEY_MY_SHIFT) { // My Shift
- 438:catboard.c    **** 			mod_keys &= ~KEY_SHIFT;
- 439:catboard.c    **** 			send();
- 440:catboard.c    **** 			if (last_key==key_id && press_time) {
- 441:catboard.c    **** 				usb_keyboard_press(KEY_SPACE, mod_keys);
- 442:catboard.c    **** 			}
- 443:catboard.c    **** 			last_key = 0xFF;
- 444:catboard.c    **** 			press_time = 0;
- 445:catboard.c    **** 			press_time2 = 0;
- 446:catboard.c    **** 			release_time = 0;
- 447:catboard.c    **** 			repeat_time = 0;
- 448:catboard.c    **** 		}
- 449:catboard.c    **** 	} else if (key_code>=0x80) { // Mod keys release
- 450:catboard.c    **** 		if (mac_mode && key_code==(KEY_CTRL|KEY_MOD)) {
- 451:catboard.c    **** 			mod_keys &= ~KEY_GUI;
- 452:catboard.c    **** 		} else if ((mac_mode && key_code==(KEY_RIGHT_CTRL|KEY_MOD)) || key_code==(KEY_RIGHT_GUI|KEY_MOD))
- 453:catboard.c    **** 			mod_keys &= ~KEY_RIGHT_GUI;
- 454:catboard.c    **** 		} else {
- 455:catboard.c    **** 			mod_keys &= ~(key_code & 0x7F);
- 456:catboard.c    **** 		}
- 457:catboard.c    **** 		send();
- 458:catboard.c    **** 	} else {
- 459:catboard.c    **** 		for (i=0; i<6; i++) {
- 460:catboard.c    **** 			if (queue[i]==key_id) {
- 461:catboard.c    **** 				break;
- 462:catboard.c    **** 			}
- 463:catboard.c    **** 		}
- 464:catboard.c    **** 		for (; i<6; i++) {
- 465:catboard.c    **** 			queue[i] = queue[i+1];
- 466:catboard.c    **** 		}
- 467:catboard.c    **** 		send();
- 468:catboard.c    **** 		// Autorepeat
- 469:catboard.c    **** 		if (last_key==key_id) { // realise time
- 470:catboard.c    **** 			press_time2 = 0;
- 471:catboard.c    **** 			release_time = 1;
- 472:catboard.c    **** 			repeat_time = 0;
- 473:catboard.c    **** 		} else { // reset
- 474:catboard.c    **** 			press_time = 0;
- 475:catboard.c    **** 			press_time2 = 0;
- 476:catboard.c    **** 			release_time = 0;
- 477:catboard.c    **** 			repeat_time = 0;
- 478:catboard.c    **** 		}
- 479:catboard.c    **** 	}
- 480:catboard.c    **** }
- 481:catboard.c    **** 
- 482:catboard.c    **** void change_layout(void) {
- 180               		.loc 1 482 0
+ 379:catboard.c    **** 		send();
+ 380:catboard.c    **** 	} else {
+ 381:catboard.c    **** 		if (! (last_key==key_id && release_time<10)) { // debounce
+ 382:catboard.c    **** 			for (i=5; i>0; i--) queue[i] = queue[i-1];
+ 383:catboard.c    **** 			queue[0] = key_id;
+ 384:catboard.c    **** 			send();
+ 385:catboard.c    **** 		}
+ 386:catboard.c    **** 	}
+ 387:catboard.c    **** 	// Autorepeat
+ 388:catboard.c    **** 	if (last_key==key_id) { // calc press2
+ 389:catboard.c    **** 		press_time2 = 1;
+ 390:catboard.c    **** 		repeat_time = 0;
+ 391:catboard.c    **** 	} else { // calc press1
+ 392:catboard.c    **** 		last_key = key_id;
+ 393:catboard.c    **** 		press_time = 1;
+ 394:catboard.c    **** 		press_time2 = 0;
+ 395:catboard.c    **** 		release_time = 0;
+ 396:catboard.c    **** 		repeat_time = 0;
+ 397:catboard.c    **** 	}
+ 398:catboard.c    **** }
+ 399:catboard.c    **** 
+ 400:catboard.c    **** void key_release(uint8_t key_id) {
+ 401:catboard.c    **** 	uint8_t i;
+ 402:catboard.c    **** 	int8_t pressed_key_id = pressed[key_id];
+ 403:catboard.c    **** 	uint8_t key_code = ((pressed_key_id==KEY_PRESSED_FN) ? layer_fn[key_id] : layout[key_id]);
+ 404:catboard.c    **** 	if (pressed_key_id==KEY_PRESSED_PREV && prev_layer) {
+ 405:catboard.c    **** 		key_code = prev_layer[key_id];
+ 406:catboard.c    **** 	}
+ 407:catboard.c    **** 	pressed[key_id] = 0;
+ 408:catboard.c    **** 	if (key_code>0xF0) { // Catboard keys release
+ 409:catboard.c    **** 		if (key_code==KEY_ALT_TAB && pressed_key_id!=KEY_PRESSED_ALT) { // AltTab: Alt release
+ 410:catboard.c    **** 			mod_keys &= ~(KEY_ALT);
+ 411:catboard.c    **** 			send();
+ 412:catboard.c    **** 		} else if (key_code==KEY_LAYER1 && pressed_key_id==KEY_PRESSED_CTRL) {
+ 413:catboard.c    **** 			mod_keys &= ~(KEY_CTRL);
+ 414:catboard.c    **** 			send();
+ 415:catboard.c    **** 		} else if (key_code==KEY_LAYER1) {
+ 416:catboard.c    **** 			mod_keys &= ~(KEY_SHIFT);
+ 417:catboard.c    **** 			send();
+ 418:catboard.c    **** 
+ 419:catboard.c    **** 			if (last_key==key_id && press_time && pressed_key_id!=KEY_PRESSED_SHIFT && ! mod_keys) {
+ 420:catboard.c    **** 			//if (last_key==key_id && pressed_key_id!=KEY_PRESSED_SHIFT) {
+ 421:catboard.c    **** 				if (layout!=layer1) {
+ 422:catboard.c    **** 					if (layout==layer_fn) {
+ 423:catboard.c    **** 						prev_layer = layer1;
+ 424:catboard.c    **** 					} else {
+ 425:catboard.c    **** 						layout = layer1;
+ 426:catboard.c    **** 					}
+ 427:catboard.c    **** 					change_layout();
+ 428:catboard.c    **** 				}
+ 429:catboard.c    **** 			}
+ 430:catboard.c    **** 			last_key = 0xFF;
+ 431:catboard.c    **** 			press_time = 0;
+ 432:catboard.c    **** 			press_time2 = 0;
+ 433:catboard.c    **** 			release_time = 0;
+ 434:catboard.c    **** 			repeat_time = 0;
+ 435:catboard.c    **** 		} else if (key_code==KEY_LAYER2 && pressed_key_id==KEY_PRESSED_CTRL) {
+ 436:catboard.c    **** 			mod_keys &= ~(KEY_RIGHT_CTRL);
+ 437:catboard.c    **** 			send();
+ 438:catboard.c    **** 		} else if (key_code==KEY_LAYER2) {
+ 439:catboard.c    **** 			mod_keys &= ~(KEY_RIGHT_SHIFT);
+ 440:catboard.c    **** 			send();
+ 441:catboard.c    **** 			if (last_key==key_id && press_time && pressed_key_id!=KEY_PRESSED_SHIFT && ! mod_keys) {
+ 442:catboard.c    **** 			//if (last_key==key_id && pressed_key_id!=KEY_PRESSED_SHIFT) {
+ 443:catboard.c    **** 				if (layout!=layer2) {
+ 444:catboard.c    **** 					if (layout==layer_fn) {
+ 445:catboard.c    **** 						prev_layer = layer2;
+ 446:catboard.c    **** 					} else {
+ 447:catboard.c    **** 						layout = layer2;
+ 448:catboard.c    **** 					}
+ 449:catboard.c    **** 					change_layout();
+ 450:catboard.c    **** 				}
+ 451:catboard.c    **** 			}
+ 452:catboard.c    **** 			last_key = 0xFF;
+ 453:catboard.c    **** 			press_time = 0;
+ 454:catboard.c    **** 			press_time2 = 0;
+ 455:catboard.c    **** 			release_time = 0;
+ 456:catboard.c    **** 			repeat_time = 0;
+ 457:catboard.c    **** 		} else if (key_code==KEY_MY_SHIFT) { // My Shift
+ 458:catboard.c    **** 			/*if (pressed_key_id==KEY_PRESSED_CTRL) { // Ctrl key
+ 459:catboard.c    **** 				mod_keys &= ~KEY_CTRL;
+ 460:catboard.c    **** 			} else { // Shift key*/
+ 461:catboard.c    **** 				mod_keys &= ~KEY_SHIFT;
+ 462:catboard.c    **** 			//}
+ 463:catboard.c    **** 			send();
+ 464:catboard.c    **** 			if (last_key==key_id && press_time && pressed_key_id!=KEY_PRESSED_MODS && ! mod_keys) {
+ 465:catboard.c    **** 				usb_keyboard_press(KEY_SPACE, mod_keys);
+ 466:catboard.c    **** 			}
+ 467:catboard.c    **** 			last_key = 0xFF;
+ 468:catboard.c    **** 			press_time = 0;
+ 469:catboard.c    **** 			press_time2 = 0;
+ 470:catboard.c    **** 			release_time = 0;
+ 471:catboard.c    **** 			repeat_time = 0;
+ 472:catboard.c    **** 		}
+ 473:catboard.c    **** 	} else if (key_code>=0x80) { // Mod keys release
+ 474:catboard.c    **** 		if (mac_mode && key_code==(KEY_CTRL|KEY_MOD)) {
+ 475:catboard.c    **** 			mod_keys &= ~KEY_GUI;
+ 476:catboard.c    **** 		} else if ((mac_mode && key_code==(KEY_RIGHT_CTRL|KEY_MOD)) || key_code==(KEY_RIGHT_GUI|KEY_MOD))
+ 477:catboard.c    **** 			mod_keys &= ~KEY_RIGHT_GUI;
+ 478:catboard.c    **** 		} else {
+ 479:catboard.c    **** 			mod_keys &= ~(key_code & 0x7F);
+ 480:catboard.c    **** 		}
+ 481:catboard.c    **** 		send();
+ 482:catboard.c    **** 	} else {
+ 483:catboard.c    **** 		for (i=0; i<6; i++) {
+ 484:catboard.c    **** 			if (queue[i]==key_id) {
+ 485:catboard.c    **** 				break;
+ 486:catboard.c    **** 			}
+ 487:catboard.c    **** 		}
+ 488:catboard.c    **** 		for (; i<6; i++) {
+ 489:catboard.c    **** 			queue[i] = queue[i+1];
+ 490:catboard.c    **** 		}
+ 491:catboard.c    **** 		send();
+ 492:catboard.c    **** 		// Autorepeat
+ 493:catboard.c    **** 		if (last_key==key_id) { // realise time
+ 494:catboard.c    **** 			press_time2 = 0;
+ 495:catboard.c    **** 			release_time = 1;
+ 496:catboard.c    **** 			repeat_time = 0;
+ 497:catboard.c    **** 		} else { // reset
+ 498:catboard.c    **** 			press_time = 0;
+ 499:catboard.c    **** 			press_time2 = 0;
+ 500:catboard.c    **** 			release_time = 0;
+ 501:catboard.c    **** 			repeat_time = 0;
+ 502:catboard.c    **** 		}
+ 503:catboard.c    **** 	}
+ 504:catboard.c    **** }
+ 505:catboard.c    **** 
+ 506:catboard.c    **** void change_layout(void) {
+ 180               		.loc 1 506 0
  181               	/* prologue: function */
  182               	/* frame size = 0 */
  183               	/* stack size = 0 */
  184               	.L__stack_usage = 0
- 483:catboard.c    **** 	if (KEY_LAYOUT==KEY_LAYOUT_GUI_SPACE || mac_mode) { // Press Cmd+Space
- 185               		.loc 1 483 0
+ 507:catboard.c    **** 	if (KEY_LAYOUT==KEY_LAYOUT_GUI_SPACE || mac_mode) { // Press Cmd+Space
+ 185               		.loc 1 507 0
  186 0000 8091 0000 		lds r24,mac_mode
  187 0004 8823      		tst r24
  188 0006 01F0      		breq .L14
  189               	.LBB35:
  190               	.LBB36:
- 484:catboard.c    **** 		keyboard_modifier_keys = KEY_GUI;
- 191               		.loc 1 484 0
+ 508:catboard.c    **** 		keyboard_modifier_keys = KEY_GUI;
+ 191               		.loc 1 508 0
  192 0008 88E0      		ldi r24,lo8(8)
  193 000a 8093 0000 		sts keyboard_modifier_keys,r24
- 485:catboard.c    **** 		keyboard_keys[0] = 0;
- 194               		.loc 1 485 0
+ 509:catboard.c    **** 		keyboard_keys[0] = 0;
+ 194               		.loc 1 509 0
  195 000e 1092 0000 		sts keyboard_keys,__zero_reg__
- 486:catboard.c    **** 		usb_keyboard_send();
- 196               		.loc 1 486 0
+ 510:catboard.c    **** 		usb_keyboard_send();
+ 196               		.loc 1 510 0
  197 0012 0E94 0000 		call usb_keyboard_send
  198               	.LVL16:
  199               	.LBB37:
@@ -855,9 +879,9 @@
  210 0026 0000      		nop
  211               	.LBE38:
  212               	.LBE37:
- 487:catboard.c    **** 		_delay_ms(50);
- 488:catboard.c    **** 		usb_keyboard_press(KEY_SPACE, KEY_GUI);
- 213               		.loc 1 488 0
+ 511:catboard.c    **** 		_delay_ms(50);
+ 512:catboard.c    **** 		usb_keyboard_press(KEY_SPACE, KEY_GUI);
+ 213               		.loc 1 512 0
  214 0028 68E0      		ldi r22,lo8(8)
  215 002a 8CE2      		ldi r24,lo8(44)
  216 002c 00C0      		rjmp .L15
@@ -865,16 +889,16 @@
  218               	.L14:
  219               	.LBE36:
  220               	.LBE35:
- 489:catboard.c    **** 	} else if (KEY_LAYOUT==KEY_LAYOUT_ALT_SHIFT) { // Press Alt+Shift
- 490:catboard.c    **** 		keyboard_modifier_keys = KEY_ALT;
- 221               		.loc 1 490 0
+ 513:catboard.c    **** 	} else if (KEY_LAYOUT==KEY_LAYOUT_ALT_SHIFT) { // Press Alt+Shift
+ 514:catboard.c    **** 		keyboard_modifier_keys = KEY_ALT;
+ 221               		.loc 1 514 0
  222 002e 84E0      		ldi r24,lo8(4)
  223 0030 8093 0000 		sts keyboard_modifier_keys,r24
- 491:catboard.c    **** 		keyboard_keys[0] = 0;
- 224               		.loc 1 491 0
+ 515:catboard.c    **** 		keyboard_keys[0] = 0;
+ 224               		.loc 1 515 0
  225 0034 1092 0000 		sts keyboard_keys,__zero_reg__
- 492:catboard.c    **** 		usb_keyboard_send();
- 226               		.loc 1 492 0
+ 516:catboard.c    **** 		usb_keyboard_send();
+ 226               		.loc 1 516 0
  227 0038 0E94 0000 		call usb_keyboard_send
  228               	.LVL18:
  229               	.LBB39:
@@ -891,9 +915,9 @@
  240 004c 0000      		nop
  241               	.LBE40:
  242               	.LBE39:
- 493:catboard.c    **** 		_delay_ms(50);
- 494:catboard.c    **** 		usb_keyboard_press(0, KEY_ALT|KEY_SHIFT);
- 243               		.loc 1 494 0
+ 517:catboard.c    **** 		_delay_ms(50);
+ 518:catboard.c    **** 		usb_keyboard_press(0, KEY_ALT|KEY_SHIFT);
+ 243               		.loc 1 518 0
  244 004e 66E0      		ldi r22,lo8(6)
  245 0050 80E0      		ldi r24,0
  246               	.LVL19:
@@ -905,41 +929,41 @@
  253               	.global	get_code
  255               	get_code:
  256               	.LFB18:
- 495:catboard.c    **** 	} else if (KEY_LAYOUT==KEY_LAYOUT_CTRL_SHIFT) { // Press Ctrl+Shift
- 496:catboard.c    **** 		keyboard_modifier_keys = KEY_CTRL;
- 497:catboard.c    **** 		keyboard_keys[0] = 0;
- 498:catboard.c    **** 		usb_keyboard_send();
- 499:catboard.c    **** 		_delay_ms(50);
- 500:catboard.c    **** 		usb_keyboard_press(0, KEY_CTRL|KEY_SHIFT);
- 501:catboard.c    **** 	}
- 502:catboard.c    **** }
- 503:catboard.c    **** 
- 504:catboard.c    **** void send(void) {
- 505:catboard.c    **** 	uint8_t i;
- 506:catboard.c    **** 	for (i=0; i<6; i++) {
- 507:catboard.c    **** 		keyboard_keys[i] = get_code(queue[i]);
- 508:catboard.c    **** 	}
- 509:catboard.c    **** 	keyboard_modifier_keys = mod_keys;
- 510:catboard.c    **** 	usb_keyboard_send();
- 511:catboard.c    **** }
- 512:catboard.c    **** 
- 513:catboard.c    **** uint8_t get_code(uint8_t key_id) {
- 257               		.loc 1 513 0
+ 519:catboard.c    **** 	} else if (KEY_LAYOUT==KEY_LAYOUT_CTRL_SHIFT) { // Press Ctrl+Shift
+ 520:catboard.c    **** 		keyboard_modifier_keys = KEY_CTRL;
+ 521:catboard.c    **** 		keyboard_keys[0] = 0;
+ 522:catboard.c    **** 		usb_keyboard_send();
+ 523:catboard.c    **** 		_delay_ms(50);
+ 524:catboard.c    **** 		usb_keyboard_press(0, KEY_CTRL|KEY_SHIFT);
+ 525:catboard.c    **** 	}
+ 526:catboard.c    **** }
+ 527:catboard.c    **** 
+ 528:catboard.c    **** void send(void) {
+ 529:catboard.c    **** 	uint8_t i;
+ 530:catboard.c    **** 	for (i=0; i<6; i++) {
+ 531:catboard.c    **** 		keyboard_keys[i] = get_code(queue[i]);
+ 532:catboard.c    **** 	}
+ 533:catboard.c    **** 	keyboard_modifier_keys = mod_keys;
+ 534:catboard.c    **** 	usb_keyboard_send();
+ 535:catboard.c    **** }
+ 536:catboard.c    **** 
+ 537:catboard.c    **** uint8_t get_code(uint8_t key_id) {
+ 257               		.loc 1 537 0
  258               	.LVL21:
  259               	/* prologue: function */
  260               	/* frame size = 0 */
  261               	/* stack size = 0 */
  262               	.L__stack_usage = 0
- 514:catboard.c    **** 	uint8_t key_code = 0;
- 515:catboard.c    **** 	if (key_id<KEYS) { // not 0xFF
- 263               		.loc 1 515 0
+ 538:catboard.c    **** 	uint8_t key_code = 0;
+ 539:catboard.c    **** 	if (key_id<KEYS) { // not 0xFF
+ 263               		.loc 1 539 0
  264 0000 8C33      		cpi r24,lo8(60)
  265 0002 00F4      		brsh .L21
  266               	.LVL22:
  267               	.LBB43:
  268               	.LBB44:
- 516:catboard.c    **** 		if (pressed[key_id]==KEY_PRESSED_FN) { // key+Fn key
- 269               		.loc 1 516 0
+ 540:catboard.c    **** 		if (pressed[key_id]==KEY_PRESSED_FN) { // key+Fn key
+ 269               		.loc 1 540 0
  270 0004 282F      		mov r18,r24
  271 0006 30E0      		ldi r19,0
  272 0008 F901      		movw r30,r18
@@ -948,8 +972,8 @@
  275 000e 9081      		ld r25,Z
  276 0010 9130      		cpi r25,lo8(1)
  277 0012 01F4      		brne .L18
- 517:catboard.c    **** 			if (layer_fn[key_id]>0 && layer_fn[key_id]<0x80) {
- 278               		.loc 1 517 0
+ 541:catboard.c    **** 			if (layer_fn[key_id]>0 && layer_fn[key_id]<0x80) {
+ 278               		.loc 1 541 0
  279 0014 F901      		movw r30,r18
  280 0016 E050      		subi r30,lo8(-(layer_fn))
  281 0018 F040      		sbci r31,hi8(-(layer_fn))
@@ -959,10 +983,10 @@
  285 001e 04F0      		brlt .L17
  286 0020 00C0      		rjmp .L21
  287               	.L18:
- 518:catboard.c    **** 				key_code = layer_fn[key_id];
- 519:catboard.c    **** 			}
- 520:catboard.c    **** 		} else if (layout!=layer_fn && pressed[key_id]==KEY_PRESSED_MODS) { // keyboard shortcuts from la
- 288               		.loc 1 520 0
+ 542:catboard.c    **** 				key_code = layer_fn[key_id];
+ 543:catboard.c    **** 			}
+ 544:catboard.c    **** 		} else if (layout!=layer_fn && pressed[key_id]==KEY_PRESSED_MODS) { // keyboard shortcuts from la
+ 288               		.loc 1 544 0
  289 0022 4091 0000 		lds r20,layout
  290 0026 5091 0000 		lds r21,layout+1
  291 002a 60E0      		ldi r22,hi8(layer_fn)
@@ -971,16 +995,16 @@
  294 0030 01F0      		breq .L20
  295 0032 9230      		cpi r25,lo8(2)
  296 0034 01F4      		brne .L20
- 521:catboard.c    **** 			key_code = (KEY_SHORTCUTS_LAYER1 ? layer1[key_id] : layer2[key_id]);
- 297               		.loc 1 521 0
+ 545:catboard.c    **** 			key_code = (KEY_SHORTCUTS_LAYER1 ? layer1[key_id] : layer2[key_id]);
+ 297               		.loc 1 545 0
  298 0036 F901      		movw r30,r18
  299 0038 E050      		subi r30,lo8(-(layer1))
  300 003a F040      		sbci r31,hi8(-(layer1))
  301 003c 00C0      		rjmp .L25
  302               	.L20:
- 522:catboard.c    **** 		} else {
- 523:catboard.c    **** 			key_code = layout[key_id];
- 303               		.loc 1 523 0
+ 546:catboard.c    **** 		} else {
+ 547:catboard.c    **** 			key_code = layout[key_id];
+ 303               		.loc 1 547 0
  304 003e FA01      		movw r30,r20
  305 0040 E80F      		add r30,r24
  306 0042 F11D      		adc r31,__zero_reg__
@@ -992,24 +1016,24 @@
  312               	.L21:
  313               	.LBE44:
  314               	.LBE43:
- 514:catboard.c    **** 	uint8_t key_code = 0;
- 315               		.loc 1 514 0
+ 538:catboard.c    **** 	uint8_t key_code = 0;
+ 315               		.loc 1 538 0
  316 0048 80E0      		ldi r24,0
  317               	.L17:
  318               	.LVL26:
- 524:catboard.c    **** 		}
- 525:catboard.c    **** 	}
- 526:catboard.c    **** 	return key_code;
- 527:catboard.c    **** }
- 319               		.loc 1 527 0
+ 548:catboard.c    **** 		}
+ 549:catboard.c    **** 	}
+ 550:catboard.c    **** 	return key_code;
+ 551:catboard.c    **** }
+ 319               		.loc 1 551 0
  320 004a 0895      		ret
  321               	.LFE18:
  323               		.section	.text.send,"ax",@progbits
  324               	.global	send
  326               	send:
  327               	.LFB17:
- 504:catboard.c    **** void send(void) {
- 328               		.loc 1 504 0
+ 528:catboard.c    **** void send(void) {
+ 328               		.loc 1 528 0
  329 0000 0F93      		push r16
  330               	.LCFI1:
  331 0002 1F93      		push r17
@@ -1029,33 +1053,33 @@
  345 000e 10E0      		ldi r17,hi8(keyboard_keys)
  346               	.LVL28:
  347               	.L27:
- 507:catboard.c    **** 		keyboard_keys[i] = get_code(queue[i]);
- 348               		.loc 1 507 0 discriminator 2
+ 531:catboard.c    **** 		keyboard_keys[i] = get_code(queue[i]);
+ 348               		.loc 1 531 0 discriminator 2
  349 0010 8991      		ld r24,Y+
  350 0012 0E94 0000 		call get_code
  351               	.LVL29:
  352 0016 F801      		movw r30,r16
  353 0018 8193      		st Z+,r24
  354 001a 8F01      		movw r16,r30
- 506:catboard.c    **** 	for (i=0; i<6; i++) {
- 355               		.loc 1 506 0 discriminator 2
+ 530:catboard.c    **** 	for (i=0; i<6; i++) {
+ 355               		.loc 1 530 0 discriminator 2
  356 001c F0E0      		ldi r31,hi8(queue+6)
  357 001e C030      		cpi r28,lo8(queue+6)
  358 0020 DF07      		cpc r29,r31
  359 0022 01F4      		brne .L27
- 509:catboard.c    **** 	keyboard_modifier_keys = mod_keys;
- 360               		.loc 1 509 0
+ 533:catboard.c    **** 	keyboard_modifier_keys = mod_keys;
+ 360               		.loc 1 533 0
  361 0024 8091 0000 		lds r24,mod_keys
  362 0028 8093 0000 		sts keyboard_modifier_keys,r24
  363               	/* epilogue start */
- 511:catboard.c    **** }
- 364               		.loc 1 511 0
+ 535:catboard.c    **** }
+ 364               		.loc 1 535 0
  365 002c DF91      		pop r29
  366 002e CF91      		pop r28
  367 0030 1F91      		pop r17
  368 0032 0F91      		pop r16
- 510:catboard.c    **** 	usb_keyboard_send();
- 369               		.loc 1 510 0
+ 534:catboard.c    **** 	usb_keyboard_send();
+ 369               		.loc 1 534 0
  370 0034 0C94 0000 		jmp usb_keyboard_send
  371               	.LVL30:
  372               	.LFE17:
@@ -1063,8 +1087,8 @@
  375               	.global	key_release
  377               	key_release:
  378               	.LFB15:
- 393:catboard.c    **** void key_release(uint8_t key_id) {
- 379               		.loc 1 393 0
+ 400:catboard.c    **** void key_release(uint8_t key_id) {
+ 379               		.loc 1 400 0
  380               	.LVL31:
  381 0000 CF93      		push r28
  382               	.LCFI5:
@@ -1075,8 +1099,8 @@
  387               	/* stack size = 2 */
  388               	.L__stack_usage = 2
  389 0004 D82F      		mov r29,r24
- 395:catboard.c    **** 	int8_t pressed_key_id = pressed[key_id];
- 390               		.loc 1 395 0
+ 402:catboard.c    **** 	int8_t pressed_key_id = pressed[key_id];
+ 390               		.loc 1 402 0
  391 0006 282F      		mov r18,r24
  392 0008 30E0      		ldi r19,0
  393 000a F901      		movw r30,r18
@@ -1084,1137 +1108,1156 @@
  395 000e F040      		sbci r31,hi8(-(pressed))
  396 0010 C081      		ld r28,Z
  397               	.LVL32:
- 396:catboard.c    **** 	uint8_t key_code = ((pressed_key_id==KEY_PRESSED_FN) ? layer_fn[key_id] : layout[key_id]);
- 398               		.loc 1 396 0
+ 403:catboard.c    **** 	uint8_t key_code = ((pressed_key_id==KEY_PRESSED_FN) ? layer_fn[key_id] : layout[key_id]);
+ 398               		.loc 1 403 0
  399 0012 C130      		cpi r28,lo8(1)
  400 0014 01F4      		brne .L30
- 396:catboard.c    **** 	uint8_t key_code = ((pressed_key_id==KEY_PRESSED_FN) ? layer_fn[key_id] : layout[key_id]);
- 401               		.loc 1 396 0 is_stmt 0 discriminator 1
+ 403:catboard.c    **** 	uint8_t key_code = ((pressed_key_id==KEY_PRESSED_FN) ? layer_fn[key_id] : layout[key_id]);
+ 401               		.loc 1 403 0 is_stmt 0 discriminator 1
  402 0016 F901      		movw r30,r18
  403 0018 E050      		subi r30,lo8(-(layer_fn))
  404 001a F040      		sbci r31,hi8(-(layer_fn))
- 405 001c 00C0      		rjmp .L83
+ 405 001c 00C0      		rjmp .L96
  406               	.L30:
- 396:catboard.c    **** 	uint8_t key_code = ((pressed_key_id==KEY_PRESSED_FN) ? layer_fn[key_id] : layout[key_id]);
- 407               		.loc 1 396 0 discriminator 2
+ 403:catboard.c    **** 	uint8_t key_code = ((pressed_key_id==KEY_PRESSED_FN) ? layer_fn[key_id] : layout[key_id]);
+ 407               		.loc 1 403 0 discriminator 2
  408 001e E091 0000 		lds r30,layout
  409 0022 F091 0000 		lds r31,layout+1
  410 0026 E20F      		add r30,r18
  411 0028 F31F      		adc r31,r19
  412 002a 9081      		ld r25,Z
  413               	.LVL33:
- 397:catboard.c    **** 	if (pressed_key_id==KEY_PRESSED_PREV && prev_layer) {
- 414               		.loc 1 397 0 is_stmt 1 discriminator 2
+ 404:catboard.c    **** 	if (pressed_key_id==KEY_PRESSED_PREV && prev_layer) {
+ 414               		.loc 1 404 0 is_stmt 1 discriminator 2
  415 002c C630      		cpi r28,lo8(6)
  416 002e 01F4      		brne .L31
- 397:catboard.c    **** 	if (pressed_key_id==KEY_PRESSED_PREV && prev_layer) {
- 417               		.loc 1 397 0 is_stmt 0 discriminator 1
+ 404:catboard.c    **** 	if (pressed_key_id==KEY_PRESSED_PREV && prev_layer) {
+ 417               		.loc 1 404 0 is_stmt 0 discriminator 1
  418 0030 4091 0000 		lds r20,prev_layer
  419 0034 5091 0000 		lds r21,prev_layer+1
  420 0038 4115      		cp r20,__zero_reg__
  421 003a 5105      		cpc r21,__zero_reg__
  422 003c 01F0      		breq .L31
- 398:catboard.c    **** 		key_code = prev_layer[key_id];
- 423               		.loc 1 398 0 is_stmt 1
+ 405:catboard.c    **** 		key_code = prev_layer[key_id];
+ 423               		.loc 1 405 0 is_stmt 1
  424 003e FA01      		movw r30,r20
  425 0040 E20F      		add r30,r18
  426 0042 F31F      		adc r31,r19
  427               	.LVL34:
- 428               	.L83:
+ 428               	.L96:
  429 0044 9081      		ld r25,Z
  430               	.LVL35:
  431               	.L31:
- 400:catboard.c    **** 	pressed[key_id] = 0;
- 432               		.loc 1 400 0
+ 407:catboard.c    **** 	pressed[key_id] = 0;
+ 432               		.loc 1 407 0
  433 0046 F901      		movw r30,r18
  434 0048 E050      		subi r30,lo8(-(pressed))
  435 004a F040      		sbci r31,hi8(-(pressed))
  436 004c 1082      		st Z,__zero_reg__
- 401:catboard.c    **** 	if (key_code>0xF0) { // Catboard keys release
- 437               		.loc 1 401 0
+ 408:catboard.c    **** 	if (key_code>0xF0) { // Catboard keys release
+ 437               		.loc 1 408 0
  438 004e 913F      		cpi r25,lo8(-15)
  439 0050 00F4      		brsh .+2
  440 0052 00C0      		rjmp .L32
- 402:catboard.c    **** 		if (key_code==KEY_ALT_TAB && pressed_key_id!=KEY_PRESSED_ALT) { // AltTab: Alt release
- 441               		.loc 1 402 0
+ 409:catboard.c    **** 		if (key_code==KEY_ALT_TAB && pressed_key_id!=KEY_PRESSED_ALT) { // AltTab: Alt release
+ 441               		.loc 1 409 0
  442 0054 9D3F      		cpi r25,lo8(-3)
  443 0056 01F4      		brne .L33
- 402:catboard.c    **** 		if (key_code==KEY_ALT_TAB && pressed_key_id!=KEY_PRESSED_ALT) { // AltTab: Alt release
- 444               		.loc 1 402 0 is_stmt 0 discriminator 1
+ 409:catboard.c    **** 		if (key_code==KEY_ALT_TAB && pressed_key_id!=KEY_PRESSED_ALT) { // AltTab: Alt release
+ 444               		.loc 1 409 0 is_stmt 0 discriminator 1
  445 0058 C330      		cpi r28,lo8(3)
  446 005a 01F4      		brne .+2
  447 005c 00C0      		rjmp .L29
- 403:catboard.c    **** 			mod_keys &= ~(KEY_ALT);
- 448               		.loc 1 403 0 is_stmt 1
+ 410:catboard.c    **** 			mod_keys &= ~(KEY_ALT);
+ 448               		.loc 1 410 0 is_stmt 1
  449 005e 8091 0000 		lds r24,mod_keys
  450               	.LVL36:
  451 0062 8B7F      		andi r24,lo8(-5)
- 452 0064 00C0      		rjmp .L86
+ 452 0064 00C0      		rjmp .L97
  453               	.L33:
- 405:catboard.c    **** 		} else if (key_code==KEY_LAYER1 && pressed_key_id==KEY_PRESSED_CTRL) {
- 454               		.loc 1 405 0
+ 412:catboard.c    **** 		} else if (key_code==KEY_LAYER1 && pressed_key_id==KEY_PRESSED_CTRL) {
+ 454               		.loc 1 412 0
  455 0066 913F      		cpi r25,lo8(-15)
- 456 0068 01F4      		brne .L36
+ 456 0068 01F4      		brne .L35
  457 006a 8091 0000 		lds r24,mod_keys
- 405:catboard.c    **** 		} else if (key_code==KEY_LAYER1 && pressed_key_id==KEY_PRESSED_CTRL) {
- 458               		.loc 1 405 0 is_stmt 0 discriminator 1
+ 412:catboard.c    **** 		} else if (key_code==KEY_LAYER1 && pressed_key_id==KEY_PRESSED_CTRL) {
+ 458               		.loc 1 412 0 is_stmt 0 discriminator 1
  459 006e C530      		cpi r28,lo8(5)
- 460 0070 01F4      		brne .L37
- 406:catboard.c    **** 			mod_keys &= ~(KEY_CTRL);
- 461               		.loc 1 406 0 is_stmt 1
+ 460 0070 01F4      		brne .L36
+ 413:catboard.c    **** 			mod_keys &= ~(KEY_CTRL);
+ 461               		.loc 1 413 0 is_stmt 1
  462 0072 8E7F      		andi r24,lo8(-2)
- 463 0074 00C0      		rjmp .L86
- 464               	.L37:
- 409:catboard.c    **** 			mod_keys &= ~(KEY_SHIFT);
- 465               		.loc 1 409 0
+ 463 0074 00C0      		rjmp .L97
+ 464               	.L36:
+ 416:catboard.c    **** 			mod_keys &= ~(KEY_SHIFT);
+ 465               		.loc 1 416 0
  466 0076 8D7F      		andi r24,lo8(-3)
  467 0078 8093 0000 		sts mod_keys,r24
- 410:catboard.c    **** 			send();
- 468               		.loc 1 410 0
+ 417:catboard.c    **** 			send();
+ 468               		.loc 1 417 0
  469 007c 0E94 0000 		call send
  470               	.LVL37:
- 411:catboard.c    **** 			if (last_key==key_id && pressed_key_id!=KEY_PRESSED_SHIFT) {
- 471               		.loc 1 411 0
+ 419:catboard.c    **** 			if (last_key==key_id && press_time && pressed_key_id!=KEY_PRESSED_SHIFT && ! mod_keys) {
+ 471               		.loc 1 419 0
  472 0080 8091 0000 		lds r24,last_key
  473 0084 8D13      		cpse r24,r29
- 474 0086 00C0      		rjmp .L29
- 411:catboard.c    **** 			if (last_key==key_id && pressed_key_id!=KEY_PRESSED_SHIFT) {
- 475               		.loc 1 411 0 is_stmt 0 discriminator 1
- 476 0088 C430      		cpi r28,lo8(4)
- 477 008a 01F4      		brne .+2
- 478 008c 00C0      		rjmp .L29
- 412:catboard.c    **** 				if (layout!=layer1) {
- 479               		.loc 1 412 0 is_stmt 1
- 480 008e 8091 0000 		lds r24,layout
- 481 0092 9091 0000 		lds r25,layout+1
- 482 0096 20E0      		ldi r18,hi8(layer1)
- 483 0098 8030      		cpi r24,lo8(layer1)
- 484 009a 9207      		cpc r25,r18
- 485 009c 01F4      		brne .+2
- 486 009e 00C0      		rjmp .L29
- 487               	.LBB45:
- 413:catboard.c    **** 					if (layout==layer_fn) {
- 488               		.loc 1 413 0
- 489 00a0 8050      		subi r24,lo8(layer_fn)
- 490 00a2 9040      		sbci r25,hi8(layer_fn)
- 491 00a4 01F4      		brne .L39
- 414:catboard.c    **** 						prev_layer = layer1;
- 492               		.loc 1 414 0
- 493 00a6 80E0      		ldi r24,lo8(layer1)
- 494 00a8 90E0      		ldi r25,hi8(layer1)
- 495 00aa 00C0      		rjmp .L84
- 496               	.L39:
- 416:catboard.c    **** 						layout = layer1;
- 497               		.loc 1 416 0
- 498 00ac 80E0      		ldi r24,lo8(layer1)
- 499 00ae 90E0      		ldi r25,hi8(layer1)
- 500               	.L85:
- 501 00b0 9093 0000 		sts layout+1,r25
- 502 00b4 8093 0000 		sts layout,r24
- 503               	.L40:
- 504               	/* epilogue start */
- 505               	.LBE45:
- 480:catboard.c    **** }
- 506               		.loc 1 480 0
- 507 00b8 DF91      		pop r29
- 508               	.LVL38:
- 509 00ba CF91      		pop r28
- 510               	.LVL39:
- 511               	.LBB46:
- 418:catboard.c    **** 					change_layout();
- 512               		.loc 1 418 0
- 513 00bc 0C94 0000 		jmp change_layout
- 514               	.LVL40:
- 515               	.L36:
- 516               	.LBE46:
- 421:catboard.c    **** 		} else if (key_code==KEY_LAYER2 && pressed_key_id==KEY_PRESSED_CTRL) {
- 517               		.loc 1 421 0
- 518 00c0 923F      		cpi r25,lo8(-14)
- 519 00c2 01F4      		brne .L41
- 520 00c4 8091 0000 		lds r24,mod_keys
- 421:catboard.c    **** 		} else if (key_code==KEY_LAYER2 && pressed_key_id==KEY_PRESSED_CTRL) {
- 521               		.loc 1 421 0 is_stmt 0 discriminator 1
- 522 00c8 C530      		cpi r28,lo8(5)
- 523 00ca 01F4      		brne .L42
- 422:catboard.c    **** 			mod_keys &= ~(KEY_RIGHT_CTRL);
- 524               		.loc 1 422 0 is_stmt 1
- 525 00cc 8F7E      		andi r24,lo8(-17)
- 526 00ce 00C0      		rjmp .L86
- 527               	.L42:
- 425:catboard.c    **** 			mod_keys &= ~(KEY_RIGHT_SHIFT);
- 528               		.loc 1 425 0
- 529 00d0 8F7D      		andi r24,lo8(-33)
- 530 00d2 8093 0000 		sts mod_keys,r24
- 426:catboard.c    **** 			send();
- 531               		.loc 1 426 0
- 532 00d6 0E94 0000 		call send
- 533               	.LVL41:
- 427:catboard.c    **** 			if (last_key==key_id && pressed_key_id!=KEY_PRESSED_SHIFT) {
- 534               		.loc 1 427 0
- 535 00da 8091 0000 		lds r24,last_key
- 536 00de 8D13      		cpse r24,r29
- 537 00e0 00C0      		rjmp .L29
- 427:catboard.c    **** 			if (last_key==key_id && pressed_key_id!=KEY_PRESSED_SHIFT) {
- 538               		.loc 1 427 0 is_stmt 0 discriminator 1
- 539 00e2 C430      		cpi r28,lo8(4)
- 540 00e4 01F4      		brne .+2
- 541 00e6 00C0      		rjmp .L29
- 428:catboard.c    **** 				if (layout!=layer2) {
- 542               		.loc 1 428 0 is_stmt 1
- 543 00e8 8091 0000 		lds r24,layout
- 544 00ec 9091 0000 		lds r25,layout+1
- 545 00f0 20E0      		ldi r18,hi8(layer2)
- 546 00f2 8030      		cpi r24,lo8(layer2)
- 547 00f4 9207      		cpc r25,r18
- 548 00f6 01F4      		brne .+2
- 549 00f8 00C0      		rjmp .L29
- 550               	.LBB47:
- 429:catboard.c    **** 					if (layout==layer_fn) {
- 551               		.loc 1 429 0
- 552 00fa 8050      		subi r24,lo8(layer_fn)
- 553 00fc 9040      		sbci r25,hi8(layer_fn)
- 554 00fe 01F4      		brne .L43
- 430:catboard.c    **** 						prev_layer = layer2;
- 555               		.loc 1 430 0
- 556 0100 80E0      		ldi r24,lo8(layer2)
- 557 0102 90E0      		ldi r25,hi8(layer2)
- 558               	.L84:
- 559 0104 9093 0000 		sts prev_layer+1,r25
- 560 0108 8093 0000 		sts prev_layer,r24
- 561 010c 00C0      		rjmp .L40
- 562               	.L43:
- 432:catboard.c    **** 						layout = layer2;
- 563               		.loc 1 432 0
- 564 010e 80E0      		ldi r24,lo8(layer2)
- 565 0110 90E0      		ldi r25,hi8(layer2)
- 566 0112 00C0      		rjmp .L85
- 567               	.LVL42:
- 568               	.L41:
- 569               	.LBE47:
- 437:catboard.c    **** 		} else if (key_code==KEY_MY_SHIFT) { // My Shift
- 570               		.loc 1 437 0
- 571 0114 933F      		cpi r25,lo8(-13)
- 572 0116 01F0      		breq .+2
- 573 0118 00C0      		rjmp .L29
- 438:catboard.c    **** 			mod_keys &= ~KEY_SHIFT;
- 574               		.loc 1 438 0
- 575 011a 8091 0000 		lds r24,mod_keys
- 576 011e 8D7F      		andi r24,lo8(-3)
- 577 0120 8093 0000 		sts mod_keys,r24
- 439:catboard.c    **** 			send();
- 578               		.loc 1 439 0
- 579 0124 0E94 0000 		call send
- 580               	.LVL43:
- 440:catboard.c    **** 			if (last_key==key_id && press_time) {
- 581               		.loc 1 440 0
- 582 0128 8091 0000 		lds r24,last_key
- 583 012c 8D13      		cpse r24,r29
- 584 012e 00C0      		rjmp .L44
- 440:catboard.c    **** 			if (last_key==key_id && press_time) {
- 585               		.loc 1 440 0 is_stmt 0 discriminator 1
- 586 0130 8091 0000 		lds r24,press_time
- 587 0134 9091 0000 		lds r25,press_time+1
- 588 0138 892B      		or r24,r25
- 589 013a 01F0      		breq .L44
- 441:catboard.c    **** 				usb_keyboard_press(KEY_SPACE, mod_keys);
- 590               		.loc 1 441 0 is_stmt 1
- 591 013c 6091 0000 		lds r22,mod_keys
- 592 0140 8CE2      		ldi r24,lo8(44)
- 593 0142 0E94 0000 		call usb_keyboard_press
- 594               	.LVL44:
- 595               	.L44:
- 443:catboard.c    **** 			last_key = 0xFF;
- 596               		.loc 1 443 0
- 597 0146 8FEF      		ldi r24,lo8(-1)
- 598 0148 8093 0000 		sts last_key,r24
- 599 014c 00C0      		rjmp .L56
- 600               	.LVL45:
- 601               	.L32:
- 449:catboard.c    **** 	} else if (key_code>=0x80) { // Mod keys release
- 602               		.loc 1 449 0
- 603 014e 97FF      		sbrs r25,7
- 604 0150 00C0      		rjmp .L45
- 450:catboard.c    **** 		if (mac_mode && key_code==(KEY_CTRL|KEY_MOD)) {
- 605               		.loc 1 450 0
- 606 0152 8091 0000 		lds r24,mac_mode
- 607 0156 8823      		tst r24
- 608 0158 01F0      		breq .L46
- 450:catboard.c    **** 		if (mac_mode && key_code==(KEY_CTRL|KEY_MOD)) {
- 609               		.loc 1 450 0 is_stmt 0 discriminator 1
- 610 015a 9138      		cpi r25,lo8(-127)
- 611 015c 01F4      		brne .L47
- 451:catboard.c    **** 			mod_keys &= ~KEY_GUI;
- 612               		.loc 1 451 0 is_stmt 1
- 613 015e 8091 0000 		lds r24,mod_keys
- 614 0162 877F      		andi r24,lo8(-9)
- 615 0164 00C0      		rjmp .L86
- 616               	.L47:
- 452:catboard.c    **** 		} else if ((mac_mode && key_code==(KEY_RIGHT_CTRL|KEY_MOD)) || key_code==(KEY_RIGHT_GUI|KEY_MOD))
- 617               		.loc 1 452 0 discriminator 1
- 618 0166 9039      		cpi r25,lo8(-112)
- 619 0168 01F0      		breq .L49
- 620               	.L46:
- 452:catboard.c    **** 		} else if ((mac_mode && key_code==(KEY_RIGHT_CTRL|KEY_MOD)) || key_code==(KEY_RIGHT_GUI|KEY_MOD))
- 621               		.loc 1 452 0 is_stmt 0 discriminator 2
- 622 016a 9038      		cpi r25,lo8(-128)
- 623 016c 01F4      		brne .L50
- 624               	.L49:
- 453:catboard.c    **** 			mod_keys &= ~KEY_RIGHT_GUI;
- 625               		.loc 1 453 0 is_stmt 1
- 626 016e 8091 0000 		lds r24,mod_keys
- 627 0172 8F77      		andi r24,lo8(127)
- 628 0174 00C0      		rjmp .L86
- 629               	.L50:
- 455:catboard.c    **** 			mod_keys &= ~(key_code & 0x7F);
- 630               		.loc 1 455 0
- 631 0176 9F77      		andi r25,lo8(127)
- 632               	.LVL46:
- 633 0178 9095      		com r25
- 634 017a 8091 0000 		lds r24,mod_keys
- 635 017e 8923      		and r24,r25
- 636               	.L86:
- 637 0180 8093 0000 		sts mod_keys,r24
- 638               	/* epilogue start */
- 480:catboard.c    **** }
- 639               		.loc 1 480 0
- 640 0184 DF91      		pop r29
- 641 0186 CF91      		pop r28
- 642               	.LVL47:
- 457:catboard.c    **** 		send();
- 643               		.loc 1 457 0
- 644 0188 0C94 0000 		jmp send
- 645               	.LVL48:
- 646               	.L45:
- 647 018c E0E0      		ldi r30,lo8(queue)
- 648 018e F0E0      		ldi r31,hi8(queue)
- 449:catboard.c    **** 	} else if (key_code>=0x80) { // Mod keys release
- 649               		.loc 1 449 0
- 650 0190 90E0      		ldi r25,0
- 651               	.LVL49:
- 652               	.L53:
- 460:catboard.c    **** 			if (queue[i]==key_id) {
- 653               		.loc 1 460 0
- 654 0192 8191      		ld r24,Z+
- 655 0194 8D17      		cp r24,r29
- 656 0196 01F0      		breq .L82
- 459:catboard.c    **** 		for (i=0; i<6; i++) {
- 657               		.loc 1 459 0
- 658 0198 9F5F      		subi r25,lo8(-(1))
- 659               	.LVL50:
- 660 019a 9630      		cpi r25,lo8(6)
- 661 019c 01F4      		brne .L53
- 662 019e 00C0      		rjmp .L82
- 663               	.L55:
- 465:catboard.c    **** 			queue[i] = queue[i+1];
- 664               		.loc 1 465 0 discriminator 2
- 665 01a0 E92F      		mov r30,r25
- 666 01a2 F0E0      		ldi r31,0
- 667 01a4 E050      		subi r30,lo8(-(queue))
- 668 01a6 F040      		sbci r31,hi8(-(queue))
- 669 01a8 8181      		ldd r24,Z+1
- 670 01aa 8083      		st Z,r24
- 464:catboard.c    **** 		for (; i<6; i++) {
- 671               		.loc 1 464 0 discriminator 2
- 672 01ac 9F5F      		subi r25,lo8(-(1))
- 673               	.LVL51:
- 674               	.L82:
- 464:catboard.c    **** 		for (; i<6; i++) {
- 675               		.loc 1 464 0 is_stmt 0 discriminator 1
- 676 01ae 9630      		cpi r25,lo8(6)
- 677 01b0 01F4      		brne .L55
- 467:catboard.c    **** 		send();
- 678               		.loc 1 467 0 is_stmt 1
- 679 01b2 0E94 0000 		call send
- 680               	.LVL52:
- 469:catboard.c    **** 		if (last_key==key_id) { // realise time
- 681               		.loc 1 469 0
- 682 01b6 8091 0000 		lds r24,last_key
- 683 01ba 8D13      		cpse r24,r29
- 684 01bc 00C0      		rjmp .L56
- 470:catboard.c    **** 			press_time2 = 0;
- 685               		.loc 1 470 0
- 686 01be 1092 0000 		sts press_time2+1,__zero_reg__
- 687 01c2 1092 0000 		sts press_time2,__zero_reg__
- 471:catboard.c    **** 			release_time = 1;
- 688               		.loc 1 471 0
- 689 01c6 81E0      		ldi r24,lo8(1)
- 690 01c8 90E0      		ldi r25,0
- 691 01ca 9093 0000 		sts release_time+1,r25
- 692 01ce 8093 0000 		sts release_time,r24
- 693 01d2 00C0      		rjmp .L87
- 694               	.L56:
- 474:catboard.c    **** 			press_time = 0;
- 695               		.loc 1 474 0
- 696 01d4 1092 0000 		sts press_time+1,__zero_reg__
- 697 01d8 1092 0000 		sts press_time,__zero_reg__
- 475:catboard.c    **** 			press_time2 = 0;
- 698               		.loc 1 475 0
- 699 01dc 1092 0000 		sts press_time2+1,__zero_reg__
- 700 01e0 1092 0000 		sts press_time2,__zero_reg__
- 476:catboard.c    **** 			release_time = 0;
- 701               		.loc 1 476 0
- 702 01e4 1092 0000 		sts release_time+1,__zero_reg__
- 703 01e8 1092 0000 		sts release_time,__zero_reg__
- 704               	.L87:
- 477:catboard.c    **** 			repeat_time = 0;
- 705               		.loc 1 477 0
- 706 01ec 1092 0000 		sts repeat_time+1,__zero_reg__
- 707 01f0 1092 0000 		sts repeat_time,__zero_reg__
- 708               	.L29:
- 709               	/* epilogue start */
- 480:catboard.c    **** }
- 710               		.loc 1 480 0
- 711 01f4 DF91      		pop r29
- 712               	.LVL53:
- 713 01f6 CF91      		pop r28
- 714               	.LVL54:
- 715 01f8 0895      		ret
- 716               	.LFE15:
- 718               		.section	.text.key_press,"ax",@progbits
- 719               	.global	key_press
- 721               	key_press:
- 722               	.LFB14:
+ 474 0086 00C0      		rjmp .L45
+ 419:catboard.c    **** 			if (last_key==key_id && press_time && pressed_key_id!=KEY_PRESSED_SHIFT && ! mod_keys) {
+ 475               		.loc 1 419 0 is_stmt 0 discriminator 1
+ 476 0088 8091 0000 		lds r24,press_time
+ 477 008c 9091 0000 		lds r25,press_time+1
+ 478 0090 892B      		or r24,r25
+ 479 0092 01F4      		brne .+2
+ 480 0094 00C0      		rjmp .L45
+ 481 0096 C430      		cpi r28,lo8(4)
+ 482 0098 01F4      		brne .+2
+ 483 009a 00C0      		rjmp .L45
+ 484 009c 8091 0000 		lds r24,mod_keys
+ 485 00a0 8111      		cpse r24,__zero_reg__
+ 486 00a2 00C0      		rjmp .L45
+ 421:catboard.c    **** 				if (layout!=layer1) {
+ 487               		.loc 1 421 0 is_stmt 1
+ 488 00a4 8091 0000 		lds r24,layout
+ 489 00a8 9091 0000 		lds r25,layout+1
+ 490 00ac 20E0      		ldi r18,hi8(layer1)
+ 491 00ae 8030      		cpi r24,lo8(layer1)
+ 492 00b0 9207      		cpc r25,r18
+ 493 00b2 01F4      		brne .+2
+ 494 00b4 00C0      		rjmp .L45
+ 495               	.LBB45:
+ 422:catboard.c    **** 					if (layout==layer_fn) {
+ 496               		.loc 1 422 0
+ 497 00b6 8050      		subi r24,lo8(layer_fn)
+ 498 00b8 9040      		sbci r25,hi8(layer_fn)
+ 499 00ba 01F4      		brne .L38
+ 423:catboard.c    **** 						prev_layer = layer1;
+ 500               		.loc 1 423 0
+ 501 00bc 80E0      		ldi r24,lo8(layer1)
+ 502 00be 90E0      		ldi r25,hi8(layer1)
+ 503 00c0 00C0      		rjmp .L100
+ 504               	.L38:
+ 425:catboard.c    **** 						layout = layer1;
+ 505               		.loc 1 425 0
+ 506 00c2 80E0      		ldi r24,lo8(layer1)
+ 507 00c4 90E0      		ldi r25,hi8(layer1)
+ 508 00c6 00C0      		rjmp .L99
+ 509               	.LVL38:
+ 510               	.L35:
+ 511               	.LBE45:
+ 435:catboard.c    **** 		} else if (key_code==KEY_LAYER2 && pressed_key_id==KEY_PRESSED_CTRL) {
+ 512               		.loc 1 435 0
+ 513 00c8 923F      		cpi r25,lo8(-14)
+ 514 00ca 01F4      		brne .L40
+ 515 00cc 8091 0000 		lds r24,mod_keys
+ 435:catboard.c    **** 		} else if (key_code==KEY_LAYER2 && pressed_key_id==KEY_PRESSED_CTRL) {
+ 516               		.loc 1 435 0 is_stmt 0 discriminator 1
+ 517 00d0 C530      		cpi r28,lo8(5)
+ 518 00d2 01F4      		brne .L41
+ 436:catboard.c    **** 			mod_keys &= ~(KEY_RIGHT_CTRL);
+ 519               		.loc 1 436 0 is_stmt 1
+ 520 00d4 8F7E      		andi r24,lo8(-17)
+ 521 00d6 00C0      		rjmp .L97
+ 522               	.L41:
+ 439:catboard.c    **** 			mod_keys &= ~(KEY_RIGHT_SHIFT);
+ 523               		.loc 1 439 0
+ 524 00d8 8F7D      		andi r24,lo8(-33)
+ 525 00da 8093 0000 		sts mod_keys,r24
+ 440:catboard.c    **** 			send();
+ 526               		.loc 1 440 0
+ 527 00de 0E94 0000 		call send
+ 528               	.LVL39:
+ 441:catboard.c    **** 			if (last_key==key_id && press_time && pressed_key_id!=KEY_PRESSED_SHIFT && ! mod_keys) {
+ 529               		.loc 1 441 0
+ 530 00e2 8091 0000 		lds r24,last_key
+ 531 00e6 8D13      		cpse r24,r29
+ 532 00e8 00C0      		rjmp .L45
+ 441:catboard.c    **** 			if (last_key==key_id && press_time && pressed_key_id!=KEY_PRESSED_SHIFT && ! mod_keys) {
+ 533               		.loc 1 441 0 is_stmt 0 discriminator 1
+ 534 00ea 8091 0000 		lds r24,press_time
+ 535 00ee 9091 0000 		lds r25,press_time+1
+ 536 00f2 892B      		or r24,r25
+ 537 00f4 01F4      		brne .+2
+ 538 00f6 00C0      		rjmp .L45
+ 539 00f8 C430      		cpi r28,lo8(4)
+ 540 00fa 01F0      		breq .L45
+ 541 00fc 8091 0000 		lds r24,mod_keys
+ 542 0100 8111      		cpse r24,__zero_reg__
+ 543 0102 00C0      		rjmp .L45
+ 443:catboard.c    **** 				if (layout!=layer2) {
+ 544               		.loc 1 443 0 is_stmt 1
+ 545 0104 8091 0000 		lds r24,layout
+ 546 0108 9091 0000 		lds r25,layout+1
+ 547 010c 20E0      		ldi r18,hi8(layer2)
+ 548 010e 8030      		cpi r24,lo8(layer2)
+ 549 0110 9207      		cpc r25,r18
+ 550 0112 01F0      		breq .L45
+ 551               	.LBB46:
+ 444:catboard.c    **** 					if (layout==layer_fn) {
+ 552               		.loc 1 444 0
+ 553 0114 8050      		subi r24,lo8(layer_fn)
+ 554 0116 9040      		sbci r25,hi8(layer_fn)
+ 555 0118 01F4      		brne .L43
+ 445:catboard.c    **** 						prev_layer = layer2;
+ 556               		.loc 1 445 0
+ 557 011a 80E0      		ldi r24,lo8(layer2)
+ 558 011c 90E0      		ldi r25,hi8(layer2)
+ 559               	.L100:
+ 560 011e 9093 0000 		sts prev_layer+1,r25
+ 561 0122 8093 0000 		sts prev_layer,r24
+ 562 0126 00C0      		rjmp .L44
+ 563               	.L43:
+ 447:catboard.c    **** 						layout = layer2;
+ 564               		.loc 1 447 0
+ 565 0128 80E0      		ldi r24,lo8(layer2)
+ 566 012a 90E0      		ldi r25,hi8(layer2)
+ 567               	.L99:
+ 568 012c 9093 0000 		sts layout+1,r25
+ 569 0130 8093 0000 		sts layout,r24
+ 570               	.L44:
+ 449:catboard.c    **** 					change_layout();
+ 571               		.loc 1 449 0
+ 572 0134 0E94 0000 		call change_layout
+ 573               	.LVL40:
+ 574 0138 00C0      		rjmp .L45
+ 575               	.LVL41:
+ 576               	.L40:
+ 577               	.LBE46:
+ 457:catboard.c    **** 		} else if (key_code==KEY_MY_SHIFT) { // My Shift
+ 578               		.loc 1 457 0
+ 579 013a 933F      		cpi r25,lo8(-13)
+ 580 013c 01F0      		breq .+2
+ 581 013e 00C0      		rjmp .L29
+ 461:catboard.c    **** 				mod_keys &= ~KEY_SHIFT;
+ 582               		.loc 1 461 0
+ 583 0140 8091 0000 		lds r24,mod_keys
+ 584 0144 8D7F      		andi r24,lo8(-3)
+ 585 0146 8093 0000 		sts mod_keys,r24
+ 463:catboard.c    **** 			send();
+ 586               		.loc 1 463 0
+ 587 014a 0E94 0000 		call send
+ 588               	.LVL42:
+ 464:catboard.c    **** 			if (last_key==key_id && press_time && pressed_key_id!=KEY_PRESSED_MODS && ! mod_keys) {
+ 589               		.loc 1 464 0
+ 590 014e 8091 0000 		lds r24,last_key
+ 591 0152 8D13      		cpse r24,r29
+ 592 0154 00C0      		rjmp .L45
+ 464:catboard.c    **** 			if (last_key==key_id && press_time && pressed_key_id!=KEY_PRESSED_MODS && ! mod_keys) {
+ 593               		.loc 1 464 0 is_stmt 0 discriminator 1
+ 594 0156 8091 0000 		lds r24,press_time
+ 595 015a 9091 0000 		lds r25,press_time+1
+ 596 015e 892B      		or r24,r25
+ 597 0160 01F0      		breq .L45
+ 598 0162 C230      		cpi r28,lo8(2)
+ 599 0164 01F0      		breq .L45
+ 600 0166 8091 0000 		lds r24,mod_keys
+ 601 016a 8111      		cpse r24,__zero_reg__
+ 602 016c 00C0      		rjmp .L45
+ 465:catboard.c    **** 				usb_keyboard_press(KEY_SPACE, mod_keys);
+ 603               		.loc 1 465 0 is_stmt 1
+ 604 016e 60E0      		ldi r22,0
+ 605 0170 8CE2      		ldi r24,lo8(44)
+ 606 0172 0E94 0000 		call usb_keyboard_press
+ 607               	.LVL43:
+ 608               	.L45:
+ 467:catboard.c    **** 			last_key = 0xFF;
+ 609               		.loc 1 467 0
+ 610 0176 8FEF      		ldi r24,lo8(-1)
+ 611 0178 8093 0000 		sts last_key,r24
+ 612 017c 00C0      		rjmp .L57
+ 613               	.LVL44:
+ 614               	.L32:
+ 473:catboard.c    **** 	} else if (key_code>=0x80) { // Mod keys release
+ 615               		.loc 1 473 0
+ 616 017e 97FF      		sbrs r25,7
+ 617 0180 00C0      		rjmp .L46
+ 474:catboard.c    **** 		if (mac_mode && key_code==(KEY_CTRL|KEY_MOD)) {
+ 618               		.loc 1 474 0
+ 619 0182 8091 0000 		lds r24,mac_mode
+ 620 0186 8823      		tst r24
+ 621 0188 01F0      		breq .L47
+ 474:catboard.c    **** 		if (mac_mode && key_code==(KEY_CTRL|KEY_MOD)) {
+ 622               		.loc 1 474 0 is_stmt 0 discriminator 1
+ 623 018a 9138      		cpi r25,lo8(-127)
+ 624 018c 01F4      		brne .L48
+ 475:catboard.c    **** 			mod_keys &= ~KEY_GUI;
+ 625               		.loc 1 475 0 is_stmt 1
+ 626 018e 8091 0000 		lds r24,mod_keys
+ 627 0192 877F      		andi r24,lo8(-9)
+ 628 0194 00C0      		rjmp .L97
+ 629               	.L48:
+ 476:catboard.c    **** 		} else if ((mac_mode && key_code==(KEY_RIGHT_CTRL|KEY_MOD)) || key_code==(KEY_RIGHT_GUI|KEY_MOD))
+ 630               		.loc 1 476 0 discriminator 1
+ 631 0196 9039      		cpi r25,lo8(-112)
+ 632 0198 01F0      		breq .L50
+ 633               	.L47:
+ 476:catboard.c    **** 		} else if ((mac_mode && key_code==(KEY_RIGHT_CTRL|KEY_MOD)) || key_code==(KEY_RIGHT_GUI|KEY_MOD))
+ 634               		.loc 1 476 0 is_stmt 0 discriminator 2
+ 635 019a 9038      		cpi r25,lo8(-128)
+ 636 019c 01F4      		brne .L51
+ 637               	.L50:
+ 477:catboard.c    **** 			mod_keys &= ~KEY_RIGHT_GUI;
+ 638               		.loc 1 477 0 is_stmt 1
+ 639 019e 8091 0000 		lds r24,mod_keys
+ 640 01a2 8F77      		andi r24,lo8(127)
+ 641 01a4 00C0      		rjmp .L97
+ 642               	.L51:
+ 479:catboard.c    **** 			mod_keys &= ~(key_code & 0x7F);
+ 643               		.loc 1 479 0
+ 644 01a6 9F77      		andi r25,lo8(127)
+ 645               	.LVL45:
+ 646 01a8 9095      		com r25
+ 647 01aa 8091 0000 		lds r24,mod_keys
+ 648 01ae 8923      		and r24,r25
+ 649               	.L97:
+ 650 01b0 8093 0000 		sts mod_keys,r24
+ 651               	/* epilogue start */
+ 504:catboard.c    **** }
+ 652               		.loc 1 504 0
+ 653 01b4 DF91      		pop r29
+ 654 01b6 CF91      		pop r28
+ 655               	.LVL46:
+ 481:catboard.c    **** 		send();
+ 656               		.loc 1 481 0
+ 657 01b8 0C94 0000 		jmp send
+ 658               	.LVL47:
+ 659               	.L46:
+ 660 01bc E0E0      		ldi r30,lo8(queue)
+ 661 01be F0E0      		ldi r31,hi8(queue)
+ 473:catboard.c    **** 	} else if (key_code>=0x80) { // Mod keys release
+ 662               		.loc 1 473 0
+ 663 01c0 90E0      		ldi r25,0
+ 664               	.LVL48:
+ 665               	.L54:
+ 484:catboard.c    **** 			if (queue[i]==key_id) {
+ 666               		.loc 1 484 0
+ 667 01c2 8191      		ld r24,Z+
+ 668 01c4 8D17      		cp r24,r29
+ 669 01c6 01F0      		breq .L95
+ 483:catboard.c    **** 		for (i=0; i<6; i++) {
+ 670               		.loc 1 483 0
+ 671 01c8 9F5F      		subi r25,lo8(-(1))
+ 672               	.LVL49:
+ 673 01ca 9630      		cpi r25,lo8(6)
+ 674 01cc 01F4      		brne .L54
+ 675 01ce 00C0      		rjmp .L95
+ 676               	.L56:
+ 489:catboard.c    **** 			queue[i] = queue[i+1];
+ 677               		.loc 1 489 0 discriminator 2
+ 678 01d0 E92F      		mov r30,r25
+ 679 01d2 F0E0      		ldi r31,0
+ 680 01d4 E050      		subi r30,lo8(-(queue))
+ 681 01d6 F040      		sbci r31,hi8(-(queue))
+ 682 01d8 8181      		ldd r24,Z+1
+ 683 01da 8083      		st Z,r24
+ 488:catboard.c    **** 		for (; i<6; i++) {
+ 684               		.loc 1 488 0 discriminator 2
+ 685 01dc 9F5F      		subi r25,lo8(-(1))
+ 686               	.LVL50:
+ 687               	.L95:
+ 488:catboard.c    **** 		for (; i<6; i++) {
+ 688               		.loc 1 488 0 is_stmt 0 discriminator 1
+ 689 01de 9630      		cpi r25,lo8(6)
+ 690 01e0 01F4      		brne .L56
+ 491:catboard.c    **** 		send();
+ 691               		.loc 1 491 0 is_stmt 1
+ 692 01e2 0E94 0000 		call send
+ 693               	.LVL51:
+ 493:catboard.c    **** 		if (last_key==key_id) { // realise time
+ 694               		.loc 1 493 0
+ 695 01e6 8091 0000 		lds r24,last_key
+ 696 01ea 8D13      		cpse r24,r29
+ 697 01ec 00C0      		rjmp .L57
+ 494:catboard.c    **** 			press_time2 = 0;
+ 698               		.loc 1 494 0
+ 699 01ee 1092 0000 		sts press_time2+1,__zero_reg__
+ 700 01f2 1092 0000 		sts press_time2,__zero_reg__
+ 495:catboard.c    **** 			release_time = 1;
+ 701               		.loc 1 495 0
+ 702 01f6 81E0      		ldi r24,lo8(1)
+ 703 01f8 90E0      		ldi r25,0
+ 704 01fa 9093 0000 		sts release_time+1,r25
+ 705 01fe 8093 0000 		sts release_time,r24
+ 706 0202 00C0      		rjmp .L98
+ 707               	.L57:
+ 498:catboard.c    **** 			press_time = 0;
+ 708               		.loc 1 498 0
+ 709 0204 1092 0000 		sts press_time+1,__zero_reg__
+ 710 0208 1092 0000 		sts press_time,__zero_reg__
+ 499:catboard.c    **** 			press_time2 = 0;
+ 711               		.loc 1 499 0
+ 712 020c 1092 0000 		sts press_time2+1,__zero_reg__
+ 713 0210 1092 0000 		sts press_time2,__zero_reg__
+ 500:catboard.c    **** 			release_time = 0;
+ 714               		.loc 1 500 0
+ 715 0214 1092 0000 		sts release_time+1,__zero_reg__
+ 716 0218 1092 0000 		sts release_time,__zero_reg__
+ 717               	.L98:
+ 501:catboard.c    **** 			repeat_time = 0;
+ 718               		.loc 1 501 0
+ 719 021c 1092 0000 		sts repeat_time+1,__zero_reg__
+ 720 0220 1092 0000 		sts repeat_time,__zero_reg__
+ 721               	.L29:
+ 722               	/* epilogue start */
+ 504:catboard.c    **** }
+ 723               		.loc 1 504 0
+ 724 0224 DF91      		pop r29
+ 725               	.LVL52:
+ 726 0226 CF91      		pop r28
+ 727               	.LVL53:
+ 728 0228 0895      		ret
+ 729               	.LFE15:
+ 731               		.section	.text.key_press,"ax",@progbits
+ 732               	.global	key_press
+ 734               	key_press:
+ 735               	.LFB14:
  290:catboard.c    **** void key_press(uint8_t key_id) {
- 723               		.loc 1 290 0
- 724               	.LVL55:
- 725 0000 CF93      		push r28
- 726               	.LCFI7:
- 727               	/* prologue: function */
- 728               	/* frame size = 0 */
- 729               	/* stack size = 1 */
- 730               	.L__stack_usage = 1
- 731 0002 C82F      		mov r28,r24
+ 736               		.loc 1 290 0
+ 737               	.LVL54:
+ 738 0000 CF93      		push r28
+ 739               	.LCFI7:
+ 740               	/* prologue: function */
+ 741               	/* frame size = 0 */
+ 742               	/* stack size = 1 */
+ 743               	.L__stack_usage = 1
+ 744 0002 C82F      		mov r28,r24
  292:catboard.c    **** 	uint8_t mods_pressed = (mod_keys & (KEY_CTRL|KEY_RIGHT_CTRL|KEY_ALT|KEY_RIGHT_ALT|KEY_GUI|KEY_RIGH
- 732               		.loc 1 292 0
- 733 0004 6091 0000 		lds r22,mod_keys
- 734 0008 962F      		mov r25,r22
- 735 000a 9D7D      		andi r25,lo8(-35)
- 736               	.LVL56:
+ 745               		.loc 1 292 0
+ 746 0004 6091 0000 		lds r22,mod_keys
+ 747 0008 962F      		mov r25,r22
+ 748 000a 9D7D      		andi r25,lo8(-35)
+ 749               	.LVL55:
  293:catboard.c    **** 	pressed[key_id] = (pressed[FN_KEY_ID] ? KEY_PRESSED_FN : (mods_pressed ? KEY_PRESSED_MODS : -1));
- 737               		.loc 1 293 0
- 738 000c 282F      		mov r18,r24
- 739 000e 30E0      		ldi r19,0
- 740 0010 8091 0000 		lds r24,pressed+35
- 741               	.LVL57:
- 742 0014 8111      		cpse r24,__zero_reg__
- 743 0016 00C0      		rjmp .L127
+ 750               		.loc 1 293 0
+ 751 000c 282F      		mov r18,r24
+ 752 000e 30E0      		ldi r19,0
+ 753 0010 8091 0000 		lds r24,pressed+35
+ 754               	.LVL56:
+ 755 0014 8111      		cpse r24,__zero_reg__
+ 756 0016 00C0      		rjmp .L140
  293:catboard.c    **** 	pressed[key_id] = (pressed[FN_KEY_ID] ? KEY_PRESSED_FN : (mods_pressed ? KEY_PRESSED_MODS : -1));
- 744               		.loc 1 293 0 is_stmt 0 discriminator 1
- 745 0018 9923      		tst r25
- 746 001a 01F0      		breq .L128
+ 757               		.loc 1 293 0 is_stmt 0 discriminator 1
+ 758 0018 9923      		tst r25
+ 759 001a 01F0      		breq .L141
  293:catboard.c    **** 	pressed[key_id] = (pressed[FN_KEY_ID] ? KEY_PRESSED_FN : (mods_pressed ? KEY_PRESSED_MODS : -1));
- 747               		.loc 1 293 0
- 748 001c 82E0      		ldi r24,lo8(2)
- 749 001e 00C0      		rjmp .L89
- 750               	.L127:
- 751 0020 81E0      		ldi r24,lo8(1)
- 752 0022 00C0      		rjmp .L89
- 753               	.L128:
- 754 0024 8FEF      		ldi r24,lo8(-1)
- 755               	.L89:
+ 760               		.loc 1 293 0
+ 761 001c 82E0      		ldi r24,lo8(2)
+ 762 001e 00C0      		rjmp .L102
+ 763               	.L140:
+ 764 0020 81E0      		ldi r24,lo8(1)
+ 765 0022 00C0      		rjmp .L102
+ 766               	.L141:
+ 767 0024 8FEF      		ldi r24,lo8(-1)
+ 768               	.L102:
  293:catboard.c    **** 	pressed[key_id] = (pressed[FN_KEY_ID] ? KEY_PRESSED_FN : (mods_pressed ? KEY_PRESSED_MODS : -1));
- 756               		.loc 1 293 0 discriminator 6
- 757 0026 F901      		movw r30,r18
- 758 0028 E050      		subi r30,lo8(-(pressed))
- 759 002a F040      		sbci r31,hi8(-(pressed))
- 760 002c 8083      		st Z,r24
+ 769               		.loc 1 293 0 discriminator 6
+ 770 0026 F901      		movw r30,r18
+ 771 0028 E050      		subi r30,lo8(-(pressed))
+ 772 002a F040      		sbci r31,hi8(-(pressed))
+ 773 002c 8083      		st Z,r24
  295:catboard.c    **** 	uint8_t key_code = ((pressed[key_id]==KEY_PRESSED_FN) ? layer_fn[key_id] : layout[key_id]);
- 761               		.loc 1 295 0 is_stmt 1 discriminator 6
- 762 002e 8130      		cpi r24,lo8(1)
- 763 0030 01F4      		brne .L90
+ 774               		.loc 1 295 0 is_stmt 1 discriminator 6
+ 775 002e 8130      		cpi r24,lo8(1)
+ 776 0030 01F4      		brne .L103
  295:catboard.c    **** 	uint8_t key_code = ((pressed[key_id]==KEY_PRESSED_FN) ? layer_fn[key_id] : layout[key_id]);
- 764               		.loc 1 295 0 is_stmt 0 discriminator 1
- 765 0032 F901      		movw r30,r18
- 766 0034 E050      		subi r30,lo8(-(layer_fn))
- 767 0036 F040      		sbci r31,hi8(-(layer_fn))
- 768 0038 00C0      		rjmp .L151
- 769               	.L90:
+ 777               		.loc 1 295 0 is_stmt 0 discriminator 1
+ 778 0032 F901      		movw r30,r18
+ 779 0034 E050      		subi r30,lo8(-(layer_fn))
+ 780 0036 F040      		sbci r31,hi8(-(layer_fn))
+ 781 0038 00C0      		rjmp .L164
+ 782               	.L103:
  295:catboard.c    **** 	uint8_t key_code = ((pressed[key_id]==KEY_PRESSED_FN) ? layer_fn[key_id] : layout[key_id]);
- 770               		.loc 1 295 0 discriminator 2
- 771 003a E091 0000 		lds r30,layout
- 772 003e F091 0000 		lds r31,layout+1
- 773 0042 EC0F      		add r30,r28
- 774 0044 F11D      		adc r31,__zero_reg__
- 775               	.L151:
- 776 0046 8081      		ld r24,Z
- 777               	.LVL58:
+ 783               		.loc 1 295 0 discriminator 2
+ 784 003a E091 0000 		lds r30,layout
+ 785 003e F091 0000 		lds r31,layout+1
+ 786 0042 EC0F      		add r30,r28
+ 787 0044 F11D      		adc r31,__zero_reg__
+ 788               	.L164:
+ 789 0046 8081      		ld r24,Z
+ 790               	.LVL57:
  296:catboard.c    **** 	if (key_code==NULL) {
- 778               		.loc 1 296 0 is_stmt 1 discriminator 2
- 779 0048 8111      		cpse r24,__zero_reg__
- 780 004a 00C0      		rjmp .L92
+ 791               		.loc 1 296 0 is_stmt 1 discriminator 2
+ 792 0048 8111      		cpse r24,__zero_reg__
+ 793 004a 00C0      		rjmp .L105
  297:catboard.c    **** 		key_code = layout[key_id];
- 781               		.loc 1 297 0
- 782 004c 4C2F      		mov r20,r28
- 783 004e 50E0      		ldi r21,0
- 784 0050 E091 0000 		lds r30,layout
- 785 0054 F091 0000 		lds r31,layout+1
- 786 0058 E40F      		add r30,r20
- 787 005a F51F      		adc r31,r21
- 788 005c 8081      		ld r24,Z
- 789               	.LVL59:
+ 794               		.loc 1 297 0
+ 795 004c 4C2F      		mov r20,r28
+ 796 004e 50E0      		ldi r21,0
+ 797 0050 E091 0000 		lds r30,layout
+ 798 0054 F091 0000 		lds r31,layout+1
+ 799 0058 E40F      		add r30,r20
+ 800 005a F51F      		adc r31,r21
+ 801 005c 8081      		ld r24,Z
+ 802               	.LVL58:
  298:catboard.c    **** 		pressed[key_id] = (mods_pressed ? KEY_PRESSED_MODS : -1);
- 790               		.loc 1 298 0
- 791 005e 9923      		tst r25
- 792 0060 01F0      		breq .L129
- 793 0062 72E0      		ldi r23,lo8(2)
- 794 0064 00C0      		rjmp .L93
- 795               	.L129:
- 796 0066 7FEF      		ldi r23,lo8(-1)
- 797               	.L93:
+ 803               		.loc 1 298 0
+ 804 005e 9923      		tst r25
+ 805 0060 01F0      		breq .L142
+ 806 0062 92E0      		ldi r25,lo8(2)
+ 807               	.LVL59:
+ 808 0064 00C0      		rjmp .L106
+ 809               	.LVL60:
+ 810               	.L142:
+ 811 0066 9FEF      		ldi r25,lo8(-1)
+ 812               	.LVL61:
+ 813               	.L106:
  298:catboard.c    **** 		pressed[key_id] = (mods_pressed ? KEY_PRESSED_MODS : -1);
- 798               		.loc 1 298 0 is_stmt 0 discriminator 3
- 799 0068 F901      		movw r30,r18
- 800 006a E050      		subi r30,lo8(-(pressed))
- 801 006c F040      		sbci r31,hi8(-(pressed))
- 802 006e 7083      		st Z,r23
+ 814               		.loc 1 298 0 is_stmt 0 discriminator 3
+ 815 0068 F901      		movw r30,r18
+ 816 006a E050      		subi r30,lo8(-(pressed))
+ 817 006c F040      		sbci r31,hi8(-(pressed))
+ 818 006e 9083      		st Z,r25
  299:catboard.c    **** 		if (key_code==NULL && prev_layer && ! mod_keys) {
- 803               		.loc 1 299 0 is_stmt 1 discriminator 3
- 804 0070 8111      		cpse r24,__zero_reg__
- 805 0072 00C0      		rjmp .L92
+ 819               		.loc 1 299 0 is_stmt 1 discriminator 3
+ 820 0070 8111      		cpse r24,__zero_reg__
+ 821 0072 00C0      		rjmp .L105
  299:catboard.c    **** 		if (key_code==NULL && prev_layer && ! mod_keys) {
- 806               		.loc 1 299 0 is_stmt 0 discriminator 1
- 807 0074 A091 0000 		lds r26,prev_layer
- 808 0078 B091 0000 		lds r27,prev_layer+1
- 809 007c 1097      		sbiw r26,0
- 810 007e 01F4      		brne .+2
- 811 0080 00C0      		rjmp .L117
- 812 0082 6111      		cpse r22,__zero_reg__
- 813 0084 00C0      		rjmp .L117
+ 822               		.loc 1 299 0 is_stmt 0 discriminator 1
+ 823 0074 A091 0000 		lds r26,prev_layer
+ 824 0078 B091 0000 		lds r27,prev_layer+1
+ 825 007c 1097      		sbiw r26,0
+ 826 007e 01F4      		brne .+2
+ 827 0080 00C0      		rjmp .L130
+ 828 0082 6111      		cpse r22,__zero_reg__
+ 829 0084 00C0      		rjmp .L130
  300:catboard.c    **** 			key_code = prev_layer[key_id];
- 814               		.loc 1 300 0 is_stmt 1
- 815 0086 A40F      		add r26,r20
- 816 0088 B51F      		adc r27,r21
- 817 008a 8C91      		ld r24,X
- 818               	.LVL60:
+ 830               		.loc 1 300 0 is_stmt 1
+ 831 0086 A40F      		add r26,r20
+ 832 0088 B51F      		adc r27,r21
+ 833 008a 8C91      		ld r24,X
+ 834               	.LVL62:
  301:catboard.c    **** 			pressed[key_id] = KEY_PRESSED_PREV;
- 819               		.loc 1 301 0
- 820 008c 46E0      		ldi r20,lo8(6)
- 821 008e 4083      		st Z,r20
- 822               	.L92:
+ 835               		.loc 1 301 0
+ 836 008c 96E0      		ldi r25,lo8(6)
+ 837 008e 9083      		st Z,r25
+ 838               	.L105:
  305:catboard.c    **** 	if (key_code>0xF0) { // Catboard keys
- 823               		.loc 1 305 0
- 824 0090 813F      		cpi r24,lo8(-15)
- 825 0092 00F4      		brsh .+2
- 826 0094 00C0      		rjmp .L94
+ 839               		.loc 1 305 0
+ 840 0090 813F      		cpi r24,lo8(-15)
+ 841 0092 00F4      		brsh .+2
+ 842 0094 00C0      		rjmp .L107
  306:catboard.c    **** 		if (key_code==KEY_ALT_TAB) { // AltTab press
- 827               		.loc 1 306 0
- 828 0096 8D3F      		cpi r24,lo8(-3)
- 829 0098 01F4      		brne .L95
+ 843               		.loc 1 306 0
+ 844 0096 8D3F      		cpi r24,lo8(-3)
+ 845 0098 01F4      		brne .L108
  307:catboard.c    **** 			if (pressed[key_id]==KEY_PRESSED_FN) { // Fn + AltTab
- 830               		.loc 1 307 0
- 831 009a F901      		movw r30,r18
- 832 009c E050      		subi r30,lo8(-(pressed))
- 833 009e F040      		sbci r31,hi8(-(pressed))
- 834 00a0 8081      		ld r24,Z
- 835               	.LVL61:
- 836 00a2 8130      		cpi r24,lo8(1)
- 837 00a4 01F4      		brne .L96
+ 846               		.loc 1 307 0
+ 847 009a F901      		movw r30,r18
+ 848 009c E050      		subi r30,lo8(-(pressed))
+ 849 009e F040      		sbci r31,hi8(-(pressed))
+ 850 00a0 8081      		ld r24,Z
+ 851               	.LVL63:
+ 852 00a2 8130      		cpi r24,lo8(1)
+ 853 00a4 01F4      		brne .L109
  308:catboard.c    **** 				usb_keyboard_press(KEY_TAB, KEY_ALT);
- 838               		.loc 1 308 0
- 839 00a6 64E0      		ldi r22,lo8(4)
- 840 00a8 8BE2      		ldi r24,lo8(43)
- 841 00aa 00C0      		rjmp .L154
- 842               	.L96:
- 310:catboard.c    **** 				if (! (mod_keys & (KEY_ALT|KEY_RIGHT_ALT|KEY_CTRL|KEY_RIGHT_CTRL|KEY_GUI|KEY_RIGHT_GUI))) {
- 843               		.loc 1 310 0
- 844 00ac 9111      		cpse r25,__zero_reg__
- 845 00ae 00C0      		rjmp .L98
- 311:catboard.c    **** 					mod_keys |= (KEY_ALT);
- 846               		.loc 1 311 0
- 847 00b0 6460      		ori r22,lo8(4)
- 848 00b2 6093 0000 		sts mod_keys,r22
- 849 00b6 00C0      		rjmp .L99
- 850               	.L98:
- 313:catboard.c    **** 					pressed[key_id] = KEY_PRESSED_ALT;
- 851               		.loc 1 313 0
- 852 00b8 83E0      		ldi r24,lo8(3)
- 853 00ba 8083      		st Z,r24
- 854               	.L99:
- 315:catboard.c    **** 				keyboard_modifier_keys = mod_keys;
- 855               		.loc 1 315 0
- 856 00bc 8091 0000 		lds r24,mod_keys
- 857 00c0 8093 0000 		sts keyboard_modifier_keys,r24
- 316:catboard.c    **** 				keyboard_keys[0] = KEY_TAB;
- 858               		.loc 1 316 0
- 859 00c4 8BE2      		ldi r24,lo8(43)
- 860 00c6 8093 0000 		sts keyboard_keys,r24
- 317:catboard.c    **** 				usb_keyboard_send();
- 861               		.loc 1 317 0
- 862 00ca 0E94 0000 		call usb_keyboard_send
- 863               	.LVL62:
- 864               	.LBB48:
- 865               	.LBB49:
- 866               		.loc 2 164 0
- 867 00ce 2FEF      		ldi r18,lo8(159999)
- 868 00d0 80E7      		ldi r24,hi8(159999)
- 869 00d2 92E0      		ldi r25,hlo8(159999)
- 870 00d4 2150      		1: subi r18,1
- 871 00d6 8040      		sbci r24,0
- 872 00d8 9040      		sbci r25,0
- 873 00da 01F4      		brne 1b
- 874 00dc 00C0      		rjmp .
- 875 00de 0000      		nop
- 876 00e0 00C0      		rjmp .L153
- 877               	.LVL63:
- 878               	.L95:
- 879               	.LBE49:
- 880               	.LBE48:
- 321:catboard.c    **** 		} else if (key_code==KEY_FN_LOCK) { // FnLock
- 881               		.loc 1 321 0
- 882 00e2 8E3F      		cpi r24,lo8(-2)
- 883 00e4 01F4      		brne .L100
- 322:catboard.c    **** 			if (prev_layer) { // FnLock Off
- 884               		.loc 1 322 0
- 885 00e6 2091 0000 		lds r18,prev_layer
- 886 00ea 3091 0000 		lds r19,prev_layer+1
- 887               	.LVL64:
- 888 00ee 2115      		cp r18,__zero_reg__
- 889 00f0 3105      		cpc r19,__zero_reg__
- 890 00f2 01F0      		breq .L101
- 323:catboard.c    **** 				layout = prev_layer;
- 891               		.loc 1 323 0
- 892 00f4 3093 0000 		sts layout+1,r19
- 893 00f8 2093 0000 		sts layout,r18
- 324:catboard.c    **** 				prev_layer = 0;
- 894               		.loc 1 324 0
- 895 00fc 1092 0000 		sts prev_layer+1,__zero_reg__
- 896 0100 1092 0000 		sts prev_layer,__zero_reg__
- 897 0104 00C0      		rjmp .L102
- 898               	.L101:
- 326:catboard.c    **** 				prev_layer = layout;
- 899               		.loc 1 326 0
- 900 0106 2091 0000 		lds r18,layout
- 901 010a 3091 0000 		lds r19,layout+1
- 902 010e 3093 0000 		sts prev_layer+1,r19
- 903 0112 2093 0000 		sts prev_layer,r18
- 327:catboard.c    **** 				layout = layer_fnlock;
- 904               		.loc 1 327 0
- 905 0116 20E0      		ldi r18,lo8(layer_fnlock)
- 906 0118 30E0      		ldi r19,hi8(layer_fnlock)
- 907 011a 3093 0000 		sts layout+1,r19
- 908 011e 2093 0000 		sts layout,r18
- 909               	.L102:
- 329:catboard.c    **** 			if (prev_layer || mac_mode) {
- 910               		.loc 1 329 0
- 911 0122 2091 0000 		lds r18,prev_layer
- 912 0126 3091 0000 		lds r19,prev_layer+1
- 913 012a 232B      		or r18,r19
- 914 012c 01F4      		brne .L108
- 329:catboard.c    **** 			if (prev_layer || mac_mode) {
- 915               		.loc 1 329 0 is_stmt 0 discriminator 1
- 916 012e 8091 0000 		lds r24,mac_mode
- 917               	.LVL65:
- 918 0132 8823      		tst r24
- 919 0134 01F0      		breq .L109
- 920 0136 00C0      		rjmp .L108
- 921               	.LVL66:
- 922               	.L100:
- 334:catboard.c    **** 		} else if (key_code==KEY_MAC_MODE) { // Mac mode
- 923               		.loc 1 334 0 is_stmt 1
- 924 0138 8C3F      		cpi r24,lo8(-4)
- 925 013a 01F4      		brne .L105
- 335:catboard.c    **** 			if (pressed[key_id]==KEY_PRESSED_FN && (mod_keys & (KEY_SHIFT|KEY_RIGHT_SHIFT))) {
- 926               		.loc 1 335 0
- 927 013c F901      		movw r30,r18
- 928 013e E050      		subi r30,lo8(-(pressed))
- 929 0140 F040      		sbci r31,hi8(-(pressed))
- 930 0142 8081      		ld r24,Z
- 931               	.LVL67:
- 932 0144 8130      		cpi r24,lo8(1)
- 933 0146 01F4      		brne .L106
- 335:catboard.c    **** 			if (pressed[key_id]==KEY_PRESSED_FN && (mod_keys & (KEY_SHIFT|KEY_RIGHT_SHIFT))) {
- 934               		.loc 1 335 0 is_stmt 0 discriminator 1
- 935 0148 862F      		mov r24,r22
- 936 014a 8272      		andi r24,lo8(34)
- 937 014c 01F0      		breq .L106
- 336:catboard.c    **** 				mac_mode = ! mac_mode;
- 938               		.loc 1 336 0 is_stmt 1
- 939 014e 81E0      		ldi r24,lo8(1)
- 940 0150 9091 0000 		lds r25,mac_mode
- 941               	.LVL68:
- 942 0154 9111      		cpse r25,__zero_reg__
- 943 0156 80E0      		ldi r24,0
- 944               	.L107:
- 945 0158 8093 0000 		sts mac_mode,r24
- 337:catboard.c    **** 				if (mac_mode || prev_layer) {
- 946               		.loc 1 337 0
- 947 015c 8111      		cpse r24,__zero_reg__
- 948 015e 00C0      		rjmp .L108
- 337:catboard.c    **** 				if (mac_mode || prev_layer) {
- 949               		.loc 1 337 0 is_stmt 0 discriminator 1
- 950 0160 2091 0000 		lds r18,prev_layer
- 951 0164 3091 0000 		lds r19,prev_layer+1
- 952               	.LVL69:
- 953 0168 232B      		or r18,r19
- 954 016a 01F0      		breq .L109
- 955               	.L108:
- 338:catboard.c    **** 					LED_ON;
- 956               		.loc 1 338 0 is_stmt 1
- 957 016c 5C9A      		sbi 0xb,4
- 958 016e 00C0      		rjmp .L97
- 959               	.L109:
- 340:catboard.c    **** 					LED_OFF;
- 960               		.loc 1 340 0
- 961 0170 5C98      		cbi 0xb,4
- 962 0172 00C0      		rjmp .L97
- 963               	.LVL70:
- 964               	.L106:
- 343:catboard.c    **** 				usb_keyboard_press(KEY_SPACE, mod_keys);
- 965               		.loc 1 343 0
- 966 0174 8CE2      		ldi r24,lo8(44)
- 967               	.L154:
- 968 0176 0E94 0000 		call usb_keyboard_press
- 969               	.LVL71:
- 970 017a 00C0      		rjmp .L97
- 971               	.LVL72:
- 972               	.L105:
- 345:catboard.c    **** 		} else if (key_code==KEY_LAYER1) { // KEY_LAYOUT1
- 973               		.loc 1 345 0
- 974 017c 813F      		cpi r24,lo8(-15)
- 975 017e 01F4      		brne .L110
- 346:catboard.c    **** 			if (mod_keys & (KEY_SHIFT|KEY_RIGHT_SHIFT)) {
- 976               		.loc 1 346 0
- 977 0180 862F      		mov r24,r22
- 978               	.LVL73:
- 979 0182 8272      		andi r24,lo8(34)
- 980 0184 01F0      		breq .L111
- 347:catboard.c    **** 				pressed[key_id] = KEY_PRESSED_CTRL;
- 981               		.loc 1 347 0
- 982 0186 F901      		movw r30,r18
- 983 0188 E050      		subi r30,lo8(-(pressed))
- 984 018a F040      		sbci r31,hi8(-(pressed))
- 985 018c 85E0      		ldi r24,lo8(5)
- 986 018e 8083      		st Z,r24
- 348:catboard.c    **** 				mod_keys |= KEY_CTRL;
- 987               		.loc 1 348 0
- 988 0190 6160      		ori r22,lo8(1)
- 989 0192 00C0      		rjmp .L156
- 990               	.L111:
- 351:catboard.c    **** 				if (mod_keys) pressed[key_id] = KEY_PRESSED_SHIFT;
- 991               		.loc 1 351 0
- 992 0194 6623      		tst r22
- 993 0196 01F0      		breq .L112
- 351:catboard.c    **** 				if (mod_keys) pressed[key_id] = KEY_PRESSED_SHIFT;
- 994               		.loc 1 351 0 is_stmt 0 discriminator 1
- 995 0198 F901      		movw r30,r18
- 996 019a E050      		subi r30,lo8(-(pressed))
- 997 019c F040      		sbci r31,hi8(-(pressed))
- 998 019e 84E0      		ldi r24,lo8(4)
- 999 01a0 8083      		st Z,r24
- 1000               	.L112:
- 352:catboard.c    **** 				mod_keys |= KEY_SHIFT;
- 1001               		.loc 1 352 0 is_stmt 1
- 1002 01a2 6260      		ori r22,lo8(2)
- 1003               	.LVL74:
- 1004               	.L156:
- 1005 01a4 6093 0000 		sts mod_keys,r22
- 1006 01a8 00C0      		rjmp .L153
- 1007               	.LVL75:
- 1008               	.L110:
- 355:catboard.c    **** 		} else if (key_code==KEY_LAYER2) { // KEY_LAYOUT2
- 1009               		.loc 1 355 0
- 1010 01aa 823F      		cpi r24,lo8(-14)
- 1011 01ac 01F4      		brne .L113
- 356:catboard.c    **** 			mod_keys |= KEY_RIGHT_SHIFT;
- 1012               		.loc 1 356 0
- 1013 01ae 6062      		ori r22,lo8(32)
- 1014 01b0 00C0      		rjmp .L156
- 1015               	.L113:
- 358:catboard.c    **** 		} else if (key_code==KEY_TURBO_REPEAT) { // TURBO_REPEAT ON/OFF
- 1016               		.loc 1 358 0
- 1017 01b2 8B3F      		cpi r24,lo8(-5)
- 1018 01b4 01F4      		brne .L114
- 359:catboard.c    **** 			turbo_repeat = ! turbo_repeat;
- 1019               		.loc 1 359 0
- 1020 01b6 81E0      		ldi r24,lo8(1)
- 1021               	.LVL76:
- 1022 01b8 9091 0000 		lds r25,turbo_repeat
- 1023               	.LVL77:
- 1024 01bc 9111      		cpse r25,__zero_reg__
- 1025 01be 80E0      		ldi r24,0
- 1026               	.L115:
- 1027 01c0 8093 0000 		sts turbo_repeat,r24
- 1028 01c4 00C0      		rjmp .L97
- 1029               	.LVL78:
- 1030               	.L114:
- 360:catboard.c    **** 		} else if (key_code==KEY_MY_SHIFT) { // My Shift
- 1031               		.loc 1 360 0
- 1032 01c6 833F      		cpi r24,lo8(-13)
- 1033 01c8 01F4      		brne .L97
- 1034 01ca 00C0      		rjmp .L112
- 1035               	.L94:
- 364:catboard.c    **** 	} else if (key_code>=0x80) { // Mod keys
- 1036               		.loc 1 364 0
- 1037 01cc 87FF      		sbrs r24,7
- 1038 01ce 00C0      		rjmp .L117
- 365:catboard.c    **** 		if (mac_mode && key_code==(KEY_CTRL|KEY_MOD)) {
- 1039               		.loc 1 365 0
- 1040 01d0 9091 0000 		lds r25,mac_mode
- 1041               	.LVL79:
- 1042 01d4 9923      		tst r25
- 1043 01d6 01F0      		breq .L118
- 365:catboard.c    **** 		if (mac_mode && key_code==(KEY_CTRL|KEY_MOD)) {
- 1044               		.loc 1 365 0 is_stmt 0 discriminator 1
- 1045 01d8 8138      		cpi r24,lo8(-127)
- 1046 01da 01F4      		brne .L119
- 366:catboard.c    **** 			mod_keys |= KEY_GUI;
- 1047               		.loc 1 366 0 is_stmt 1
- 1048 01dc 6860      		ori r22,lo8(8)
- 1049               	.LVL80:
- 1050 01de 00C0      		rjmp .L156
- 1051               	.LVL81:
- 1052               	.L119:
- 367:catboard.c    **** 		} else if ((mac_mode && key_code==(KEY_RIGHT_CTRL|KEY_MOD)) || key_code==(KEY_RIGHT_GUI|KEY_MOD))
- 1053               		.loc 1 367 0 discriminator 1
- 1054 01e0 8039      		cpi r24,lo8(-112)
- 1055 01e2 01F0      		breq .L121
- 1056               	.L118:
- 367:catboard.c    **** 		} else if ((mac_mode && key_code==(KEY_RIGHT_CTRL|KEY_MOD)) || key_code==(KEY_RIGHT_GUI|KEY_MOD))
- 1057               		.loc 1 367 0 is_stmt 0 discriminator 2
- 1058 01e4 8038      		cpi r24,lo8(-128)
- 1059 01e6 01F4      		brne .L122
- 1060               	.L121:
- 368:catboard.c    **** 			mod_keys |= KEY_RIGHT_GUI;
- 1061               		.loc 1 368 0 is_stmt 1
- 1062 01e8 6068      		ori r22,lo8(-128)
- 1063               	.LVL82:
- 1064 01ea 00C0      		rjmp .L156
- 1065               	.LVL83:
- 1066               	.L122:
- 370:catboard.c    **** 			mod_keys |= (key_code & 0x7F);
- 1067               		.loc 1 370 0
- 1068 01ec 8F77      		andi r24,lo8(127)
- 1069               	.LVL84:
- 1070 01ee 862B      		or r24,r22
- 1071 01f0 8093 0000 		sts mod_keys,r24
- 1072 01f4 00C0      		rjmp .L153
- 1073               	.LVL85:
- 1074               	.L117:
- 374:catboard.c    **** 		if (! (last_key==key_id && release_time<10)) { // debounce
- 1075               		.loc 1 374 0
- 1076 01f6 8091 0000 		lds r24,last_key
- 1077               	.LVL86:
- 1078 01fa 8C13      		cpse r24,r28
- 1079 01fc 00C0      		rjmp .L123
- 374:catboard.c    **** 		if (! (last_key==key_id && release_time<10)) { // debounce
- 1080               		.loc 1 374 0 is_stmt 0 discriminator 1
- 1081 01fe 2091 0000 		lds r18,release_time
- 1082 0202 3091 0000 		lds r19,release_time+1
- 1083               	.LVL87:
- 1084 0206 2A30      		cpi r18,10
- 1085 0208 3105      		cpc r19,__zero_reg__
- 1086 020a 00F0      		brlo .L97
- 1087               	.L123:
- 1088               	.LVL88:
- 375:catboard.c    **** 			for (i=5; i>0; i--) queue[i] = queue[i-1];
- 1089               		.loc 1 375 0 is_stmt 1 discriminator 1
- 1090 020c 8091 0000 		lds r24,queue+4
- 1091 0210 8093 0000 		sts queue+5,r24
- 1092               	.LVL89:
- 1093 0214 8091 0000 		lds r24,queue+3
- 1094 0218 8093 0000 		sts queue+4,r24
- 1095               	.LVL90:
- 1096 021c 8091 0000 		lds r24,queue+2
- 1097 0220 8093 0000 		sts queue+3,r24
- 1098               	.LVL91:
- 1099 0224 8091 0000 		lds r24,queue+1
- 1100 0228 8093 0000 		sts queue+2,r24
- 1101               	.LVL92:
- 1102 022c 8091 0000 		lds r24,queue
- 1103 0230 8093 0000 		sts queue+1,r24
- 1104               	.LVL93:
- 376:catboard.c    **** 			queue[0] = key_id;
- 1105               		.loc 1 376 0 discriminator 1
- 1106 0234 C093 0000 		sts queue,r28
- 1107               	.LVL94:
- 1108               	.L153:
- 377:catboard.c    **** 			send();
- 1109               		.loc 1 377 0 discriminator 1
- 1110 0238 0E94 0000 		call send
- 1111               	.LVL95:
- 1112               	.L97:
- 381:catboard.c    **** 	if (last_key==key_id) { // calc press2
- 1113               		.loc 1 381 0
- 1114 023c 8091 0000 		lds r24,last_key
- 1115 0240 8C13      		cpse r24,r28
- 1116 0242 00C0      		rjmp .L125
- 382:catboard.c    **** 		press_time2 = 1;
- 1117               		.loc 1 382 0
- 1118 0244 81E0      		ldi r24,lo8(1)
- 1119 0246 90E0      		ldi r25,0
- 1120 0248 9093 0000 		sts press_time2+1,r25
- 1121 024c 8093 0000 		sts press_time2,r24
- 1122 0250 00C0      		rjmp .L155
- 1123               	.L125:
- 385:catboard.c    **** 		last_key = key_id;
- 1124               		.loc 1 385 0
- 1125 0252 C093 0000 		sts last_key,r28
- 386:catboard.c    **** 		press_time = 1;
- 1126               		.loc 1 386 0
- 1127 0256 81E0      		ldi r24,lo8(1)
- 1128 0258 90E0      		ldi r25,0
- 1129 025a 9093 0000 		sts press_time+1,r25
- 1130 025e 8093 0000 		sts press_time,r24
- 387:catboard.c    **** 		press_time2 = 0;
- 1131               		.loc 1 387 0
- 1132 0262 1092 0000 		sts press_time2+1,__zero_reg__
- 1133 0266 1092 0000 		sts press_time2,__zero_reg__
- 388:catboard.c    **** 		release_time = 0;
- 1134               		.loc 1 388 0
- 1135 026a 1092 0000 		sts release_time+1,__zero_reg__
- 1136 026e 1092 0000 		sts release_time,__zero_reg__
- 1137               	.L155:
- 389:catboard.c    **** 		repeat_time = 0;
- 1138               		.loc 1 389 0
- 1139 0272 1092 0000 		sts repeat_time+1,__zero_reg__
- 1140 0276 1092 0000 		sts repeat_time,__zero_reg__
- 1141               	/* epilogue start */
- 391:catboard.c    **** }
- 1142               		.loc 1 391 0
- 1143 027a CF91      		pop r28
- 1144               	.LVL96:
- 1145 027c 0895      		ret
- 1146               	.LFE14:
- 1148               		.section	.text.repeat_tick,"ax",@progbits
- 1149               	.global	repeat_tick
- 1151               	repeat_tick:
- 1152               	.LFB11:
+ 854               		.loc 1 308 0
+ 855 00a6 64E0      		ldi r22,lo8(4)
+ 856               	.LVL64:
+ 857 00a8 8BE2      		ldi r24,lo8(43)
+ 858 00aa 00C0      		rjmp .L167
+ 859               	.LVL65:
+ 860               	.L109:
+ 311:catboard.c    **** 				if (! mod_keys) {
+ 861               		.loc 1 311 0
+ 862 00ac 6111      		cpse r22,__zero_reg__
+ 863 00ae 00C0      		rjmp .L111
+ 312:catboard.c    **** 					mod_keys |= (KEY_ALT);
+ 864               		.loc 1 312 0
+ 865 00b0 84E0      		ldi r24,lo8(4)
+ 866 00b2 8093 0000 		sts mod_keys,r24
+ 867 00b6 00C0      		rjmp .L112
+ 868               	.L111:
+ 314:catboard.c    **** 					pressed[key_id] = KEY_PRESSED_ALT;
+ 869               		.loc 1 314 0
+ 870 00b8 83E0      		ldi r24,lo8(3)
+ 871 00ba 8083      		st Z,r24
+ 872               	.L112:
+ 316:catboard.c    **** 				keyboard_modifier_keys = mod_keys;
+ 873               		.loc 1 316 0
+ 874 00bc 8091 0000 		lds r24,mod_keys
+ 875 00c0 8093 0000 		sts keyboard_modifier_keys,r24
+ 317:catboard.c    **** 				keyboard_keys[0] = KEY_TAB;
+ 876               		.loc 1 317 0
+ 877 00c4 8BE2      		ldi r24,lo8(43)
+ 878 00c6 8093 0000 		sts keyboard_keys,r24
+ 318:catboard.c    **** 				usb_keyboard_send();
+ 879               		.loc 1 318 0
+ 880 00ca 0E94 0000 		call usb_keyboard_send
+ 881               	.LVL66:
+ 882               	.LBB47:
+ 883               	.LBB48:
+ 884               		.loc 2 164 0
+ 885 00ce 2FEF      		ldi r18,lo8(159999)
+ 886 00d0 80E7      		ldi r24,hi8(159999)
+ 887 00d2 92E0      		ldi r25,hlo8(159999)
+ 888 00d4 2150      		1: subi r18,1
+ 889 00d6 8040      		sbci r24,0
+ 890 00d8 9040      		sbci r25,0
+ 891 00da 01F4      		brne 1b
+ 892 00dc 00C0      		rjmp .
+ 893 00de 0000      		nop
+ 894 00e0 00C0      		rjmp .L166
+ 895               	.LVL67:
+ 896               	.L108:
+ 897               	.LBE48:
+ 898               	.LBE47:
+ 322:catboard.c    **** 		} else if (key_code==KEY_FN_LOCK) { // FnLock
+ 899               		.loc 1 322 0
+ 900 00e2 8E3F      		cpi r24,lo8(-2)
+ 901 00e4 01F4      		brne .L113
+ 323:catboard.c    **** 			if (prev_layer) { // FnLock Off
+ 902               		.loc 1 323 0
+ 903 00e6 2091 0000 		lds r18,prev_layer
+ 904 00ea 3091 0000 		lds r19,prev_layer+1
+ 905               	.LVL68:
+ 906 00ee 2115      		cp r18,__zero_reg__
+ 907 00f0 3105      		cpc r19,__zero_reg__
+ 908 00f2 01F0      		breq .L114
+ 324:catboard.c    **** 				layout = prev_layer;
+ 909               		.loc 1 324 0
+ 910 00f4 3093 0000 		sts layout+1,r19
+ 911 00f8 2093 0000 		sts layout,r18
+ 325:catboard.c    **** 				prev_layer = 0;
+ 912               		.loc 1 325 0
+ 913 00fc 1092 0000 		sts prev_layer+1,__zero_reg__
+ 914 0100 1092 0000 		sts prev_layer,__zero_reg__
+ 915 0104 00C0      		rjmp .L115
+ 916               	.L114:
+ 327:catboard.c    **** 				prev_layer = layout;
+ 917               		.loc 1 327 0
+ 918 0106 2091 0000 		lds r18,layout
+ 919 010a 3091 0000 		lds r19,layout+1
+ 920 010e 3093 0000 		sts prev_layer+1,r19
+ 921 0112 2093 0000 		sts prev_layer,r18
+ 328:catboard.c    **** 				layout = layer_fnlock;
+ 922               		.loc 1 328 0
+ 923 0116 20E0      		ldi r18,lo8(layer_fnlock)
+ 924 0118 30E0      		ldi r19,hi8(layer_fnlock)
+ 925 011a 3093 0000 		sts layout+1,r19
+ 926 011e 2093 0000 		sts layout,r18
+ 927               	.L115:
+ 330:catboard.c    **** 			if (prev_layer || mac_mode) {
+ 928               		.loc 1 330 0
+ 929 0122 2091 0000 		lds r18,prev_layer
+ 930 0126 3091 0000 		lds r19,prev_layer+1
+ 931 012a 232B      		or r18,r19
+ 932 012c 01F4      		brne .L121
+ 330:catboard.c    **** 			if (prev_layer || mac_mode) {
+ 933               		.loc 1 330 0 is_stmt 0 discriminator 1
+ 934 012e 8091 0000 		lds r24,mac_mode
+ 935               	.LVL69:
+ 936 0132 8823      		tst r24
+ 937 0134 01F0      		breq .L122
+ 938 0136 00C0      		rjmp .L121
+ 939               	.LVL70:
+ 940               	.L113:
+ 335:catboard.c    **** 		} else if (key_code==KEY_MAC_MODE) { // Mac mode
+ 941               		.loc 1 335 0 is_stmt 1
+ 942 0138 8C3F      		cpi r24,lo8(-4)
+ 943 013a 01F4      		brne .L118
+ 336:catboard.c    **** 			if (pressed[key_id]==KEY_PRESSED_FN && (mod_keys & (KEY_SHIFT|KEY_RIGHT_SHIFT))) {
+ 944               		.loc 1 336 0
+ 945 013c F901      		movw r30,r18
+ 946 013e E050      		subi r30,lo8(-(pressed))
+ 947 0140 F040      		sbci r31,hi8(-(pressed))
+ 948 0142 8081      		ld r24,Z
+ 949               	.LVL71:
+ 950 0144 8130      		cpi r24,lo8(1)
+ 951 0146 01F4      		brne .L119
+ 336:catboard.c    **** 			if (pressed[key_id]==KEY_PRESSED_FN && (mod_keys & (KEY_SHIFT|KEY_RIGHT_SHIFT))) {
+ 952               		.loc 1 336 0 is_stmt 0 discriminator 1
+ 953 0148 862F      		mov r24,r22
+ 954 014a 8272      		andi r24,lo8(34)
+ 955 014c 01F0      		breq .L119
+ 337:catboard.c    **** 				mac_mode = ! mac_mode;
+ 956               		.loc 1 337 0 is_stmt 1
+ 957 014e 81E0      		ldi r24,lo8(1)
+ 958 0150 9091 0000 		lds r25,mac_mode
+ 959 0154 9111      		cpse r25,__zero_reg__
+ 960 0156 80E0      		ldi r24,0
+ 961               	.L120:
+ 962 0158 8093 0000 		sts mac_mode,r24
+ 338:catboard.c    **** 				if (mac_mode || prev_layer) {
+ 963               		.loc 1 338 0
+ 964 015c 8111      		cpse r24,__zero_reg__
+ 965 015e 00C0      		rjmp .L121
+ 338:catboard.c    **** 				if (mac_mode || prev_layer) {
+ 966               		.loc 1 338 0 is_stmt 0 discriminator 1
+ 967 0160 2091 0000 		lds r18,prev_layer
+ 968 0164 3091 0000 		lds r19,prev_layer+1
+ 969               	.LVL72:
+ 970 0168 232B      		or r18,r19
+ 971 016a 01F0      		breq .L122
+ 972               	.L121:
+ 339:catboard.c    **** 					LED_ON;
+ 973               		.loc 1 339 0 is_stmt 1
+ 974 016c 5C9A      		sbi 0xb,4
+ 975 016e 00C0      		rjmp .L110
+ 976               	.L122:
+ 341:catboard.c    **** 					LED_OFF;
+ 977               		.loc 1 341 0
+ 978 0170 5C98      		cbi 0xb,4
+ 979 0172 00C0      		rjmp .L110
+ 980               	.LVL73:
+ 981               	.L119:
+ 344:catboard.c    **** 				usb_keyboard_press(KEY_SPACE, mod_keys);
+ 982               		.loc 1 344 0
+ 983 0174 8CE2      		ldi r24,lo8(44)
+ 984               	.LVL74:
+ 985               	.L167:
+ 986 0176 0E94 0000 		call usb_keyboard_press
+ 987               	.LVL75:
+ 988 017a 00C0      		rjmp .L110
+ 989               	.LVL76:
+ 990               	.L118:
+ 346:catboard.c    **** 		} else if (key_code==KEY_LAYER1) { // KEY_LAYOUT1
+ 991               		.loc 1 346 0
+ 992 017c 813F      		cpi r24,lo8(-15)
+ 993 017e 01F4      		brne .L123
+ 347:catboard.c    **** 			if (mod_keys & (KEY_SHIFT|KEY_RIGHT_SHIFT)) {
+ 994               		.loc 1 347 0
+ 995 0180 862F      		mov r24,r22
+ 996               	.LVL77:
+ 997 0182 8272      		andi r24,lo8(34)
+ 998 0184 01F0      		breq .L124
+ 348:catboard.c    **** 				pressed[key_id] = KEY_PRESSED_CTRL;
+ 999               		.loc 1 348 0
+ 1000 0186 F901      		movw r30,r18
+ 1001 0188 E050      		subi r30,lo8(-(pressed))
+ 1002 018a F040      		sbci r31,hi8(-(pressed))
+ 1003 018c 85E0      		ldi r24,lo8(5)
+ 1004 018e 8083      		st Z,r24
+ 349:catboard.c    **** 				mod_keys |= KEY_CTRL;
+ 1005               		.loc 1 349 0
+ 1006 0190 6160      		ori r22,lo8(1)
+ 1007               	.LVL78:
+ 1008 0192 00C0      		rjmp .L169
+ 1009               	.LVL79:
+ 1010               	.L124:
+ 352:catboard.c    **** 				if (mod_keys) pressed[key_id] = KEY_PRESSED_SHIFT;
+ 1011               		.loc 1 352 0
+ 1012 0194 6623      		tst r22
+ 1013 0196 01F0      		breq .L125
+ 352:catboard.c    **** 				if (mod_keys) pressed[key_id] = KEY_PRESSED_SHIFT;
+ 1014               		.loc 1 352 0 is_stmt 0 discriminator 1
+ 1015 0198 F901      		movw r30,r18
+ 1016 019a E050      		subi r30,lo8(-(pressed))
+ 1017 019c F040      		sbci r31,hi8(-(pressed))
+ 1018 019e 84E0      		ldi r24,lo8(4)
+ 1019 01a0 8083      		st Z,r24
+ 1020               	.L125:
+ 353:catboard.c    **** 				mod_keys |= KEY_SHIFT;
+ 1021               		.loc 1 353 0 is_stmt 1
+ 1022 01a2 6260      		ori r22,lo8(2)
+ 1023               	.LVL80:
+ 1024               	.L169:
+ 1025 01a4 6093 0000 		sts mod_keys,r22
+ 1026 01a8 00C0      		rjmp .L166
+ 1027               	.LVL81:
+ 1028               	.L123:
+ 356:catboard.c    **** 		} else if (key_code==KEY_LAYER2) { // KEY_LAYOUT2
+ 1029               		.loc 1 356 0
+ 1030 01aa 823F      		cpi r24,lo8(-14)
+ 1031 01ac 01F4      		brne .L126
+ 357:catboard.c    **** 			mod_keys |= KEY_RIGHT_SHIFT;
+ 1032               		.loc 1 357 0
+ 1033 01ae 6062      		ori r22,lo8(32)
+ 1034               	.LVL82:
+ 1035 01b0 00C0      		rjmp .L169
+ 1036               	.LVL83:
+ 1037               	.L126:
+ 359:catboard.c    **** 		} else if (key_code==KEY_TURBO_REPEAT) { // TURBO_REPEAT ON/OFF
+ 1038               		.loc 1 359 0
+ 1039 01b2 8B3F      		cpi r24,lo8(-5)
+ 1040 01b4 01F4      		brne .L127
+ 360:catboard.c    **** 			turbo_repeat = ! turbo_repeat;
+ 1041               		.loc 1 360 0
+ 1042 01b6 81E0      		ldi r24,lo8(1)
+ 1043               	.LVL84:
+ 1044 01b8 9091 0000 		lds r25,turbo_repeat
+ 1045 01bc 9111      		cpse r25,__zero_reg__
+ 1046 01be 80E0      		ldi r24,0
+ 1047               	.L128:
+ 1048 01c0 8093 0000 		sts turbo_repeat,r24
+ 1049 01c4 00C0      		rjmp .L110
+ 1050               	.LVL85:
+ 1051               	.L127:
+ 361:catboard.c    **** 		} else if (key_code==KEY_MY_SHIFT) { // My Shift
+ 1052               		.loc 1 361 0
+ 1053 01c6 833F      		cpi r24,lo8(-13)
+ 1054 01c8 01F4      		brne .L110
+ 1055 01ca 00C0      		rjmp .L125
+ 1056               	.L107:
+ 371:catboard.c    **** 	} else if (key_code>=0x80) { // Mod keys
+ 1057               		.loc 1 371 0
+ 1058 01cc 87FF      		sbrs r24,7
+ 1059 01ce 00C0      		rjmp .L130
+ 372:catboard.c    **** 		if (mac_mode && key_code==(KEY_CTRL|KEY_MOD)) {
+ 1060               		.loc 1 372 0
+ 1061 01d0 9091 0000 		lds r25,mac_mode
+ 1062 01d4 9923      		tst r25
+ 1063 01d6 01F0      		breq .L131
+ 372:catboard.c    **** 		if (mac_mode && key_code==(KEY_CTRL|KEY_MOD)) {
+ 1064               		.loc 1 372 0 is_stmt 0 discriminator 1
+ 1065 01d8 8138      		cpi r24,lo8(-127)
+ 1066 01da 01F4      		brne .L132
+ 373:catboard.c    **** 			mod_keys |= KEY_GUI;
+ 1067               		.loc 1 373 0 is_stmt 1
+ 1068 01dc 6860      		ori r22,lo8(8)
+ 1069               	.LVL86:
+ 1070 01de 00C0      		rjmp .L169
+ 1071               	.LVL87:
+ 1072               	.L132:
+ 374:catboard.c    **** 		} else if ((mac_mode && key_code==(KEY_RIGHT_CTRL|KEY_MOD)) || key_code==(KEY_RIGHT_GUI|KEY_MOD))
+ 1073               		.loc 1 374 0 discriminator 1
+ 1074 01e0 8039      		cpi r24,lo8(-112)
+ 1075 01e2 01F0      		breq .L134
+ 1076               	.L131:
+ 374:catboard.c    **** 		} else if ((mac_mode && key_code==(KEY_RIGHT_CTRL|KEY_MOD)) || key_code==(KEY_RIGHT_GUI|KEY_MOD))
+ 1077               		.loc 1 374 0 is_stmt 0 discriminator 2
+ 1078 01e4 8038      		cpi r24,lo8(-128)
+ 1079 01e6 01F4      		brne .L135
+ 1080               	.L134:
+ 375:catboard.c    **** 			mod_keys |= KEY_RIGHT_GUI;
+ 1081               		.loc 1 375 0 is_stmt 1
+ 1082 01e8 6068      		ori r22,lo8(-128)
+ 1083               	.LVL88:
+ 1084 01ea 00C0      		rjmp .L169
+ 1085               	.LVL89:
+ 1086               	.L135:
+ 377:catboard.c    **** 			mod_keys |= (key_code & 0x7F);
+ 1087               		.loc 1 377 0
+ 1088 01ec 8F77      		andi r24,lo8(127)
+ 1089               	.LVL90:
+ 1090 01ee 862B      		or r24,r22
+ 1091 01f0 8093 0000 		sts mod_keys,r24
+ 1092 01f4 00C0      		rjmp .L166
+ 1093               	.LVL91:
+ 1094               	.L130:
+ 381:catboard.c    **** 		if (! (last_key==key_id && release_time<10)) { // debounce
+ 1095               		.loc 1 381 0
+ 1096 01f6 8091 0000 		lds r24,last_key
+ 1097               	.LVL92:
+ 1098 01fa 8C13      		cpse r24,r28
+ 1099 01fc 00C0      		rjmp .L136
+ 381:catboard.c    **** 		if (! (last_key==key_id && release_time<10)) { // debounce
+ 1100               		.loc 1 381 0 is_stmt 0 discriminator 1
+ 1101 01fe 2091 0000 		lds r18,release_time
+ 1102 0202 3091 0000 		lds r19,release_time+1
+ 1103               	.LVL93:
+ 1104 0206 2A30      		cpi r18,10
+ 1105 0208 3105      		cpc r19,__zero_reg__
+ 1106 020a 00F0      		brlo .L110
+ 1107               	.L136:
+ 1108               	.LVL94:
+ 382:catboard.c    **** 			for (i=5; i>0; i--) queue[i] = queue[i-1];
+ 1109               		.loc 1 382 0 is_stmt 1 discriminator 1
+ 1110 020c 8091 0000 		lds r24,queue+4
+ 1111 0210 8093 0000 		sts queue+5,r24
+ 1112               	.LVL95:
+ 1113 0214 8091 0000 		lds r24,queue+3
+ 1114 0218 8093 0000 		sts queue+4,r24
+ 1115               	.LVL96:
+ 1116 021c 8091 0000 		lds r24,queue+2
+ 1117 0220 8093 0000 		sts queue+3,r24
+ 1118               	.LVL97:
+ 1119 0224 8091 0000 		lds r24,queue+1
+ 1120 0228 8093 0000 		sts queue+2,r24
+ 1121               	.LVL98:
+ 1122 022c 8091 0000 		lds r24,queue
+ 1123 0230 8093 0000 		sts queue+1,r24
+ 1124               	.LVL99:
+ 383:catboard.c    **** 			queue[0] = key_id;
+ 1125               		.loc 1 383 0 discriminator 1
+ 1126 0234 C093 0000 		sts queue,r28
+ 1127               	.LVL100:
+ 1128               	.L166:
+ 384:catboard.c    **** 			send();
+ 1129               		.loc 1 384 0 discriminator 1
+ 1130 0238 0E94 0000 		call send
+ 1131               	.LVL101:
+ 1132               	.L110:
+ 388:catboard.c    **** 	if (last_key==key_id) { // calc press2
+ 1133               		.loc 1 388 0
+ 1134 023c 8091 0000 		lds r24,last_key
+ 1135 0240 8C13      		cpse r24,r28
+ 1136 0242 00C0      		rjmp .L138
+ 389:catboard.c    **** 		press_time2 = 1;
+ 1137               		.loc 1 389 0
+ 1138 0244 81E0      		ldi r24,lo8(1)
+ 1139 0246 90E0      		ldi r25,0
+ 1140 0248 9093 0000 		sts press_time2+1,r25
+ 1141 024c 8093 0000 		sts press_time2,r24
+ 1142 0250 00C0      		rjmp .L168
+ 1143               	.L138:
+ 392:catboard.c    **** 		last_key = key_id;
+ 1144               		.loc 1 392 0
+ 1145 0252 C093 0000 		sts last_key,r28
+ 393:catboard.c    **** 		press_time = 1;
+ 1146               		.loc 1 393 0
+ 1147 0256 81E0      		ldi r24,lo8(1)
+ 1148 0258 90E0      		ldi r25,0
+ 1149 025a 9093 0000 		sts press_time+1,r25
+ 1150 025e 8093 0000 		sts press_time,r24
+ 394:catboard.c    **** 		press_time2 = 0;
+ 1151               		.loc 1 394 0
+ 1152 0262 1092 0000 		sts press_time2+1,__zero_reg__
+ 1153 0266 1092 0000 		sts press_time2,__zero_reg__
+ 395:catboard.c    **** 		release_time = 0;
+ 1154               		.loc 1 395 0
+ 1155 026a 1092 0000 		sts release_time+1,__zero_reg__
+ 1156 026e 1092 0000 		sts release_time,__zero_reg__
+ 1157               	.L168:
+ 396:catboard.c    **** 		repeat_time = 0;
+ 1158               		.loc 1 396 0
+ 1159 0272 1092 0000 		sts repeat_time+1,__zero_reg__
+ 1160 0276 1092 0000 		sts repeat_time,__zero_reg__
+ 1161               	/* epilogue start */
+ 398:catboard.c    **** }
+ 1162               		.loc 1 398 0
+ 1163 027a CF91      		pop r28
+ 1164               	.LVL102:
+ 1165 027c 0895      		ret
+ 1166               	.LFE14:
+ 1168               		.section	.text.repeat_tick,"ax",@progbits
+ 1169               	.global	repeat_tick
+ 1171               	repeat_tick:
+ 1172               	.LFB11:
  232:catboard.c    **** void repeat_tick(void) {
- 1153               		.loc 1 232 0
- 1154               	/* prologue: function */
- 1155               	/* frame size = 0 */
- 1156               	/* stack size = 0 */
- 1157               	.L__stack_usage = 0
+ 1173               		.loc 1 232 0
+ 1174               	/* prologue: function */
+ 1175               	/* frame size = 0 */
+ 1176               	/* stack size = 0 */
+ 1177               	.L__stack_usage = 0
  233:catboard.c    **** 	if (repeat_time) { // repeat pause
- 1158               		.loc 1 233 0
- 1159 0000 8091 0000 		lds r24,repeat_time
- 1160 0004 9091 0000 		lds r25,repeat_time+1
- 1161 0008 0097      		sbiw r24,0
- 1162 000a 01F0      		breq .L158
+ 1178               		.loc 1 233 0
+ 1179 0000 8091 0000 		lds r24,repeat_time
+ 1180 0004 9091 0000 		lds r25,repeat_time+1
+ 1181 0008 0097      		sbiw r24,0
+ 1182 000a 01F0      		breq .L171
  234:catboard.c    **** 		if (repeat_time<(release_time>>2)) {
- 1163               		.loc 1 234 0
- 1164 000c 2091 0000 		lds r18,release_time
- 1165 0010 3091 0000 		lds r19,release_time+1
- 1166 0014 3695      		lsr r19
- 1167 0016 2795      		ror r18
- 1168 0018 3695      		lsr r19
- 1169 001a 2795      		ror r18
- 1170 001c 8217      		cp r24,r18
- 1171 001e 9307      		cpc r25,r19
- 1172 0020 00F4      		brsh .L159
+ 1183               		.loc 1 234 0
+ 1184 000c 2091 0000 		lds r18,release_time
+ 1185 0010 3091 0000 		lds r19,release_time+1
+ 1186 0014 3695      		lsr r19
+ 1187 0016 2795      		ror r18
+ 1188 0018 3695      		lsr r19
+ 1189 001a 2795      		ror r18
+ 1190 001c 8217      		cp r24,r18
+ 1191 001e 9307      		cpc r25,r19
+ 1192 0020 00F4      		brsh .L172
  235:catboard.c    **** 			repeat_time++;
- 1173               		.loc 1 235 0
- 1174 0022 0196      		adiw r24,1
- 1175 0024 00C0      		rjmp .L173
- 1176               	.L159:
+ 1193               		.loc 1 235 0
+ 1194 0022 0196      		adiw r24,1
+ 1195 0024 00C0      		rjmp .L186
+ 1196               	.L172:
  237:catboard.c    **** 			repeat_time = 1;
- 1177               		.loc 1 237 0
- 1178 0026 81E0      		ldi r24,lo8(1)
- 1179 0028 90E0      		ldi r25,0
- 1180 002a 9093 0000 		sts repeat_time+1,r25
- 1181 002e 8093 0000 		sts repeat_time,r24
+ 1197               		.loc 1 237 0
+ 1198 0026 81E0      		ldi r24,lo8(1)
+ 1199 0028 90E0      		ldi r25,0
+ 1200 002a 9093 0000 		sts repeat_time+1,r25
+ 1201 002e 8093 0000 		sts repeat_time,r24
  238:catboard.c    **** 			if (turbo_repeat) {
- 1182               		.loc 1 238 0
- 1183 0032 8091 0000 		lds r24,turbo_repeat
- 1184 0036 8823      		tst r24
- 1185 0038 01F4      		brne .+2
- 1186 003a 00C0      		rjmp .L157
+ 1202               		.loc 1 238 0
+ 1203 0032 8091 0000 		lds r24,turbo_repeat
+ 1204 0036 8823      		tst r24
+ 1205 0038 01F4      		brne .+2
+ 1206 003a 00C0      		rjmp .L170
  239:catboard.c    **** 				keyboard_modifier_keys = mod_keys;
- 1187               		.loc 1 239 0
- 1188 003c 8091 0000 		lds r24,mod_keys
- 1189 0040 8093 0000 		sts keyboard_modifier_keys,r24
+ 1207               		.loc 1 239 0
+ 1208 003c 8091 0000 		lds r24,mod_keys
+ 1209 0040 8093 0000 		sts keyboard_modifier_keys,r24
  240:catboard.c    **** 				keyboard_keys[0] = get_code(last_key);
- 1190               		.loc 1 240 0
- 1191 0044 8091 0000 		lds r24,last_key
- 1192 0048 0E94 0000 		call get_code
- 1193               	.LVL97:
- 1194 004c 8093 0000 		sts keyboard_keys,r24
+ 1210               		.loc 1 240 0
+ 1211 0044 8091 0000 		lds r24,last_key
+ 1212 0048 0E94 0000 		call get_code
+ 1213               	.LVL103:
+ 1214 004c 8093 0000 		sts keyboard_keys,r24
  241:catboard.c    **** 				if (! usb_keyboard_send()) { // repeat release
- 1195               		.loc 1 241 0
- 1196 0050 0E94 0000 		call usb_keyboard_send
- 1197               	.LVL98:
- 1198 0054 8111      		cpse r24,__zero_reg__
- 1199 0056 00C0      		rjmp .L157
+ 1215               		.loc 1 241 0
+ 1216 0050 0E94 0000 		call usb_keyboard_send
+ 1217               	.LVL104:
+ 1218 0054 8111      		cpse r24,__zero_reg__
+ 1219 0056 00C0      		rjmp .L170
  242:catboard.c    **** 					keyboard_keys[0] = 0;
- 1200               		.loc 1 242 0
- 1201 0058 1092 0000 		sts keyboard_keys,__zero_reg__
+ 1220               		.loc 1 242 0
+ 1221 0058 1092 0000 		sts keyboard_keys,__zero_reg__
  243:catboard.c    **** 					usb_keyboard_send();
- 1202               		.loc 1 243 0
- 1203 005c 0C94 0000 		jmp usb_keyboard_send
- 1204               	.LVL99:
- 1205               	.L158:
+ 1222               		.loc 1 243 0
+ 1223 005c 0C94 0000 		jmp usb_keyboard_send
+ 1224               	.LVL105:
+ 1225               	.L171:
  247:catboard.c    **** 	} else if (press_time2) { // press2 pause
- 1206               		.loc 1 247 0
- 1207 0060 2091 0000 		lds r18,press_time2
- 1208 0064 3091 0000 		lds r19,press_time2+1
- 1209 0068 8091 0000 		lds r24,press_time
- 1210 006c 9091 0000 		lds r25,press_time+1
- 1211 0070 2115      		cp r18,__zero_reg__
- 1212 0072 3105      		cpc r19,__zero_reg__
- 1213 0074 01F0      		breq .L163
+ 1226               		.loc 1 247 0
+ 1227 0060 2091 0000 		lds r18,press_time2
+ 1228 0064 3091 0000 		lds r19,press_time2+1
+ 1229 0068 8091 0000 		lds r24,press_time
+ 1230 006c 9091 0000 		lds r25,press_time+1
+ 1231 0070 2115      		cp r18,__zero_reg__
+ 1232 0072 3105      		cpc r19,__zero_reg__
+ 1233 0074 01F0      		breq .L176
  248:catboard.c    **** 		if (press_time2<(press_time+(pressed[FN_KEY_ID] ? 5 : 30))) {
- 1214               		.loc 1 248 0
- 1215 0076 4091 0000 		lds r20,pressed+35
- 1216 007a 4423      		tst r20
- 1217 007c 01F0      		breq .L169
- 1218 007e 45E0      		ldi r20,lo8(5)
- 1219 0080 50E0      		ldi r21,0
- 1220 0082 00C0      		rjmp .L164
- 1221               	.L169:
- 1222 0084 4EE1      		ldi r20,lo8(30)
- 1223 0086 50E0      		ldi r21,0
- 1224               	.L164:
+ 1234               		.loc 1 248 0
+ 1235 0076 4091 0000 		lds r20,pressed+35
+ 1236 007a 4423      		tst r20
+ 1237 007c 01F0      		breq .L182
+ 1238 007e 45E0      		ldi r20,lo8(5)
+ 1239 0080 50E0      		ldi r21,0
+ 1240 0082 00C0      		rjmp .L177
+ 1241               	.L182:
+ 1242 0084 4EE1      		ldi r20,lo8(30)
+ 1243 0086 50E0      		ldi r21,0
+ 1244               	.L177:
  248:catboard.c    **** 		if (press_time2<(press_time+(pressed[FN_KEY_ID] ? 5 : 30))) {
- 1225               		.loc 1 248 0 is_stmt 0 discriminator 3
- 1226 0088 840F      		add r24,r20
- 1227 008a 951F      		adc r25,r21
- 1228 008c 2817      		cp r18,r24
- 1229 008e 3907      		cpc r19,r25
- 1230 0090 00F4      		brsh .L165
+ 1245               		.loc 1 248 0 is_stmt 0 discriminator 3
+ 1246 0088 840F      		add r24,r20
+ 1247 008a 951F      		adc r25,r21
+ 1248 008c 2817      		cp r18,r24
+ 1249 008e 3907      		cpc r19,r25
+ 1250 0090 00F4      		brsh .L178
  249:catboard.c    **** 			press_time2++;
- 1231               		.loc 1 249 0 is_stmt 1
- 1232 0092 2F5F      		subi r18,-1
- 1233 0094 3F4F      		sbci r19,-1
- 1234 0096 3093 0000 		sts press_time2+1,r19
- 1235 009a 2093 0000 		sts press_time2,r18
- 1236 009e 0895      		ret
- 1237               	.L165:
+ 1251               		.loc 1 249 0 is_stmt 1
+ 1252 0092 2F5F      		subi r18,-1
+ 1253 0094 3F4F      		sbci r19,-1
+ 1254 0096 3093 0000 		sts press_time2+1,r19
+ 1255 009a 2093 0000 		sts press_time2,r18
+ 1256 009e 0895      		ret
+ 1257               	.L178:
  251:catboard.c    **** 			repeat_time = 1;
- 1238               		.loc 1 251 0
- 1239 00a0 81E0      		ldi r24,lo8(1)
- 1240 00a2 90E0      		ldi r25,0
- 1241               	.L173:
- 1242 00a4 9093 0000 		sts repeat_time+1,r25
- 1243 00a8 8093 0000 		sts repeat_time,r24
- 1244 00ac 0895      		ret
- 1245               	.L163:
+ 1258               		.loc 1 251 0
+ 1259 00a0 81E0      		ldi r24,lo8(1)
+ 1260 00a2 90E0      		ldi r25,0
+ 1261               	.L186:
+ 1262 00a4 9093 0000 		sts repeat_time+1,r25
+ 1263 00a8 8093 0000 		sts repeat_time,r24
+ 1264 00ac 0895      		ret
+ 1265               	.L176:
  253:catboard.c    **** 	} else if (release_time) { // release pause
- 1246               		.loc 1 253 0
- 1247 00ae 2091 0000 		lds r18,release_time
- 1248 00b2 3091 0000 		lds r19,release_time+1
- 1249 00b6 2115      		cp r18,__zero_reg__
- 1250 00b8 3105      		cpc r19,__zero_reg__
- 1251 00ba 01F0      		breq .L166
+ 1266               		.loc 1 253 0
+ 1267 00ae 2091 0000 		lds r18,release_time
+ 1268 00b2 3091 0000 		lds r19,release_time+1
+ 1269 00b6 2115      		cp r18,__zero_reg__
+ 1270 00b8 3105      		cpc r19,__zero_reg__
+ 1271 00ba 01F0      		breq .L179
  254:catboard.c    **** 		if (release_time<(press_time+50)) {
- 1252               		.loc 1 254 0
- 1253 00bc C296      		adiw r24,50
- 1254 00be 2817      		cp r18,r24
- 1255 00c0 3907      		cpc r19,r25
- 1256 00c2 00F4      		brsh .L167
+ 1272               		.loc 1 254 0
+ 1273 00bc C296      		adiw r24,50
+ 1274 00be 2817      		cp r18,r24
+ 1275 00c0 3907      		cpc r19,r25
+ 1276 00c2 00F4      		brsh .L180
  255:catboard.c    **** 			release_time++;
- 1257               		.loc 1 255 0
- 1258 00c4 2F5F      		subi r18,-1
- 1259 00c6 3F4F      		sbci r19,-1
- 1260 00c8 3093 0000 		sts release_time+1,r19
- 1261 00cc 2093 0000 		sts release_time,r18
- 1262 00d0 0895      		ret
- 1263               	.L167:
+ 1277               		.loc 1 255 0
+ 1278 00c4 2F5F      		subi r18,-1
+ 1279 00c6 3F4F      		sbci r19,-1
+ 1280 00c8 3093 0000 		sts release_time+1,r19
+ 1281 00cc 2093 0000 		sts release_time,r18
+ 1282 00d0 0895      		ret
+ 1283               	.L180:
  257:catboard.c    **** 			last_key = 0xFF;
- 1264               		.loc 1 257 0
- 1265 00d2 8FEF      		ldi r24,lo8(-1)
- 1266 00d4 8093 0000 		sts last_key,r24
+ 1284               		.loc 1 257 0
+ 1285 00d2 8FEF      		ldi r24,lo8(-1)
+ 1286 00d4 8093 0000 		sts last_key,r24
  258:catboard.c    **** 			release_time = 0;
- 1267               		.loc 1 258 0
- 1268 00d8 1092 0000 		sts release_time+1,__zero_reg__
- 1269 00dc 1092 0000 		sts release_time,__zero_reg__
+ 1287               		.loc 1 258 0
+ 1288 00d8 1092 0000 		sts release_time+1,__zero_reg__
+ 1289 00dc 1092 0000 		sts release_time,__zero_reg__
  259:catboard.c    **** 			press_time = 0;
- 1270               		.loc 1 259 0
- 1271 00e0 1092 0000 		sts press_time+1,__zero_reg__
- 1272 00e4 1092 0000 		sts press_time,__zero_reg__
+ 1290               		.loc 1 259 0
+ 1291 00e0 1092 0000 		sts press_time+1,__zero_reg__
+ 1292 00e4 1092 0000 		sts press_time,__zero_reg__
  260:catboard.c    **** 			press_time2 = 0;
- 1273               		.loc 1 260 0
- 1274 00e8 1092 0000 		sts press_time2+1,__zero_reg__
- 1275 00ec 1092 0000 		sts press_time2,__zero_reg__
- 1276 00f0 0895      		ret
- 1277               	.L166:
+ 1293               		.loc 1 260 0
+ 1294 00e8 1092 0000 		sts press_time2+1,__zero_reg__
+ 1295 00ec 1092 0000 		sts press_time2,__zero_reg__
+ 1296 00f0 0895      		ret
+ 1297               	.L179:
  263:catboard.c    **** 	} else if (press_time) { // press1 pause
- 1278               		.loc 1 263 0
- 1279 00f2 0097      		sbiw r24,0
- 1280 00f4 01F0      		breq .L157
+ 1298               		.loc 1 263 0
+ 1299 00f2 0097      		sbiw r24,0
+ 1300 00f4 01F0      		breq .L170
  264:catboard.c    **** 		if (press_time<250) {
- 1281               		.loc 1 264 0
- 1282 00f6 8A3F      		cpi r24,-6
- 1283 00f8 9105      		cpc r25,__zero_reg__
- 1284 00fa 00F4      		brsh .L168
+ 1301               		.loc 1 264 0
+ 1302 00f6 8A3F      		cpi r24,-6
+ 1303 00f8 9105      		cpc r25,__zero_reg__
+ 1304 00fa 00F4      		brsh .L181
  265:catboard.c    **** 			press_time++;
- 1285               		.loc 1 265 0
- 1286 00fc 0196      		adiw r24,1
- 1287 00fe 9093 0000 		sts press_time+1,r25
- 1288 0102 8093 0000 		sts press_time,r24
- 1289 0106 0895      		ret
- 1290               	.L168:
+ 1305               		.loc 1 265 0
+ 1306 00fc 0196      		adiw r24,1
+ 1307 00fe 9093 0000 		sts press_time+1,r25
+ 1308 0102 8093 0000 		sts press_time,r24
+ 1309 0106 0895      		ret
+ 1310               	.L181:
  267:catboard.c    **** 			press_time = 0;
- 1291               		.loc 1 267 0
- 1292 0108 1092 0000 		sts press_time+1,__zero_reg__
- 1293 010c 1092 0000 		sts press_time,__zero_reg__
- 1294               	.L157:
- 1295 0110 0895      		ret
- 1296               	.LFE11:
- 1298               		.section	.text.poll,"ax",@progbits
- 1299               	.global	poll
- 1301               	poll:
- 1302               	.LFB10:
+ 1311               		.loc 1 267 0
+ 1312 0108 1092 0000 		sts press_time+1,__zero_reg__
+ 1313 010c 1092 0000 		sts press_time,__zero_reg__
+ 1314               	.L170:
+ 1315 0110 0895      		ret
+ 1316               	.LFE11:
+ 1318               		.section	.text.poll,"ax",@progbits
+ 1319               	.global	poll
+ 1321               	poll:
+ 1322               	.LFB10:
  204:catboard.c    **** void poll() {
- 1303               		.loc 1 204 0
- 1304 0000 7F92      		push r7
- 1305               	.LCFI8:
- 1306 0002 8F92      		push r8
- 1307               	.LCFI9:
- 1308 0004 9F92      		push r9
- 1309               	.LCFI10:
- 1310 0006 AF92      		push r10
- 1311               	.LCFI11:
- 1312 0008 BF92      		push r11
- 1313               	.LCFI12:
- 1314 000a CF92      		push r12
- 1315               	.LCFI13:
- 1316 000c DF92      		push r13
- 1317               	.LCFI14:
- 1318 000e EF92      		push r14
- 1319               	.LCFI15:
- 1320 0010 FF92      		push r15
- 1321               	.LCFI16:
- 1322 0012 0F93      		push r16
- 1323               	.LCFI17:
- 1324 0014 1F93      		push r17
- 1325               	.LCFI18:
- 1326 0016 CF93      		push r28
- 1327               	.LCFI19:
- 1328 0018 DF93      		push r29
- 1329               	.LCFI20:
- 1330               	/* prologue: function */
- 1331               	/* frame size = 0 */
- 1332               	/* stack size = 13 */
- 1333               	.L__stack_usage = 13
- 1334               	.LVL100:
- 1335 001a 70E0      		ldi r23,lo8(row_port)
- 1336 001c E72E      		mov r14,r23
- 1337 001e 70E0      		ldi r23,hi8(row_port)
- 1338 0020 F72E      		mov r15,r23
- 1339 0022 00E0      		ldi r16,lo8(row_bit)
- 1340 0024 10E0      		ldi r17,hi8(row_bit)
+ 1323               		.loc 1 204 0
+ 1324 0000 7F92      		push r7
+ 1325               	.LCFI8:
+ 1326 0002 8F92      		push r8
+ 1327               	.LCFI9:
+ 1328 0004 9F92      		push r9
+ 1329               	.LCFI10:
+ 1330 0006 AF92      		push r10
+ 1331               	.LCFI11:
+ 1332 0008 BF92      		push r11
+ 1333               	.LCFI12:
+ 1334 000a CF92      		push r12
+ 1335               	.LCFI13:
+ 1336 000c DF92      		push r13
+ 1337               	.LCFI14:
+ 1338 000e EF92      		push r14
+ 1339               	.LCFI15:
+ 1340 0010 FF92      		push r15
+ 1341               	.LCFI16:
+ 1342 0012 0F93      		push r16
+ 1343               	.LCFI17:
+ 1344 0014 1F93      		push r17
+ 1345               	.LCFI18:
+ 1346 0016 CF93      		push r28
+ 1347               	.LCFI19:
+ 1348 0018 DF93      		push r29
+ 1349               	.LCFI20:
+ 1350               	/* prologue: function */
+ 1351               	/* frame size = 0 */
+ 1352               	/* stack size = 13 */
+ 1353               	.L__stack_usage = 13
+ 1354               	.LVL106:
+ 1355 001a 70E0      		ldi r23,lo8(row_port)
+ 1356 001c E72E      		mov r14,r23
+ 1357 001e 70E0      		ldi r23,hi8(row_port)
+ 1358 0020 F72E      		mov r15,r23
+ 1359 0022 00E0      		ldi r16,lo8(row_bit)
+ 1360 0024 10E0      		ldi r17,hi8(row_bit)
  206:catboard.c    **** 	for (row=0; row<ROWS; row++) { // scan rows
- 1341               		.loc 1 206 0
- 1342 0026 912C      		mov r9,__zero_reg__
- 1343               	.LVL101:
- 1344               	.L178:
+ 1361               		.loc 1 206 0
+ 1362 0026 912C      		mov r9,__zero_reg__
+ 1363               	.LVL107:
+ 1364               	.L191:
  207:catboard.c    **** 		*row_port[row] &= ~row_bit[row];
- 1345               		.loc 1 207 0
- 1346 0028 D701      		movw r26,r14
- 1347 002a CD91      		ld r28,X+
- 1348 002c DD91      		ld r29,X+
- 1349 002e 7D01      		movw r14,r26
- 1350 0030 F801      		movw r30,r16
- 1351 0032 7190      		ld r7,Z+
- 1352 0034 8F01      		movw r16,r30
- 1353 0036 972D      		mov r25,r7
- 1354 0038 9095      		com r25
- 1355 003a 8881      		ld r24,Y
- 1356 003c 8923      		and r24,r25
- 1357 003e 8883      		st Y,r24
- 1358               	.LVL102:
- 1359               	.LBB50:
- 1360               	.LBB51:
+ 1365               		.loc 1 207 0
+ 1366 0028 D701      		movw r26,r14
+ 1367 002a CD91      		ld r28,X+
+ 1368 002c DD91      		ld r29,X+
+ 1369 002e 7D01      		movw r14,r26
+ 1370 0030 F801      		movw r30,r16
+ 1371 0032 7190      		ld r7,Z+
+ 1372 0034 8F01      		movw r16,r30
+ 1373 0036 972D      		mov r25,r7
+ 1374 0038 9095      		com r25
+ 1375 003a 8881      		ld r24,Y
+ 1376 003c 8923      		and r24,r25
+ 1377 003e 8883      		st Y,r24
+ 1378               	.LVL108:
+ 1379               	.LBB49:
+ 1380               	.LBB50:
  165:/usr/lib/gcc/avr/4.7.0/../../../avr/include/util/delay.h **** 
  166:/usr/lib/gcc/avr/4.7.0/../../../avr/include/util/delay.h **** #else
  167:/usr/lib/gcc/avr/4.7.0/../../../avr/include/util/delay.h **** 	__tmp = ((F_CPU) / 4e3) * __ms;
@@ -2297,182 +2340,182 @@
  244:/usr/lib/gcc/avr/4.7.0/../../../avr/include/util/delay.h **** 	#endif
  245:/usr/lib/gcc/avr/4.7.0/../../../avr/include/util/delay.h **** 
  246:/usr/lib/gcc/avr/4.7.0/../../../avr/include/util/delay.h **** 	__builtin_avr_delay_cycles(__ticks_dc);
- 1361               		.loc 2 246 0
- 1362 0040 F5E0      		ldi r31,lo8(5)
- 1363 0042 FA95      		1: dec r31
- 1364 0044 01F4      		brne 1b
- 1365 0046 0000      		nop
- 1366               	.LVL103:
- 1367 0048 50E0      		ldi r21,lo8(col_pin)
- 1368 004a C52E      		mov r12,r21
- 1369 004c 50E0      		ldi r21,hi8(col_pin)
- 1370 004e D52E      		mov r13,r21
- 1371 0050 60E0      		ldi r22,lo8(col_bit)
- 1372 0052 A62E      		mov r10,r22
- 1373 0054 60E0      		ldi r22,hi8(col_bit)
- 1374 0056 B62E      		mov r11,r22
- 1375 0058 812C      		mov r8,__zero_reg__
- 1376               	.LVL104:
- 1377               	.L177:
- 1378               	.LBE51:
- 1379               	.LBE50:
+ 1381               		.loc 2 246 0
+ 1382 0040 F5E0      		ldi r31,lo8(5)
+ 1383 0042 FA95      		1: dec r31
+ 1384 0044 01F4      		brne 1b
+ 1385 0046 0000      		nop
+ 1386               	.LVL109:
+ 1387 0048 50E0      		ldi r21,lo8(col_pin)
+ 1388 004a C52E      		mov r12,r21
+ 1389 004c 50E0      		ldi r21,hi8(col_pin)
+ 1390 004e D52E      		mov r13,r21
+ 1391 0050 60E0      		ldi r22,lo8(col_bit)
+ 1392 0052 A62E      		mov r10,r22
+ 1393 0054 60E0      		ldi r22,hi8(col_bit)
+ 1394 0056 B62E      		mov r11,r22
+ 1395 0058 812C      		mov r8,__zero_reg__
+ 1396               	.LVL110:
+ 1397               	.L190:
+ 1398               	.LBE50:
+ 1399               	.LBE49:
  210:catboard.c    **** 			key_id = col*ROWS+row;
- 1380               		.loc 1 210 0
- 1381 005a 882D      		mov r24,r8
- 1382 005c 890D      		add r24,r9
- 1383               	.LVL105:
+ 1400               		.loc 1 210 0
+ 1401 005a 882D      		mov r24,r8
+ 1402 005c 890D      		add r24,r9
+ 1403               	.LVL111:
  211:catboard.c    **** 			if (! (*col_pin[col] & col_bit[col])) { // press key
- 1384               		.loc 1 211 0
- 1385 005e D601      		movw r26,r12
- 1386 0060 ED91      		ld r30,X+
- 1387 0062 FD91      		ld r31,X+
- 1388 0064 6D01      		movw r12,r26
- 1389 0066 D501      		movw r26,r10
- 1390 0068 9D91      		ld r25,X+
- 1391 006a 5D01      		movw r10,r26
- 1392 006c 2081      		ld r18,Z
- 1393 006e 9223      		and r25,r18
- 1394 0070 282F      		mov r18,r24
- 1395 0072 30E0      		ldi r19,0
+ 1404               		.loc 1 211 0
+ 1405 005e D601      		movw r26,r12
+ 1406 0060 ED91      		ld r30,X+
+ 1407 0062 FD91      		ld r31,X+
+ 1408 0064 6D01      		movw r12,r26
+ 1409 0066 D501      		movw r26,r10
+ 1410 0068 9D91      		ld r25,X+
+ 1411 006a 5D01      		movw r10,r26
+ 1412 006c 2081      		ld r18,Z
+ 1413 006e 9223      		and r25,r18
+ 1414 0070 282F      		mov r18,r24
+ 1415 0072 30E0      		ldi r19,0
  212:catboard.c    **** 				if (! pressed[key_id]) {
- 1396               		.loc 1 212 0
- 1397 0074 F901      		movw r30,r18
- 1398 0076 E050      		subi r30,lo8(-(pressed))
- 1399 0078 F040      		sbci r31,hi8(-(pressed))
+ 1416               		.loc 1 212 0
+ 1417 0074 F901      		movw r30,r18
+ 1418 0076 E050      		subi r30,lo8(-(pressed))
+ 1419 0078 F040      		sbci r31,hi8(-(pressed))
  211:catboard.c    **** 			if (! (*col_pin[col] & col_bit[col])) { // press key
- 1400               		.loc 1 211 0
- 1401 007a 9111      		cpse r25,__zero_reg__
- 1402 007c 00C0      		rjmp .L175
+ 1420               		.loc 1 211 0
+ 1421 007a 9111      		cpse r25,__zero_reg__
+ 1422 007c 00C0      		rjmp .L188
  212:catboard.c    **** 				if (! pressed[key_id]) {
- 1403               		.loc 1 212 0
- 1404 007e 9081      		ld r25,Z
- 1405 0080 9111      		cpse r25,__zero_reg__
- 1406 0082 00C0      		rjmp .L176
+ 1423               		.loc 1 212 0
+ 1424 007e 9081      		ld r25,Z
+ 1425 0080 9111      		cpse r25,__zero_reg__
+ 1426 0082 00C0      		rjmp .L189
  213:catboard.c    **** 					key_press(key_id);
- 1407               		.loc 1 213 0
- 1408 0084 0E94 0000 		call key_press
- 1409               	.LVL106:
- 1410 0088 00C0      		rjmp .L176
- 1411               	.LVL107:
- 1412               	.L175:
+ 1427               		.loc 1 213 0
+ 1428 0084 0E94 0000 		call key_press
+ 1429               	.LVL112:
+ 1430 0088 00C0      		rjmp .L189
+ 1431               	.LVL113:
+ 1432               	.L188:
  215:catboard.c    **** 			} else if (pressed[key_id]) { // release key
- 1413               		.loc 1 215 0
- 1414 008a 9081      		ld r25,Z
- 1415 008c 9111      		cpse r25,__zero_reg__
+ 1433               		.loc 1 215 0
+ 1434 008a 9081      		ld r25,Z
+ 1435 008c 9111      		cpse r25,__zero_reg__
  216:catboard.c    **** 				key_release(key_id);
- 1416               		.loc 1 216 0
- 1417 008e 0E94 0000 		call key_release
- 1418               	.LVL108:
- 1419               	.L176:
- 1420 0092 B5E0      		ldi r27,lo8(5)
- 1421 0094 8B0E      		add r8,r27
- 1422               	.LVL109:
+ 1436               		.loc 1 216 0
+ 1437 008e 0E94 0000 		call key_release
+ 1438               	.LVL114:
+ 1439               	.L189:
+ 1440 0092 B5E0      		ldi r27,lo8(5)
+ 1441 0094 8B0E      		add r8,r27
+ 1442               	.LVL115:
  209:catboard.c    **** 		for (col=0; col<COLS; col++) { // read columns
- 1423               		.loc 1 209 0
- 1424 0096 ECE3      		ldi r30,lo8(60)
- 1425 0098 8E12      		cpse r8,r30
- 1426 009a 00C0      		rjmp .L177
+ 1443               		.loc 1 209 0
+ 1444 0096 ECE3      		ldi r30,lo8(60)
+ 1445 0098 8E12      		cpse r8,r30
+ 1446 009a 00C0      		rjmp .L190
  219:catboard.c    **** 		*row_port[row] |= row_bit[row];
- 1427               		.loc 1 219 0
- 1428 009c 8881      		ld r24,Y
- 1429 009e 8729      		or r24,r7
- 1430 00a0 8883      		st Y,r24
+ 1447               		.loc 1 219 0
+ 1448 009c 8881      		ld r24,Y
+ 1449 009e 8729      		or r24,r7
+ 1450 00a0 8883      		st Y,r24
  206:catboard.c    **** 	for (row=0; row<ROWS; row++) { // scan rows
- 1431               		.loc 1 206 0
- 1432 00a2 9394      		inc r9
- 1433               	.LVL110:
- 1434 00a4 9B12      		cpse r9,r27
- 1435 00a6 00C0      		rjmp .L178
- 1436 00a8 8091 0000 		lds r24,pressed_sw2
+ 1451               		.loc 1 206 0
+ 1452 00a2 9394      		inc r9
+ 1453               	.LVL116:
+ 1454 00a4 9B12      		cpse r9,r27
+ 1455 00a6 00C0      		rjmp .L191
+ 1456 00a8 8091 0000 		lds r24,pressed_sw2
  221:catboard.c    **** 	if (! (*col_pin_sw2 & col_bit_sw2)) { // press SW2
- 1437               		.loc 1 221 0
- 1438 00ac 4F99      		sbic 0x9,7
- 1439 00ae 00C0      		rjmp .L179
+ 1457               		.loc 1 221 0
+ 1458 00ac 4F99      		sbic 0x9,7
+ 1459 00ae 00C0      		rjmp .L192
  222:catboard.c    **** 		if (! pressed_sw2) {
- 1440               		.loc 1 222 0
- 1441 00b0 8111      		cpse r24,__zero_reg__
- 1442 00b2 00C0      		rjmp .L180
+ 1460               		.loc 1 222 0
+ 1461 00b0 8111      		cpse r24,__zero_reg__
+ 1462 00b2 00C0      		rjmp .L193
  223:catboard.c    **** 			key_press_sw2();
- 1443               		.loc 1 223 0
- 1444 00b4 0E94 0000 		call key_press_sw2
- 1445               	.LVL111:
- 1446 00b8 00C0      		rjmp .L180
- 1447               	.L179:
+ 1463               		.loc 1 223 0
+ 1464 00b4 0E94 0000 		call key_press_sw2
+ 1465               	.LVL117:
+ 1466 00b8 00C0      		rjmp .L193
+ 1467               	.L192:
  225:catboard.c    **** 	} else if (pressed_sw2) { // release SW2
- 1448               		.loc 1 225 0
- 1449 00ba 8111      		cpse r24,__zero_reg__
+ 1468               		.loc 1 225 0
+ 1469 00ba 8111      		cpse r24,__zero_reg__
  226:catboard.c    **** 		key_release_sw2();
- 1450               		.loc 1 226 0
- 1451 00bc 0E94 0000 		call key_release_sw2
- 1452               	.LVL112:
- 1453               	.L180:
+ 1470               		.loc 1 226 0
+ 1471 00bc 0E94 0000 		call key_release_sw2
+ 1472               	.LVL118:
+ 1473               	.L193:
  228:catboard.c    **** 	repeat_tick();
- 1454               		.loc 1 228 0
- 1455 00c0 0E94 0000 		call repeat_tick
- 1456               	.LVL113:
- 1457               	.LBB52:
- 1458               	.LBB53:
+ 1474               		.loc 1 228 0
+ 1475 00c0 0E94 0000 		call repeat_tick
+ 1476               	.LVL119:
+ 1477               	.LBB51:
+ 1478               	.LBB52:
  164:/usr/lib/gcc/avr/4.7.0/../../../avr/include/util/delay.h **** 	__builtin_avr_delay_cycles(__ticks_dc);
- 1459               		.loc 2 164 0
- 1460 00c4 8FE1      		ldi r24,lo8(19999)
- 1461 00c6 9EE4      		ldi r25,hi8(19999)
- 1462 00c8 0197      		1: sbiw r24,1
- 1463 00ca 01F4      		brne 1b
- 1464 00cc 00C0      		rjmp .
- 1465 00ce 0000      		nop
- 1466               	/* epilogue start */
- 1467               	.LBE53:
- 1468               	.LBE52:
+ 1479               		.loc 2 164 0
+ 1480 00c4 8FE1      		ldi r24,lo8(19999)
+ 1481 00c6 9EE4      		ldi r25,hi8(19999)
+ 1482 00c8 0197      		1: sbiw r24,1
+ 1483 00ca 01F4      		brne 1b
+ 1484 00cc 00C0      		rjmp .
+ 1485 00ce 0000      		nop
+ 1486               	/* epilogue start */
+ 1487               	.LBE52:
+ 1488               	.LBE51:
  230:catboard.c    **** }
- 1469               		.loc 1 230 0
- 1470 00d0 DF91      		pop r29
- 1471 00d2 CF91      		pop r28
- 1472 00d4 1F91      		pop r17
- 1473 00d6 0F91      		pop r16
- 1474 00d8 FF90      		pop r15
- 1475 00da EF90      		pop r14
- 1476 00dc DF90      		pop r13
- 1477 00de CF90      		pop r12
- 1478 00e0 BF90      		pop r11
- 1479 00e2 AF90      		pop r10
- 1480 00e4 9F90      		pop r9
- 1481               	.LVL114:
- 1482 00e6 8F90      		pop r8
- 1483 00e8 7F90      		pop r7
- 1484 00ea 0895      		ret
- 1485               	.LFE10:
- 1487               		.section	.text.startup.main,"ax",@progbits
- 1488               	.global	main
- 1490               	main:
- 1491               	.LFB8:
+ 1489               		.loc 1 230 0
+ 1490 00d0 DF91      		pop r29
+ 1491 00d2 CF91      		pop r28
+ 1492 00d4 1F91      		pop r17
+ 1493 00d6 0F91      		pop r16
+ 1494 00d8 FF90      		pop r15
+ 1495 00da EF90      		pop r14
+ 1496 00dc DF90      		pop r13
+ 1497 00de CF90      		pop r12
+ 1498 00e0 BF90      		pop r11
+ 1499 00e2 AF90      		pop r10
+ 1500 00e4 9F90      		pop r9
+ 1501               	.LVL120:
+ 1502 00e6 8F90      		pop r8
+ 1503 00e8 7F90      		pop r7
+ 1504 00ea 0895      		ret
+ 1505               	.LFE10:
+ 1507               		.section	.text.startup.main,"ax",@progbits
+ 1508               	.global	main
+ 1510               	main:
+ 1511               	.LFB8:
  167:catboard.c    **** int main(void) {
- 1492               		.loc 1 167 0
- 1493               	/* prologue: function */
- 1494               	/* frame size = 0 */
- 1495               	/* stack size = 0 */
- 1496               	.L__stack_usage = 0
+ 1512               		.loc 1 167 0
+ 1513               	/* prologue: function */
+ 1514               	/* frame size = 0 */
+ 1515               	/* stack size = 0 */
+ 1516               	.L__stack_usage = 0
  169:catboard.c    **** 	MCUSR &= ~(1 << WDRF);
- 1497               		.loc 1 169 0
- 1498 0000 84B7      		in r24,0x34
- 1499 0002 877F      		andi r24,lo8(-9)
- 1500 0004 84BF      		out 0x34,r24
+ 1517               		.loc 1 169 0
+ 1518 0000 84B7      		in r24,0x34
+ 1519 0002 877F      		andi r24,lo8(-9)
+ 1520 0004 84BF      		out 0x34,r24
  170:catboard.c    **** 	wdt_disable();
- 1501               		.loc 1 170 0
- 1502 0006 88E1      		ldi r24,lo8(24)
- 1503               	/* #APP */
- 1504               	 ;  170 "catboard.c" 1
- 1505 0008 0FB6      		in __tmp_reg__, __SREG__
- 1506 000a F894      		cli
- 1507 000c 8093 6000 		sts 96, r24
- 1508 0010 1092 6000 		sts 96, __zero_reg__
- 1509 0014 0FBE      		out __SREG__,__tmp_reg__
- 1510               		
- 1511               	 ;  0 "" 2
- 1512               	.LVL115:
- 1513               	/* #NOAPP */
- 1514               	.LBB54:
- 1515               	.LBB55:
- 1516               		.file 3 "/usr/lib/gcc/avr/4.7.0/../../../avr/include/avr/power.h"
+ 1521               		.loc 1 170 0
+ 1522 0006 88E1      		ldi r24,lo8(24)
+ 1523               	/* #APP */
+ 1524               	 ;  170 "catboard.c" 1
+ 1525 0008 0FB6      		in __tmp_reg__, __SREG__
+ 1526 000a F894      		cli
+ 1527 000c 8093 6000 		sts 96, r24
+ 1528 0010 1092 6000 		sts 96, __zero_reg__
+ 1529 0014 0FBE      		out __SREG__,__tmp_reg__
+ 1530               		
+ 1531               	 ;  0 "" 2
+ 1532               	.LVL121:
+ 1533               	/* #NOAPP */
+ 1534               	.LBB53:
+ 1535               	.LBB54:
+ 1536               		.file 3 "/usr/lib/gcc/avr/4.7.0/../../../avr/include/avr/power.h"
    1:/usr/lib/gcc/avr/4.7.0/../../../avr/include/avr/power.h **** /* Copyright (c) 2006, 2007, 2008  Eric B. Weddington
    2:/usr/lib/gcc/avr/4.7.0/../../../avr/include/avr/power.h ****    All rights reserved.
    3:/usr/lib/gcc/avr/4.7.0/../../../avr/include/avr/power.h **** 
@@ -3968,424 +4011,424 @@
 1493:/usr/lib/gcc/avr/4.7.0/../../../avr/include/avr/power.h **** {
 1494:/usr/lib/gcc/avr/4.7.0/../../../avr/include/avr/power.h ****     uint8_t __tmp = _BV(CLKPCE);
 1495:/usr/lib/gcc/avr/4.7.0/../../../avr/include/avr/power.h ****     __asm__ __volatile__ (
- 1517               		.loc 3 1495 0
- 1518 0016 90E0      		ldi r25,0
- 1519 0018 80E8      		ldi r24,lo8(-128)
- 1520               	/* #APP */
- 1521               	 ;  1495 "/usr/lib/gcc/avr/4.7.0/../../../avr/include/avr/power.h" 1
- 1522 001a 0FB6      		in __tmp_reg__,__SREG__
- 1523 001c F894      		cli
- 1524 001e 8093 6100 		sts 97, r24
- 1525 0022 9093 6100 		sts 97, r25
- 1526 0026 0FBE      		out __SREG__, __tmp_reg__
- 1527               	 ;  0 "" 2
- 1528               	/* #NOAPP */
- 1529               	.LBE55:
- 1530               	.LBE54:
+ 1537               		.loc 3 1495 0
+ 1538 0016 90E0      		ldi r25,0
+ 1539 0018 80E8      		ldi r24,lo8(-128)
+ 1540               	/* #APP */
+ 1541               	 ;  1495 "/usr/lib/gcc/avr/4.7.0/../../../avr/include/avr/power.h" 1
+ 1542 001a 0FB6      		in __tmp_reg__,__SREG__
+ 1543 001c F894      		cli
+ 1544 001e 8093 6100 		sts 97, r24
+ 1545 0022 9093 6100 		sts 97, r25
+ 1546 0026 0FBE      		out __SREG__, __tmp_reg__
+ 1547               	 ;  0 "" 2
+ 1548               	/* #NOAPP */
+ 1549               	.LBE54:
+ 1550               	.LBE53:
  175:catboard.c    **** 	init();
- 1531               		.loc 1 175 0
- 1532 0028 0E94 0000 		call init
- 1533               	.LVL116:
- 1534               	.L190:
+ 1551               		.loc 1 175 0
+ 1552 0028 0E94 0000 		call init
+ 1553               	.LVL122:
+ 1554               	.L203:
  177:catboard.c    **** 		poll();
- 1535               		.loc 1 177 0 discriminator 1
- 1536 002c 0E94 0000 		call poll
- 1537               	.LVL117:
- 1538 0030 00C0      		rjmp .L190
- 1539               	.LFE8:
- 1541               	.global	repeat_time
- 1542               		.section .bss
- 1545               	repeat_time:
- 1546 0000 0000      		.zero	2
- 1547               	.global	release_time
- 1550               	release_time:
- 1551 0002 0000      		.zero	2
- 1552               	.global	press_time2
- 1555               	press_time2:
- 1556 0004 0000      		.zero	2
- 1557               	.global	press_time
- 1560               	press_time:
- 1561 0006 0000      		.zero	2
- 1562               	.global	last_key
- 1563               		.data
- 1566               	last_key:
- 1567 0000 FF        		.byte	-1
- 1568               	.global	turbo_repeat
- 1571               	turbo_repeat:
- 1572 0001 01        		.byte	1
- 1573               	.global	prev_layer
- 1574               		.section .bss
- 1577               	prev_layer:
- 1578 0008 0000      		.zero	2
- 1579               	.global	mod_keys
- 1582               	mod_keys:
- 1583 000a 00        		.zero	1
- 1584               	.global	queue
- 1585               		.data
- 1588               	queue:
- 1589 0002 FF        		.byte	-1
- 1590 0003 FF        		.byte	-1
- 1591 0004 FF        		.byte	-1
- 1592 0005 FF        		.byte	-1
- 1593 0006 FF        		.byte	-1
- 1594 0007 FF        		.byte	-1
- 1595 0008 FF        		.byte	-1
- 1596               	.global	pressed_sw2
- 1597               		.section .bss
- 1600               	pressed_sw2:
- 1601 000b 00        		.zero	1
- 1602               		.comm	pressed,60,1
- 1603               	.global	col_bit_sw2
- 1604               		.section	.rodata
- 1607               	col_bit_sw2:
- 1608 0000 80        		.byte	-128
- 1609               	.global	col_pin_sw2
- 1612               	col_pin_sw2:
- 1613 0001 2900      		.word	41
- 1614               	.global	col_bit
- 1617               	col_bit:
- 1618 0003 40        		.byte	64
- 1619 0004 20        		.byte	32
- 1620 0005 08        		.byte	8
- 1621 0006 04        		.byte	4
- 1622 0007 02        		.byte	2
- 1623 0008 01        		.byte	1
- 1624 0009 80        		.byte	-128
- 1625 000a 40        		.byte	64
- 1626 000b 20        		.byte	32
- 1627 000c 10        		.byte	16
- 1628 000d 02        		.byte	2
- 1629 000e 01        		.byte	1
- 1630               	.global	col_pin
- 1633               	col_pin:
- 1634 000f 2900      		.word	41
- 1635 0011 2900      		.word	41
- 1636 0013 2900      		.word	41
- 1637 0015 2900      		.word	41
- 1638 0017 2900      		.word	41
- 1639 0019 2900      		.word	41
- 1640 001b 2300      		.word	35
- 1641 001d 2300      		.word	35
- 1642 001f 2300      		.word	35
- 1643 0021 2300      		.word	35
- 1644 0023 2300      		.word	35
- 1645 0025 2300      		.word	35
- 1646               	.global	row_bit
- 1649               	row_bit:
- 1650 0027 80        		.byte	-128
- 1651 0028 40        		.byte	64
- 1652 0029 20        		.byte	32
- 1653 002a 10        		.byte	16
- 1654 002b 04        		.byte	4
- 1655               	.global	row_port
- 1658               	row_port:
- 1659 002c 2800      		.word	40
- 1660 002e 2800      		.word	40
- 1661 0030 2800      		.word	40
- 1662 0032 2800      		.word	40
- 1663 0034 2800      		.word	40
- 1664               	.global	layer_fnlock
- 1667               	layer_fnlock:
- 1668 0036 29        		.byte	41
- 1669 0037 82        		.byte	-126
- 1670 0038 90        		.byte	-112
- 1671 0039 2B        		.byte	43
- 1672 003a 35        		.byte	53
- 1673 003b FD        		.byte	-3
- 1674 003c 00        		.byte	0
- 1675 003d 4E        		.byte	78
- 1676 003e 4B        		.byte	75
- 1677 003f 1E        		.byte	30
- 1678 0040 84        		.byte	-124
- 1679 0041 00        		.byte	0
- 1680 0042 50        		.byte	80
- 1681 0043 4A        		.byte	74
- 1682 0044 1F        		.byte	31
- 1683 0045 84        		.byte	-124
- 1684 0046 00        		.byte	0
- 1685 0047 51        		.byte	81
- 1686 0048 52        		.byte	82
- 1687 0049 20        		.byte	32
- 1688 004a 81        		.byte	-127
- 1689 004b 00        		.byte	0
- 1690 004c 4F        		.byte	79
- 1691 004d 4D        		.byte	77
- 1692 004e 21        		.byte	33
- 1693 004f 2C        		.byte	44
- 1694 0050 00        		.byte	0
- 1695 0051 28        		.byte	40
- 1696 0052 35        		.byte	53
- 1697 0053 22        		.byte	34
- 1698 0054 2C        		.byte	44
- 1699 0055 62        		.byte	98
- 1700 0056 55        		.byte	85
- 1701 0057 54        		.byte	84
- 1702 0058 23        		.byte	35
- 1703 0059 FF        		.byte	-1
- 1704 005a 59        		.byte	89
- 1705 005b 5C        		.byte	92
- 1706 005c 5F        		.byte	95
- 1707 005d 24        		.byte	36
- 1708 005e C0        		.byte	-64
- 1709 005f 5A        		.byte	90
- 1710 0060 5D        		.byte	93
- 1711 0061 60        		.byte	96
- 1712 0062 25        		.byte	37
- 1713 0063 28        		.byte	40
- 1714 0064 5B        		.byte	91
- 1715 0065 5E        		.byte	94
- 1716 0066 61        		.byte	97
- 1717 0067 26        		.byte	38
- 1718 0068 53        		.byte	83
- 1719 0069 63        		.byte	99
- 1720 006a 57        		.byte	87
- 1721 006b 56        		.byte	86
- 1722 006c 27        		.byte	39
- 1723 006d 2E        		.byte	46
- 1724 006e A0        		.byte	-96
- 1725 006f 28        		.byte	40
- 1726 0070 29        		.byte	41
- 1727 0071 2D        		.byte	45
- 1728               	.global	layer_fn
- 1731               	layer_fn:
- 1732 0072 FB        		.byte	-5
- 1733 0073 F1        		.byte	-15
- 1734 0074 90        		.byte	-112
- 1735 0075 2B        		.byte	43
- 1736 0076 46        		.byte	70
- 1737 0077 FD        		.byte	-3
- 1738 0078 00        		.byte	0
- 1739 0079 00        		.byte	0
- 1740 007a 00        		.byte	0
- 1741 007b 3A        		.byte	58
- 1742 007c 84        		.byte	-124
- 1743 007d 00        		.byte	0
- 1744 007e 00        		.byte	0
- 1745 007f 00        		.byte	0
- 1746 0080 3B        		.byte	59
- 1747 0081 84        		.byte	-124
- 1748 0082 00        		.byte	0
- 1749 0083 00        		.byte	0
- 1750 0084 00        		.byte	0
- 1751 0085 3C        		.byte	60
- 1752 0086 81        		.byte	-127
- 1753 0087 00        		.byte	0
- 1754 0088 00        		.byte	0
- 1755 0089 00        		.byte	0
- 1756 008a 3D        		.byte	61
- 1757 008b F3        		.byte	-13
- 1758 008c 00        		.byte	0
- 1759 008d 00        		.byte	0
- 1760 008e 35        		.byte	53
- 1761 008f 3E        		.byte	62
- 1762 0090 FC        		.byte	-4
- 1763 0091 2A        		.byte	42
- 1764 0092 28        		.byte	40
- 1765 0093 28        		.byte	40
- 1766 0094 3F        		.byte	63
- 1767 0095 FF        		.byte	-1
- 1768 0096 4C        		.byte	76
- 1769 0097 50        		.byte	80
- 1770 0098 4A        		.byte	74
- 1771 0099 40        		.byte	64
- 1772 009a FE        		.byte	-2
- 1773 009b 49        		.byte	73
- 1774 009c 51        		.byte	81
- 1775 009d 52        		.byte	82
- 1776 009e 41        		.byte	65
- 1777 009f 00        		.byte	0
- 1778 00a0 00        		.byte	0
- 1779 00a1 4F        		.byte	79
- 1780 00a2 4D        		.byte	77
- 1781 00a3 42        		.byte	66
- 1782 00a4 47        		.byte	71
- 1783 00a5 00        		.byte	0
- 1784 00a6 4E        		.byte	78
- 1785 00a7 4B        		.byte	75
- 1786 00a8 43        		.byte	67
- 1787 00a9 45        		.byte	69
- 1788 00aa F2        		.byte	-14
- 1789 00ab 48        		.byte	72
- 1790 00ac 29        		.byte	41
- 1791 00ad 44        		.byte	68
- 1792               	.global	layer1
- 1795               	layer1:
- 1796 00ae 29        		.byte	41
- 1797 00af F1        		.byte	-15
- 1798 00b0 90        		.byte	-112
- 1799 00b1 2B        		.byte	43
- 1800 00b2 35        		.byte	53
- 1801 00b3 FD        		.byte	-3
- 1802 00b4 1D        		.byte	29
- 1803 00b5 04        		.byte	4
- 1804 00b6 14        		.byte	20
- 1805 00b7 1E        		.byte	30
- 1806 00b8 84        		.byte	-124
- 1807 00b9 1B        		.byte	27
- 1808 00ba 16        		.byte	22
- 1809 00bb 1A        		.byte	26
- 1810 00bc 1F        		.byte	31
- 1811 00bd 84        		.byte	-124
- 1812 00be 06        		.byte	6
- 1813 00bf 07        		.byte	7
- 1814 00c0 08        		.byte	8
- 1815 00c1 20        		.byte	32
- 1816 00c2 81        		.byte	-127
- 1817 00c3 19        		.byte	25
- 1818 00c4 09        		.byte	9
- 1819 00c5 15        		.byte	21
- 1820 00c6 21        		.byte	33
- 1821 00c7 F3        		.byte	-13
- 1822 00c8 05        		.byte	5
- 1823 00c9 0A        		.byte	10
- 1824 00ca 17        		.byte	23
- 1825 00cb 22        		.byte	34
- 1826 00cc 2C        		.byte	44
- 1827 00cd 11        		.byte	17
- 1828 00ce 0B        		.byte	11
- 1829 00cf 1C        		.byte	28
- 1830 00d0 23        		.byte	35
- 1831 00d1 FF        		.byte	-1
- 1832 00d2 10        		.byte	16
- 1833 00d3 0D        		.byte	13
- 1834 00d4 18        		.byte	24
- 1835 00d5 24        		.byte	36
- 1836 00d6 C0        		.byte	-64
- 1837 00d7 36        		.byte	54
- 1838 00d8 0E        		.byte	14
- 1839 00d9 0C        		.byte	12
- 1840 00da 25        		.byte	37
- 1841 00db 31        		.byte	49
- 1842 00dc 37        		.byte	55
- 1843 00dd 0F        		.byte	15
- 1844 00de 12        		.byte	18
- 1845 00df 26        		.byte	38
- 1846 00e0 30        		.byte	48
- 1847 00e1 38        		.byte	56
- 1848 00e2 33        		.byte	51
- 1849 00e3 13        		.byte	19
- 1850 00e4 27        		.byte	39
- 1851 00e5 2E        		.byte	46
- 1852 00e6 F2        		.byte	-14
- 1853 00e7 34        		.byte	52
- 1854 00e8 2F        		.byte	47
- 1855 00e9 2D        		.byte	45
- 1856               	.global	mac_mode
- 1857               		.section .bss
- 1860               	mac_mode:
- 1861 000c 00        		.zero	1
- 1862               	.global	layout
- 1863               		.data
- 1866               	layout:
- 1867 0009 0000      		.word	layer2
- 1868               	.global	layer2
- 1869               		.section	.rodata
- 1872               	layer2:
- 1873 00ea 29        		.byte	41
- 1874 00eb F1        		.byte	-15
- 1875 00ec 90        		.byte	-112
- 1876 00ed 2B        		.byte	43
- 1877 00ee 35        		.byte	53
- 1878 00ef FD        		.byte	-3
- 1879 00f0 14        		.byte	20
- 1880 00f1 09        		.byte	9
- 1881 00f2 0D        		.byte	13
- 1882 00f3 1E        		.byte	30
- 1883 00f4 84        		.byte	-124
- 1884 00f5 38        		.byte	56
- 1885 00f6 1C        		.byte	28
- 1886 00f7 06        		.byte	6
- 1887 00f8 1F        		.byte	31
- 1888 00f9 84        		.byte	-124
- 1889 00fa 16        		.byte	22
- 1890 00fb 19        		.byte	25
- 1891 00fc 18        		.byte	24
- 1892 00fd 20        		.byte	32
- 1893 00fe 81        		.byte	-127
- 1894 00ff 10        		.byte	16
- 1895 0100 04        		.byte	4
- 1896 0101 0E        		.byte	14
- 1897 0102 21        		.byte	33
- 1898 0103 F3        		.byte	-13
- 1899 0104 0C        		.byte	12
- 1900 0105 13        		.byte	19
- 1901 0106 08        		.byte	8
- 1902 0107 22        		.byte	34
- 1903 0108 2C        		.byte	44
- 1904 0109 17        		.byte	23
- 1905 010a 15        		.byte	21
- 1906 010b 11        		.byte	17
- 1907 010c 23        		.byte	35
- 1908 010d FF        		.byte	-1
- 1909 010e 1B        		.byte	27
- 1910 010f 12        		.byte	18
- 1911 0110 0A        		.byte	10
- 1912 0111 24        		.byte	36
- 1913 0112 C0        		.byte	-64
- 1914 0113 05        		.byte	5
- 1915 0114 0F        		.byte	15
- 1916 0115 0B        		.byte	11
- 1917 0116 25        		.byte	37
- 1918 0117 31        		.byte	49
- 1919 0118 36        		.byte	54
- 1920 0119 07        		.byte	7
- 1921 011a 1A        		.byte	26
- 1922 011b 26        		.byte	38
- 1923 011c 30        		.byte	48
- 1924 011d 37        		.byte	55
- 1925 011e 33        		.byte	51
- 1926 011f 1D        		.byte	29
- 1927 0120 27        		.byte	39
- 1928 0121 2E        		.byte	46
- 1929 0122 F2        		.byte	-14
- 1930 0123 34        		.byte	52
- 1931 0124 2F        		.byte	47
- 1932 0125 2D        		.byte	45
- 2165               	.Letext0:
- 2166               		.file 4 "/usr/lib/gcc/avr/4.7.0/../../../avr/include/stdint.h"
- 2167               		.file 5 "usb_keyboard.h"
- 2168               		.file 6 "jcuken.h"
+ 1555               		.loc 1 177 0 discriminator 1
+ 1556 002c 0E94 0000 		call poll
+ 1557               	.LVL123:
+ 1558 0030 00C0      		rjmp .L203
+ 1559               	.LFE8:
+ 1561               	.global	repeat_time
+ 1562               		.section .bss
+ 1565               	repeat_time:
+ 1566 0000 0000      		.zero	2
+ 1567               	.global	release_time
+ 1570               	release_time:
+ 1571 0002 0000      		.zero	2
+ 1572               	.global	press_time2
+ 1575               	press_time2:
+ 1576 0004 0000      		.zero	2
+ 1577               	.global	press_time
+ 1580               	press_time:
+ 1581 0006 0000      		.zero	2
+ 1582               	.global	last_key
+ 1583               		.data
+ 1586               	last_key:
+ 1587 0000 FF        		.byte	-1
+ 1588               	.global	turbo_repeat
+ 1591               	turbo_repeat:
+ 1592 0001 01        		.byte	1
+ 1593               	.global	prev_layer
+ 1594               		.section .bss
+ 1597               	prev_layer:
+ 1598 0008 0000      		.zero	2
+ 1599               	.global	mod_keys
+ 1602               	mod_keys:
+ 1603 000a 00        		.zero	1
+ 1604               	.global	queue
+ 1605               		.data
+ 1608               	queue:
+ 1609 0002 FF        		.byte	-1
+ 1610 0003 FF        		.byte	-1
+ 1611 0004 FF        		.byte	-1
+ 1612 0005 FF        		.byte	-1
+ 1613 0006 FF        		.byte	-1
+ 1614 0007 FF        		.byte	-1
+ 1615 0008 FF        		.byte	-1
+ 1616               	.global	pressed_sw2
+ 1617               		.section .bss
+ 1620               	pressed_sw2:
+ 1621 000b 00        		.zero	1
+ 1622               		.comm	pressed,60,1
+ 1623               	.global	col_bit_sw2
+ 1624               		.section	.rodata
+ 1627               	col_bit_sw2:
+ 1628 0000 80        		.byte	-128
+ 1629               	.global	col_pin_sw2
+ 1632               	col_pin_sw2:
+ 1633 0001 2900      		.word	41
+ 1634               	.global	col_bit
+ 1637               	col_bit:
+ 1638 0003 40        		.byte	64
+ 1639 0004 20        		.byte	32
+ 1640 0005 08        		.byte	8
+ 1641 0006 04        		.byte	4
+ 1642 0007 02        		.byte	2
+ 1643 0008 01        		.byte	1
+ 1644 0009 80        		.byte	-128
+ 1645 000a 40        		.byte	64
+ 1646 000b 20        		.byte	32
+ 1647 000c 10        		.byte	16
+ 1648 000d 02        		.byte	2
+ 1649 000e 01        		.byte	1
+ 1650               	.global	col_pin
+ 1653               	col_pin:
+ 1654 000f 2900      		.word	41
+ 1655 0011 2900      		.word	41
+ 1656 0013 2900      		.word	41
+ 1657 0015 2900      		.word	41
+ 1658 0017 2900      		.word	41
+ 1659 0019 2900      		.word	41
+ 1660 001b 2300      		.word	35
+ 1661 001d 2300      		.word	35
+ 1662 001f 2300      		.word	35
+ 1663 0021 2300      		.word	35
+ 1664 0023 2300      		.word	35
+ 1665 0025 2300      		.word	35
+ 1666               	.global	row_bit
+ 1669               	row_bit:
+ 1670 0027 80        		.byte	-128
+ 1671 0028 40        		.byte	64
+ 1672 0029 20        		.byte	32
+ 1673 002a 10        		.byte	16
+ 1674 002b 04        		.byte	4
+ 1675               	.global	row_port
+ 1678               	row_port:
+ 1679 002c 2800      		.word	40
+ 1680 002e 2800      		.word	40
+ 1681 0030 2800      		.word	40
+ 1682 0032 2800      		.word	40
+ 1683 0034 2800      		.word	40
+ 1684               	.global	layer_fnlock
+ 1687               	layer_fnlock:
+ 1688 0036 29        		.byte	41
+ 1689 0037 82        		.byte	-126
+ 1690 0038 90        		.byte	-112
+ 1691 0039 2B        		.byte	43
+ 1692 003a 35        		.byte	53
+ 1693 003b FD        		.byte	-3
+ 1694 003c 00        		.byte	0
+ 1695 003d 4E        		.byte	78
+ 1696 003e 4B        		.byte	75
+ 1697 003f 1E        		.byte	30
+ 1698 0040 84        		.byte	-124
+ 1699 0041 00        		.byte	0
+ 1700 0042 50        		.byte	80
+ 1701 0043 4A        		.byte	74
+ 1702 0044 1F        		.byte	31
+ 1703 0045 84        		.byte	-124
+ 1704 0046 00        		.byte	0
+ 1705 0047 51        		.byte	81
+ 1706 0048 52        		.byte	82
+ 1707 0049 20        		.byte	32
+ 1708 004a 81        		.byte	-127
+ 1709 004b 00        		.byte	0
+ 1710 004c 4F        		.byte	79
+ 1711 004d 4D        		.byte	77
+ 1712 004e 21        		.byte	33
+ 1713 004f 2C        		.byte	44
+ 1714 0050 00        		.byte	0
+ 1715 0051 28        		.byte	40
+ 1716 0052 35        		.byte	53
+ 1717 0053 22        		.byte	34
+ 1718 0054 2C        		.byte	44
+ 1719 0055 62        		.byte	98
+ 1720 0056 55        		.byte	85
+ 1721 0057 54        		.byte	84
+ 1722 0058 23        		.byte	35
+ 1723 0059 FF        		.byte	-1
+ 1724 005a 59        		.byte	89
+ 1725 005b 5C        		.byte	92
+ 1726 005c 5F        		.byte	95
+ 1727 005d 24        		.byte	36
+ 1728 005e C0        		.byte	-64
+ 1729 005f 5A        		.byte	90
+ 1730 0060 5D        		.byte	93
+ 1731 0061 60        		.byte	96
+ 1732 0062 25        		.byte	37
+ 1733 0063 28        		.byte	40
+ 1734 0064 5B        		.byte	91
+ 1735 0065 5E        		.byte	94
+ 1736 0066 61        		.byte	97
+ 1737 0067 26        		.byte	38
+ 1738 0068 53        		.byte	83
+ 1739 0069 63        		.byte	99
+ 1740 006a 57        		.byte	87
+ 1741 006b 56        		.byte	86
+ 1742 006c 27        		.byte	39
+ 1743 006d 2E        		.byte	46
+ 1744 006e A0        		.byte	-96
+ 1745 006f 28        		.byte	40
+ 1746 0070 29        		.byte	41
+ 1747 0071 2D        		.byte	45
+ 1748               	.global	layer_fn
+ 1751               	layer_fn:
+ 1752 0072 FB        		.byte	-5
+ 1753 0073 F1        		.byte	-15
+ 1754 0074 90        		.byte	-112
+ 1755 0075 2B        		.byte	43
+ 1756 0076 46        		.byte	70
+ 1757 0077 2B        		.byte	43
+ 1758 0078 00        		.byte	0
+ 1759 0079 00        		.byte	0
+ 1760 007a 00        		.byte	0
+ 1761 007b 3A        		.byte	58
+ 1762 007c 84        		.byte	-124
+ 1763 007d 00        		.byte	0
+ 1764 007e 00        		.byte	0
+ 1765 007f 00        		.byte	0
+ 1766 0080 3B        		.byte	59
+ 1767 0081 84        		.byte	-124
+ 1768 0082 00        		.byte	0
+ 1769 0083 00        		.byte	0
+ 1770 0084 00        		.byte	0
+ 1771 0085 3C        		.byte	60
+ 1772 0086 81        		.byte	-127
+ 1773 0087 00        		.byte	0
+ 1774 0088 00        		.byte	0
+ 1775 0089 00        		.byte	0
+ 1776 008a 3D        		.byte	61
+ 1777 008b F3        		.byte	-13
+ 1778 008c 00        		.byte	0
+ 1779 008d 00        		.byte	0
+ 1780 008e 35        		.byte	53
+ 1781 008f 3E        		.byte	62
+ 1782 0090 FC        		.byte	-4
+ 1783 0091 2A        		.byte	42
+ 1784 0092 28        		.byte	40
+ 1785 0093 28        		.byte	40
+ 1786 0094 3F        		.byte	63
+ 1787 0095 FF        		.byte	-1
+ 1788 0096 4C        		.byte	76
+ 1789 0097 50        		.byte	80
+ 1790 0098 4A        		.byte	74
+ 1791 0099 40        		.byte	64
+ 1792 009a FE        		.byte	-2
+ 1793 009b 49        		.byte	73
+ 1794 009c 51        		.byte	81
+ 1795 009d 52        		.byte	82
+ 1796 009e 41        		.byte	65
+ 1797 009f 00        		.byte	0
+ 1798 00a0 00        		.byte	0
+ 1799 00a1 4F        		.byte	79
+ 1800 00a2 4D        		.byte	77
+ 1801 00a3 42        		.byte	66
+ 1802 00a4 47        		.byte	71
+ 1803 00a5 00        		.byte	0
+ 1804 00a6 4E        		.byte	78
+ 1805 00a7 4B        		.byte	75
+ 1806 00a8 43        		.byte	67
+ 1807 00a9 45        		.byte	69
+ 1808 00aa F2        		.byte	-14
+ 1809 00ab 48        		.byte	72
+ 1810 00ac 29        		.byte	41
+ 1811 00ad 44        		.byte	68
+ 1812               	.global	layer1
+ 1815               	layer1:
+ 1816 00ae 29        		.byte	41
+ 1817 00af F1        		.byte	-15
+ 1818 00b0 90        		.byte	-112
+ 1819 00b1 2B        		.byte	43
+ 1820 00b2 35        		.byte	53
+ 1821 00b3 FD        		.byte	-3
+ 1822 00b4 1D        		.byte	29
+ 1823 00b5 04        		.byte	4
+ 1824 00b6 14        		.byte	20
+ 1825 00b7 1E        		.byte	30
+ 1826 00b8 84        		.byte	-124
+ 1827 00b9 1B        		.byte	27
+ 1828 00ba 16        		.byte	22
+ 1829 00bb 1A        		.byte	26
+ 1830 00bc 1F        		.byte	31
+ 1831 00bd 84        		.byte	-124
+ 1832 00be 06        		.byte	6
+ 1833 00bf 07        		.byte	7
+ 1834 00c0 08        		.byte	8
+ 1835 00c1 20        		.byte	32
+ 1836 00c2 81        		.byte	-127
+ 1837 00c3 19        		.byte	25
+ 1838 00c4 09        		.byte	9
+ 1839 00c5 15        		.byte	21
+ 1840 00c6 21        		.byte	33
+ 1841 00c7 F3        		.byte	-13
+ 1842 00c8 05        		.byte	5
+ 1843 00c9 0A        		.byte	10
+ 1844 00ca 17        		.byte	23
+ 1845 00cb 22        		.byte	34
+ 1846 00cc 2C        		.byte	44
+ 1847 00cd 11        		.byte	17
+ 1848 00ce 0B        		.byte	11
+ 1849 00cf 1C        		.byte	28
+ 1850 00d0 23        		.byte	35
+ 1851 00d1 FF        		.byte	-1
+ 1852 00d2 10        		.byte	16
+ 1853 00d3 0D        		.byte	13
+ 1854 00d4 18        		.byte	24
+ 1855 00d5 24        		.byte	36
+ 1856 00d6 C0        		.byte	-64
+ 1857 00d7 36        		.byte	54
+ 1858 00d8 0E        		.byte	14
+ 1859 00d9 0C        		.byte	12
+ 1860 00da 25        		.byte	37
+ 1861 00db 31        		.byte	49
+ 1862 00dc 37        		.byte	55
+ 1863 00dd 0F        		.byte	15
+ 1864 00de 12        		.byte	18
+ 1865 00df 26        		.byte	38
+ 1866 00e0 30        		.byte	48
+ 1867 00e1 38        		.byte	56
+ 1868 00e2 33        		.byte	51
+ 1869 00e3 13        		.byte	19
+ 1870 00e4 27        		.byte	39
+ 1871 00e5 2E        		.byte	46
+ 1872 00e6 F2        		.byte	-14
+ 1873 00e7 34        		.byte	52
+ 1874 00e8 2F        		.byte	47
+ 1875 00e9 2D        		.byte	45
+ 1876               	.global	mac_mode
+ 1877               		.section .bss
+ 1880               	mac_mode:
+ 1881 000c 00        		.zero	1
+ 1882               	.global	layout
+ 1883               		.data
+ 1886               	layout:
+ 1887 0009 0000      		.word	layer2
+ 1888               	.global	layer2
+ 1889               		.section	.rodata
+ 1892               	layer2:
+ 1893 00ea 29        		.byte	41
+ 1894 00eb F1        		.byte	-15
+ 1895 00ec 90        		.byte	-112
+ 1896 00ed 2B        		.byte	43
+ 1897 00ee 35        		.byte	53
+ 1898 00ef FD        		.byte	-3
+ 1899 00f0 14        		.byte	20
+ 1900 00f1 09        		.byte	9
+ 1901 00f2 0D        		.byte	13
+ 1902 00f3 1E        		.byte	30
+ 1903 00f4 84        		.byte	-124
+ 1904 00f5 38        		.byte	56
+ 1905 00f6 1C        		.byte	28
+ 1906 00f7 06        		.byte	6
+ 1907 00f8 1F        		.byte	31
+ 1908 00f9 84        		.byte	-124
+ 1909 00fa 16        		.byte	22
+ 1910 00fb 19        		.byte	25
+ 1911 00fc 18        		.byte	24
+ 1912 00fd 20        		.byte	32
+ 1913 00fe 81        		.byte	-127
+ 1914 00ff 10        		.byte	16
+ 1915 0100 04        		.byte	4
+ 1916 0101 0E        		.byte	14
+ 1917 0102 21        		.byte	33
+ 1918 0103 F3        		.byte	-13
+ 1919 0104 0C        		.byte	12
+ 1920 0105 13        		.byte	19
+ 1921 0106 08        		.byte	8
+ 1922 0107 22        		.byte	34
+ 1923 0108 2C        		.byte	44
+ 1924 0109 17        		.byte	23
+ 1925 010a 15        		.byte	21
+ 1926 010b 11        		.byte	17
+ 1927 010c 23        		.byte	35
+ 1928 010d FF        		.byte	-1
+ 1929 010e 1B        		.byte	27
+ 1930 010f 12        		.byte	18
+ 1931 0110 0A        		.byte	10
+ 1932 0111 24        		.byte	36
+ 1933 0112 C0        		.byte	-64
+ 1934 0113 05        		.byte	5
+ 1935 0114 0F        		.byte	15
+ 1936 0115 0B        		.byte	11
+ 1937 0116 25        		.byte	37
+ 1938 0117 31        		.byte	49
+ 1939 0118 36        		.byte	54
+ 1940 0119 07        		.byte	7
+ 1941 011a 1A        		.byte	26
+ 1942 011b 26        		.byte	38
+ 1943 011c 30        		.byte	48
+ 1944 011d 37        		.byte	55
+ 1945 011e 33        		.byte	51
+ 1946 011f 1D        		.byte	29
+ 1947 0120 27        		.byte	39
+ 1948 0121 2E        		.byte	46
+ 1949 0122 F2        		.byte	-14
+ 1950 0123 34        		.byte	52
+ 1951 0124 2F        		.byte	47
+ 1952 0125 2D        		.byte	45
+ 2185               	.Letext0:
+ 2186               		.file 4 "/usr/lib/gcc/avr/4.7.0/../../../avr/include/stdint.h"
+ 2187               		.file 5 "usb_keyboard.h"
+ 2188               		.file 6 "jcuken.h"
 DEFINED SYMBOLS
                             *ABS*:0000000000000000 catboard.c
-     /tmp/ccFRLxZY.s:2      *ABS*:000000000000003e __SP_H__
-     /tmp/ccFRLxZY.s:3      *ABS*:000000000000003d __SP_L__
-     /tmp/ccFRLxZY.s:4      *ABS*:000000000000003f __SREG__
-     /tmp/ccFRLxZY.s:5      *ABS*:0000000000000000 __tmp_reg__
-     /tmp/ccFRLxZY.s:6      *ABS*:0000000000000001 __zero_reg__
-     /tmp/ccFRLxZY.s:12     .text.init:0000000000000000 init
+     /tmp/ccOPgIso.s:2      *ABS*:000000000000003e __SP_H__
+     /tmp/ccOPgIso.s:3      *ABS*:000000000000003d __SP_L__
+     /tmp/ccOPgIso.s:4      *ABS*:000000000000003f __SREG__
+     /tmp/ccOPgIso.s:5      *ABS*:0000000000000000 __tmp_reg__
+     /tmp/ccOPgIso.s:6      *ABS*:0000000000000001 __zero_reg__
+     /tmp/ccOPgIso.s:12     .text.init:0000000000000000 init
                             *COM*:000000000000003c pressed
-     /tmp/ccFRLxZY.s:89     .text.key_press_sw2:0000000000000000 key_press_sw2
-     /tmp/ccFRLxZY.s:1600   .bss:000000000000000b pressed_sw2
-     /tmp/ccFRLxZY.s:144    .text.key_release_sw2:0000000000000000 key_release_sw2
-     /tmp/ccFRLxZY.s:178    .text.change_layout:0000000000000000 change_layout
-     /tmp/ccFRLxZY.s:1860   .bss:000000000000000c mac_mode
-     /tmp/ccFRLxZY.s:255    .text.get_code:0000000000000000 get_code
-     /tmp/ccFRLxZY.s:1731   .rodata:0000000000000072 layer_fn
-     /tmp/ccFRLxZY.s:1866   .data:0000000000000009 layout
-     /tmp/ccFRLxZY.s:1795   .rodata:00000000000000ae layer1
-     /tmp/ccFRLxZY.s:326    .text.send:0000000000000000 send
-     /tmp/ccFRLxZY.s:1588   .data:0000000000000002 queue
-     /tmp/ccFRLxZY.s:1582   .bss:000000000000000a mod_keys
-     /tmp/ccFRLxZY.s:377    .text.key_release:0000000000000000 key_release
-     /tmp/ccFRLxZY.s:1577   .bss:0000000000000008 prev_layer
-     /tmp/ccFRLxZY.s:1566   .data:0000000000000000 last_key
-     /tmp/ccFRLxZY.s:1872   .rodata:00000000000000ea layer2
-     /tmp/ccFRLxZY.s:1560   .bss:0000000000000006 press_time
-     /tmp/ccFRLxZY.s:1555   .bss:0000000000000004 press_time2
-     /tmp/ccFRLxZY.s:1550   .bss:0000000000000002 release_time
-     /tmp/ccFRLxZY.s:1545   .bss:0000000000000000 repeat_time
-     /tmp/ccFRLxZY.s:721    .text.key_press:0000000000000000 key_press
-     /tmp/ccFRLxZY.s:1667   .rodata:0000000000000036 layer_fnlock
-     /tmp/ccFRLxZY.s:1571   .data:0000000000000001 turbo_repeat
-     /tmp/ccFRLxZY.s:1151   .text.repeat_tick:0000000000000000 repeat_tick
-     /tmp/ccFRLxZY.s:1301   .text.poll:0000000000000000 poll
-     /tmp/ccFRLxZY.s:1658   .rodata:000000000000002c row_port
-     /tmp/ccFRLxZY.s:1649   .rodata:0000000000000027 row_bit
-     /tmp/ccFRLxZY.s:1633   .rodata:000000000000000f col_pin
-     /tmp/ccFRLxZY.s:1617   .rodata:0000000000000003 col_bit
-     /tmp/ccFRLxZY.s:1490   .text.startup.main:0000000000000000 main
-     /tmp/ccFRLxZY.s:1607   .rodata:0000000000000000 col_bit_sw2
-     /tmp/ccFRLxZY.s:1612   .rodata:0000000000000001 col_pin_sw2
+     /tmp/ccOPgIso.s:89     .text.key_press_sw2:0000000000000000 key_press_sw2
+     /tmp/ccOPgIso.s:1620   .bss:000000000000000b pressed_sw2
+     /tmp/ccOPgIso.s:144    .text.key_release_sw2:0000000000000000 key_release_sw2
+     /tmp/ccOPgIso.s:178    .text.change_layout:0000000000000000 change_layout
+     /tmp/ccOPgIso.s:1880   .bss:000000000000000c mac_mode
+     /tmp/ccOPgIso.s:255    .text.get_code:0000000000000000 get_code
+     /tmp/ccOPgIso.s:1751   .rodata:0000000000000072 layer_fn
+     /tmp/ccOPgIso.s:1886   .data:0000000000000009 layout
+     /tmp/ccOPgIso.s:1815   .rodata:00000000000000ae layer1
+     /tmp/ccOPgIso.s:326    .text.send:0000000000000000 send
+     /tmp/ccOPgIso.s:1608   .data:0000000000000002 queue
+     /tmp/ccOPgIso.s:1602   .bss:000000000000000a mod_keys
+     /tmp/ccOPgIso.s:377    .text.key_release:0000000000000000 key_release
+     /tmp/ccOPgIso.s:1597   .bss:0000000000000008 prev_layer
+     /tmp/ccOPgIso.s:1586   .data:0000000000000000 last_key
+     /tmp/ccOPgIso.s:1580   .bss:0000000000000006 press_time
+     /tmp/ccOPgIso.s:1892   .rodata:00000000000000ea layer2
+     /tmp/ccOPgIso.s:1575   .bss:0000000000000004 press_time2
+     /tmp/ccOPgIso.s:1570   .bss:0000000000000002 release_time
+     /tmp/ccOPgIso.s:1565   .bss:0000000000000000 repeat_time
+     /tmp/ccOPgIso.s:734    .text.key_press:0000000000000000 key_press
+     /tmp/ccOPgIso.s:1687   .rodata:0000000000000036 layer_fnlock
+     /tmp/ccOPgIso.s:1591   .data:0000000000000001 turbo_repeat
+     /tmp/ccOPgIso.s:1171   .text.repeat_tick:0000000000000000 repeat_tick
+     /tmp/ccOPgIso.s:1321   .text.poll:0000000000000000 poll
+     /tmp/ccOPgIso.s:1678   .rodata:000000000000002c row_port
+     /tmp/ccOPgIso.s:1669   .rodata:0000000000000027 row_bit
+     /tmp/ccOPgIso.s:1653   .rodata:000000000000000f col_pin
+     /tmp/ccOPgIso.s:1637   .rodata:0000000000000003 col_bit
+     /tmp/ccOPgIso.s:1510   .text.startup.main:0000000000000000 main
+     /tmp/ccOPgIso.s:1627   .rodata:0000000000000000 col_bit_sw2
+     /tmp/ccOPgIso.s:1632   .rodata:0000000000000001 col_pin_sw2
 
 UNDEFINED SYMBOLS
 usb_init

@@ -173,7 +173,7 @@ LOAD /usr/lib/gcc/avr/4.7.0/avr35/libgcc.a
 .rela.plt
  *(.rela.plt)
 
-.text           0x0000000000000000      0xde0
+.text           0x0000000000000000      0xe10
  *(.vectors)
  .vectors       0x0000000000000000       0x74 /usr/lib/gcc/avr/4.7.0/../../../avr/lib/avr35/crtusb162.o
                 0x0000000000000000                __vectors
@@ -276,44 +276,44 @@ LOAD /usr/lib/gcc/avr/4.7.0/avr35/libgcc.a
  .text.send     0x00000000000002b4       0x34 catboard.o
                 0x00000000000002b4                send
  .text.key_release
-                0x00000000000002e8      0x1ec catboard.o
+                0x00000000000002e8      0x21c catboard.o
                 0x00000000000002e8                key_release
  .text.key_press
-                0x00000000000004d4      0x278 catboard.o
-                0x00000000000004d4                key_press
+                0x0000000000000504      0x278 catboard.o
+                0x0000000000000504                key_press
  .text.repeat_tick
-                0x000000000000074c      0x10c catboard.o
-                0x000000000000074c                repeat_tick
- .text.poll     0x0000000000000858       0xe2 catboard.o
-                0x0000000000000858                poll
+                0x000000000000077c      0x10c catboard.o
+                0x000000000000077c                repeat_tick
+ .text.poll     0x0000000000000888       0xe2 catboard.o
+                0x0000000000000888                poll
  .text.startup.main
-                0x000000000000093a       0x2e catboard.o
-                0x000000000000093a                main
+                0x000000000000096a       0x2e catboard.o
+                0x000000000000096a                main
  .text.usb_wait_in_ready
-                0x0000000000000968        0xa usb_keyboard.o
+                0x0000000000000998        0xa usb_keyboard.o
  .text.usb_init
-                0x0000000000000972       0x28 usb_keyboard.o
-                0x0000000000000972                usb_init
+                0x00000000000009a2       0x28 usb_keyboard.o
+                0x00000000000009a2                usb_init
  .text.usb_configured
-                0x000000000000099a        0x6 usb_keyboard.o
-                0x000000000000099a                usb_configured
+                0x00000000000009ca        0x6 usb_keyboard.o
+                0x00000000000009ca                usb_configured
  .text.usb_keyboard_send
-                0x00000000000009a0       0x74 usb_keyboard.o
-                0x00000000000009a0                usb_keyboard_send
+                0x00000000000009d0       0x74 usb_keyboard.o
+                0x00000000000009d0                usb_keyboard_send
  .text.usb_keyboard_press
-                0x0000000000000a14       0x1a usb_keyboard.o
-                0x0000000000000a14                usb_keyboard_press
+                0x0000000000000a44       0x1a usb_keyboard.o
+                0x0000000000000a44                usb_keyboard_press
  .text.__vector_11
-                0x0000000000000a2e       0xbe usb_keyboard.o
-                0x0000000000000a2e                __vector_11
+                0x0000000000000a5e       0xbe usb_keyboard.o
+                0x0000000000000a5e                __vector_11
  .text.__vector_12
-                0x0000000000000aec      0x2f0 usb_keyboard.o
-                0x0000000000000aec                __vector_12
-                0x0000000000000ddc                . = ALIGN (0x2)
+                0x0000000000000b1c      0x2f0 usb_keyboard.o
+                0x0000000000000b1c                __vector_12
+                0x0000000000000e0c                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x0000000000000ddc        0x0 /usr/lib/gcc/avr/4.7.0/avr35/libgcc.a(_exit.o)
-                0x0000000000000ddc                exit
-                0x0000000000000ddc                _exit
+ .fini9         0x0000000000000e0c        0x0 /usr/lib/gcc/avr/4.7.0/avr35/libgcc.a(_exit.o)
+                0x0000000000000e0c                exit
+                0x0000000000000e0c                _exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -332,11 +332,11 @@ LOAD /usr/lib/gcc/avr/4.7.0/avr35/libgcc.a
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x0000000000000ddc        0x4 /usr/lib/gcc/avr/4.7.0/avr35/libgcc.a(_exit.o)
+ .fini0         0x0000000000000e0c        0x4 /usr/lib/gcc/avr/4.7.0/avr35/libgcc.a(_exit.o)
  *(.fini0)
-                0x0000000000000de0                _etext = .
+                0x0000000000000e10                _etext = .
 
-.data           0x0000000000800100      0x134 load address 0x0000000000000de0
+.data           0x0000000000800100      0x134 load address 0x0000000000000e10
                 0x0000000000800100                PROVIDE (__data_start, .)
  *(.data)
  .data          0x0000000000800100        0xb catboard.o
@@ -386,8 +386,8 @@ LOAD /usr/lib/gcc/avr/4.7.0/avr35/libgcc.a
  COMMON         0x000000000080024c       0x3c catboard.o
                 0x000000000080024c                pressed
                 0x0000000000800288                PROVIDE (__bss_end, .)
-                0x0000000000000de0                __data_load_start = LOADADDR (.data)
-                0x0000000000000f14                __data_load_end = (__data_load_start + SIZEOF (.data))
+                0x0000000000000e10                __data_load_start = LOADADDR (.data)
+                0x0000000000000f44                __data_load_end = (__data_load_start + SIZEOF (.data))
 
 .noinit         0x0000000000800288        0x0
                 0x0000000000800288                PROVIDE (__noinit_start, .)
@@ -462,16 +462,16 @@ LOAD /usr/lib/gcc/avr/4.7.0/avr35/libgcc.a
  .debug_pubnames
                 0x0000000000000000       0xbe usb_keyboard.o
 
-.debug_info     0x0000000000000000     0x11bd
+.debug_info     0x0000000000000000     0x11c5
  *(.debug_info)
- .debug_info    0x0000000000000000      0xab9 catboard.o
- .debug_info    0x0000000000000ab9      0x704 usb_keyboard.o
+ .debug_info    0x0000000000000000      0xac1 catboard.o
+ .debug_info    0x0000000000000ac1      0x704 usb_keyboard.o
  *(.gnu.linkonce.wi.*)
 
-.debug_abbrev   0x0000000000000000      0x541
+.debug_abbrev   0x0000000000000000      0x538
  *(.debug_abbrev)
- .debug_abbrev  0x0000000000000000      0x36c catboard.o
- .debug_abbrev  0x000000000000036c      0x1d5 usb_keyboard.o
+ .debug_abbrev  0x0000000000000000      0x363 catboard.o
+ .debug_abbrev  0x0000000000000363      0x1d5 usb_keyboard.o
 
 .debug_line     0x0000000000000000      0xaf9
  *(.debug_line)
@@ -490,19 +490,19 @@ LOAD /usr/lib/gcc/avr/4.7.0/avr35/libgcc.a
  .debug_str     0x0000000000000347      0x259 usb_keyboard.o
                                         0x353 (size before relaxing)
 
-.debug_loc      0x0000000000000000      0xe9e
+.debug_loc      0x0000000000000000      0xef2
  *(.debug_loc)
- .debug_loc     0x0000000000000000      0x6ef catboard.o
- .debug_loc     0x00000000000006ef      0x7af usb_keyboard.o
+ .debug_loc     0x0000000000000000      0x743 catboard.o
+ .debug_loc     0x0000000000000743      0x7af usb_keyboard.o
 
 .debug_macinfo
  *(.debug_macinfo)
 OUTPUT(catboard.elf elf32-avr)
 LOAD linker stubs
 
-.debug_ranges   0x0000000000000000       0xd0
- .debug_ranges  0x0000000000000000       0x78 catboard.o
- .debug_ranges  0x0000000000000078       0x58 usb_keyboard.o
+.debug_ranges   0x0000000000000000       0xb8
+ .debug_ranges  0x0000000000000000       0x60 catboard.o
+ .debug_ranges  0x0000000000000060       0x58 usb_keyboard.o
 
 .debug_pubtypes
                 0x0000000000000000       0x7e
