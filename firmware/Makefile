@@ -453,7 +453,7 @@ program: $(TARGET).hex $(TARGET).eep
 	$(AVRDUDE) $(AVRDUDE_FLAGS) $(AVRDUDE_WRITE_FLASH) $(AVRDUDE_WRITE_EEPROM)
 
 
-# Program the device.  
+# Program the device. !!!TODO: Not work, use ./flash.sh!!!
 flash: $(TARGET).hex
 	sleep 3
 	$(DFU) $(MCU) erase

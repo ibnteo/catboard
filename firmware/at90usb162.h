@@ -1,6 +1,17 @@
-#define LED_CONFIG	(DDRD	|= (1<<4))
-#define LED_OFF		(PORTD	&= ~(1<<4))
-#define LED_ON		(PORTD	|= (1<<4))
+#define LED_CONFIG	(DDRD	|= (1<<6))
+#define LED_OFF		(PORTD	&= ~(1<<6))
+#define LED_ON		(PORTD	|= (1<<6))
+
+#define LED_RED_CONFIG	LED_CONFIG
+#define LED_RED_OFF		LED_OFF
+#define LED_RED_ON		LED_ON
+
+#define LED_BLUE_CONFIG	LED_CONFIG
+#define LED_BLUE_OFF	LED_ON
+#define LED_BLUE_ON		LED_OFF
+
+uint8_t *const col_pin_sw2 = _PIND;
+const uint8_t col_bit_sw2 = (1<<7);
 
 // Init ports
 void init_ports(void) {
