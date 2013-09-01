@@ -37,3 +37,7 @@ Ability to use different keys on the thumb, it is convenient and Shift on the le
 ## PCB
 
 ![](fablab/pcb.png)
+
+## License
+
+GPL2

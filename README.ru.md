@@ -43,3 +43,7 @@
 Прошивка основана на простом коде, найденном на форуме [geekhack.org](http://geekhack.org/index.php?topic=15542.0)
 
 Исходные файлы располагаются в [firmware](firmware/).
+
+## License
+
+GPL2
