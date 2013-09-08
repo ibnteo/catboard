@@ -1,7 +1,7 @@
 /*
 * Project: CatBoard ][
-* Version: 3.1 beta
-* Date: 2013-09-02
+* Version: 3.2 beta
+* Date: 2013-09-07
 * Author: Vladimir Romanovich <ibnteo@gmail.com>
 * License: GPL2
 * Blog: http://ibnteo.klava.org/tag/catboard
@@ -35,8 +35,8 @@
 //1=num lock, 2=caps lock, 4=scroll lock, 8=compose, 16=kana
 #define LED_NUM_LOCK		1
 #define LED_CAPS_LOCK		2
-#define LED_SCROLL_LOCK	4
-#define LED_COMPOSE		8
+#define LED_SCROLL_LOCK		4
+#define LED_COMPOSE			8
 #define LED_KANA			16
 
 #define NULL				0
@@ -66,14 +66,6 @@
 #define KEY_RSHIFT	106
 #define KEY_RALT	107
 #define KEY_RGUI	108
-/*#define KEY_LCTRL	0x01+100
-#define KEY_LSHIFT	0x02+100
-#define KEY_LALT	0x04+100
-#define KEY_LGUI	0x08+100
-#define KEY_RCTRL	0x10+100
-#define KEY_RSHIFT	0x20+100
-#define KEY_RALT	0x40+100
-#define KEY_RGUI	0x80+100*/
 
 
 #define KEY_PRESSED_FN		1
@@ -90,7 +82,7 @@
 //#include "at90usb162.h"
 #include "at90usb162mu.h"
 
-#include "my_macros.h"
+//#include "my_macros.h"
 
 // 0 - shorcuts my layout; 1 - shorcuts qwerty layout
 #define KEY_SHORTCUTS_LAYER1	1
@@ -420,13 +412,18 @@ void key_press(uint8_t key_id) {
 		} else if (key_code==KEY_RCTRL) {
 			mod_keys |= KEY_RIGHT_CTRL;
 		} else if (key_code==KEY_RSHIFT) {
-			mod_keys |= KEY_SHIFT;
+			mod_keys |= KEY_RIGHT_SHIFT;
 		} else if (key_code==KEY_RALT) {
 			mod_keys |= KEY_RIGHT_ALT;
 		} else if (key_code==KEY_RGUI) {
 			mod_keys |= KEY_RIGHT_GUI;
 		}
 		send();
+		press_time = 0;
+		press_time2 = 0;
+		release_time = 0;
+		repeat_time = 0;
+		last_key = 0;
 	} else {
 		/*if (mod_keys & (KEY_ALT|KEY_RIGHT_ALT)) { // TODO: typo
 			uint16_t num = layer2_typo[0];
@@ -524,9 +521,9 @@ void key_release(uint8_t key_id) {
 		}
 	} else if (key_code>=KEY_LCTRL) { // Mod keys release
 		if (os_mode==2 && key_code==KEY_LCTRL) {
-			mod_keys &= ~KEY_LGUI;
+			mod_keys &= ~KEY_GUI;
 		} else if ((os_mode==2 && key_code==KEY_RCTRL) || key_code==KEY_RGUI) {
-			mod_keys &= ~KEY_RGUI;
+			mod_keys &= ~KEY_RIGHT_GUI;
 		} else if (key_code==KEY_LCTRL) {
 			mod_keys &= ~KEY_CTRL;
 		} else if (key_code==KEY_LSHIFT) {
@@ -538,13 +535,18 @@ void key_release(uint8_t key_id) {
 		} else if (key_code==KEY_RCTRL) {
 			mod_keys &= ~KEY_RIGHT_CTRL;
 		} else if (key_code==KEY_RSHIFT) {
-			mod_keys &= ~KEY_SHIFT;
+			mod_keys &= ~KEY_RIGHT_SHIFT;
 		} else if (key_code==KEY_RALT) {
 			mod_keys &= ~KEY_RIGHT_ALT;
 		} else if (key_code==KEY_RGUI) {
 			mod_keys &= ~KEY_RIGHT_GUI;
 		}
 		send();
+		press_time = 0;
+		press_time2 = 0;
+		release_time = 0;
+		repeat_time = 0;
+		last_key = 0;
 	} else {
 		for (i=0; i<6; i++) {
 			if (queue[i]==key_id) {

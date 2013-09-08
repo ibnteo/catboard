@@ -1,10 +1,10 @@
 Archive member included because of file (symbol)
 
-/usr/lib/gcc/avr/4.7.0/avr35/libgcc.a(_exit.o)
-                              /usr/lib/gcc/avr/4.7.0/../../../avr/lib/avr35/crtusb162.o (exit)
-/usr/lib/gcc/avr/4.7.0/avr35/libgcc.a(_copy_data.o)
+/usr/lib/gcc/avr/4.7.2/avr35/libgcc.a(_exit.o)
+                              /usr/lib/gcc/avr/4.7.2/../../../avr/lib/avr35/crtusb162.o (exit)
+/usr/lib/gcc/avr/4.7.2/avr35/libgcc.a(_copy_data.o)
                               catboard.o (__do_copy_data)
-/usr/lib/gcc/avr/4.7.0/avr35/libgcc.a(_clear_bss.o)
+/usr/lib/gcc/avr/4.7.2/avr35/libgcc.a(_clear_bss.o)
                               catboard.o (__do_clear_bss)
 
 Allocating common symbols
@@ -14,52 +14,52 @@ pressed             0x3c              catboard.o
 
 Discarded input sections
 
- .data          0x0000000000000000        0x0 /usr/lib/gcc/avr/4.7.0/../../../avr/lib/avr35/crtusb162.o
- .bss           0x0000000000000000        0x0 /usr/lib/gcc/avr/4.7.0/../../../avr/lib/avr35/crtusb162.o
+ .data          0x0000000000000000        0x0 /usr/lib/gcc/avr/4.7.2/../../../avr/lib/avr35/crtusb162.o
+ .bss           0x0000000000000000        0x0 /usr/lib/gcc/avr/4.7.2/../../../avr/lib/avr35/crtusb162.o
  .text          0x0000000000000000        0x0 catboard.o
  .text          0x0000000000000000        0x0 usb_keyboard.o
- .text          0x0000000000000000        0x0 /usr/lib/gcc/avr/4.7.0/avr35/libgcc.a(_exit.o)
- .data          0x0000000000000000        0x0 /usr/lib/gcc/avr/4.7.0/avr35/libgcc.a(_exit.o)
- .bss           0x0000000000000000        0x0 /usr/lib/gcc/avr/4.7.0/avr35/libgcc.a(_exit.o)
+ .text          0x0000000000000000        0x0 /usr/lib/gcc/avr/4.7.2/avr35/libgcc.a(_exit.o)
+ .data          0x0000000000000000        0x0 /usr/lib/gcc/avr/4.7.2/avr35/libgcc.a(_exit.o)
+ .bss           0x0000000000000000        0x0 /usr/lib/gcc/avr/4.7.2/avr35/libgcc.a(_exit.o)
  .text.libgcc.mul
-                0x0000000000000000        0x0 /usr/lib/gcc/avr/4.7.0/avr35/libgcc.a(_exit.o)
+                0x0000000000000000        0x0 /usr/lib/gcc/avr/4.7.2/avr35/libgcc.a(_exit.o)
  .text.libgcc.div
-                0x0000000000000000        0x0 /usr/lib/gcc/avr/4.7.0/avr35/libgcc.a(_exit.o)
- .text.libgcc   0x0000000000000000        0x0 /usr/lib/gcc/avr/4.7.0/avr35/libgcc.a(_exit.o)
+                0x0000000000000000        0x0 /usr/lib/gcc/avr/4.7.2/avr35/libgcc.a(_exit.o)
+ .text.libgcc   0x0000000000000000        0x0 /usr/lib/gcc/avr/4.7.2/avr35/libgcc.a(_exit.o)
  .text.libgcc.prologue
-                0x0000000000000000        0x0 /usr/lib/gcc/avr/4.7.0/avr35/libgcc.a(_exit.o)
+                0x0000000000000000        0x0 /usr/lib/gcc/avr/4.7.2/avr35/libgcc.a(_exit.o)
  .text.libgcc.builtins
-                0x0000000000000000        0x0 /usr/lib/gcc/avr/4.7.0/avr35/libgcc.a(_exit.o)
+                0x0000000000000000        0x0 /usr/lib/gcc/avr/4.7.2/avr35/libgcc.a(_exit.o)
  .text.libgcc.fmul
-                0x0000000000000000        0x0 /usr/lib/gcc/avr/4.7.0/avr35/libgcc.a(_exit.o)
- .text          0x0000000000000000        0x0 /usr/lib/gcc/avr/4.7.0/avr35/libgcc.a(_copy_data.o)
- .data          0x0000000000000000        0x0 /usr/lib/gcc/avr/4.7.0/avr35/libgcc.a(_copy_data.o)
- .bss           0x0000000000000000        0x0 /usr/lib/gcc/avr/4.7.0/avr35/libgcc.a(_copy_data.o)
+                0x0000000000000000        0x0 /usr/lib/gcc/avr/4.7.2/avr35/libgcc.a(_exit.o)
+ .text          0x0000000000000000        0x0 /usr/lib/gcc/avr/4.7.2/avr35/libgcc.a(_copy_data.o)
+ .data          0x0000000000000000        0x0 /usr/lib/gcc/avr/4.7.2/avr35/libgcc.a(_copy_data.o)
+ .bss           0x0000000000000000        0x0 /usr/lib/gcc/avr/4.7.2/avr35/libgcc.a(_copy_data.o)
  .text.libgcc.mul
-                0x0000000000000000        0x0 /usr/lib/gcc/avr/4.7.0/avr35/libgcc.a(_copy_data.o)
+                0x0000000000000000        0x0 /usr/lib/gcc/avr/4.7.2/avr35/libgcc.a(_copy_data.o)
  .text.libgcc.div
-                0x0000000000000000        0x0 /usr/lib/gcc/avr/4.7.0/avr35/libgcc.a(_copy_data.o)
- .text.libgcc   0x0000000000000000        0x0 /usr/lib/gcc/avr/4.7.0/avr35/libgcc.a(_copy_data.o)
+                0x0000000000000000        0x0 /usr/lib/gcc/avr/4.7.2/avr35/libgcc.a(_copy_data.o)
+ .text.libgcc   0x0000000000000000        0x0 /usr/lib/gcc/avr/4.7.2/avr35/libgcc.a(_copy_data.o)
  .text.libgcc.prologue
-                0x0000000000000000        0x0 /usr/lib/gcc/avr/4.7.0/avr35/libgcc.a(_copy_data.o)
+                0x0000000000000000        0x0 /usr/lib/gcc/avr/4.7.2/avr35/libgcc.a(_copy_data.o)
  .text.libgcc.builtins
-                0x0000000000000000        0x0 /usr/lib/gcc/avr/4.7.0/avr35/libgcc.a(_copy_data.o)
+                0x0000000000000000        0x0 /usr/lib/gcc/avr/4.7.2/avr35/libgcc.a(_copy_data.o)
  .text.libgcc.fmul
-                0x0000000000000000        0x0 /usr/lib/gcc/avr/4.7.0/avr35/libgcc.a(_copy_data.o)
- .text          0x0000000000000000        0x0 /usr/lib/gcc/avr/4.7.0/avr35/libgcc.a(_clear_bss.o)
- .data          0x0000000000000000        0x0 /usr/lib/gcc/avr/4.7.0/avr35/libgcc.a(_clear_bss.o)
- .bss           0x0000000000000000        0x0 /usr/lib/gcc/avr/4.7.0/avr35/libgcc.a(_clear_bss.o)
+                0x0000000000000000        0x0 /usr/lib/gcc/avr/4.7.2/avr35/libgcc.a(_copy_data.o)
+ .text          0x0000000000000000        0x0 /usr/lib/gcc/avr/4.7.2/avr35/libgcc.a(_clear_bss.o)
+ .data          0x0000000000000000        0x0 /usr/lib/gcc/avr/4.7.2/avr35/libgcc.a(_clear_bss.o)
+ .bss           0x0000000000000000        0x0 /usr/lib/gcc/avr/4.7.2/avr35/libgcc.a(_clear_bss.o)
  .text.libgcc.mul
-                0x0000000000000000        0x0 /usr/lib/gcc/avr/4.7.0/avr35/libgcc.a(_clear_bss.o)
+                0x0000000000000000        0x0 /usr/lib/gcc/avr/4.7.2/avr35/libgcc.a(_clear_bss.o)
  .text.libgcc.div
-                0x0000000000000000        0x0 /usr/lib/gcc/avr/4.7.0/avr35/libgcc.a(_clear_bss.o)
- .text.libgcc   0x0000000000000000        0x0 /usr/lib/gcc/avr/4.7.0/avr35/libgcc.a(_clear_bss.o)
+                0x0000000000000000        0x0 /usr/lib/gcc/avr/4.7.2/avr35/libgcc.a(_clear_bss.o)
+ .text.libgcc   0x0000000000000000        0x0 /usr/lib/gcc/avr/4.7.2/avr35/libgcc.a(_clear_bss.o)
  .text.libgcc.prologue
-                0x0000000000000000        0x0 /usr/lib/gcc/avr/4.7.0/avr35/libgcc.a(_clear_bss.o)
+                0x0000000000000000        0x0 /usr/lib/gcc/avr/4.7.2/avr35/libgcc.a(_clear_bss.o)
  .text.libgcc.builtins
-                0x0000000000000000        0x0 /usr/lib/gcc/avr/4.7.0/avr35/libgcc.a(_clear_bss.o)
+                0x0000000000000000        0x0 /usr/lib/gcc/avr/4.7.2/avr35/libgcc.a(_clear_bss.o)
  .text.libgcc.fmul
-                0x0000000000000000        0x0 /usr/lib/gcc/avr/4.7.0/avr35/libgcc.a(_clear_bss.o)
+                0x0000000000000000        0x0 /usr/lib/gcc/avr/4.7.2/avr35/libgcc.a(_clear_bss.o)
 
 Memory Configuration
 
@@ -75,13 +75,13 @@ signature        0x0000000000840000 0x0000000000000400 rw !x
 Linker script and memory map
 
 Address of section .data set to 0x800100
-LOAD /usr/lib/gcc/avr/4.7.0/../../../avr/lib/avr35/crtusb162.o
+LOAD /usr/lib/gcc/avr/4.7.2/../../../avr/lib/avr35/crtusb162.o
 LOAD catboard.o
 LOAD usb_keyboard.o
-LOAD /usr/lib/gcc/avr/4.7.0/../../../avr/lib/avr35/libm.a
-LOAD /usr/lib/gcc/avr/4.7.0/avr35/libgcc.a
-LOAD /usr/lib/gcc/avr/4.7.0/../../../avr/lib/avr35/libc.a
-LOAD /usr/lib/gcc/avr/4.7.0/avr35/libgcc.a
+LOAD /usr/lib/gcc/avr/4.7.2/../../../avr/lib/avr35/libm.a
+LOAD /usr/lib/gcc/avr/4.7.2/avr35/libgcc.a
+LOAD /usr/lib/gcc/avr/4.7.2/../../../avr/lib/avr35/libc.a
+LOAD /usr/lib/gcc/avr/4.7.2/avr35/libgcc.a
 
 .hash
  *(.hash)
@@ -173,9 +173,9 @@ LOAD /usr/lib/gcc/avr/4.7.0/avr35/libgcc.a
 .rela.plt
  *(.rela.plt)
 
-.text           0x0000000000000000      0xf74
+.text           0x0000000000000000      0xfda
  *(.vectors)
- .vectors       0x0000000000000000       0x74 /usr/lib/gcc/avr/4.7.0/../../../avr/lib/avr35/crtusb162.o
+ .vectors       0x0000000000000000       0x74 /usr/lib/gcc/avr/4.7.2/../../../avr/lib/avr35/crtusb162.o
                 0x0000000000000000                __vectors
                 0x0000000000000000                __vector_default
  *(.vectors)
@@ -201,20 +201,20 @@ LOAD /usr/lib/gcc/avr/4.7.0/avr35/libgcc.a
  SORT(*)(.ctors)
  SORT(*)(.dtors)
  *(.init0)
- .init0         0x0000000000000146        0x0 /usr/lib/gcc/avr/4.7.0/../../../avr/lib/avr35/crtusb162.o
+ .init0         0x0000000000000146        0x0 /usr/lib/gcc/avr/4.7.2/../../../avr/lib/avr35/crtusb162.o
                 0x0000000000000146                __init
  *(.init0)
  *(.init1)
  *(.init1)
  *(.init2)
- .init2         0x0000000000000146        0xc /usr/lib/gcc/avr/4.7.0/../../../avr/lib/avr35/crtusb162.o
+ .init2         0x0000000000000146        0xc /usr/lib/gcc/avr/4.7.2/../../../avr/lib/avr35/crtusb162.o
  *(.init2)
  *(.init3)
  *(.init3)
  *(.init4)
- .init4         0x0000000000000152       0x16 /usr/lib/gcc/avr/4.7.0/avr35/libgcc.a(_copy_data.o)
+ .init4         0x0000000000000152       0x16 /usr/lib/gcc/avr/4.7.2/avr35/libgcc.a(_copy_data.o)
                 0x0000000000000152                __do_copy_data
- .init4         0x0000000000000168       0x10 /usr/lib/gcc/avr/4.7.0/avr35/libgcc.a(_clear_bss.o)
+ .init4         0x0000000000000168       0x10 /usr/lib/gcc/avr/4.7.2/avr35/libgcc.a(_clear_bss.o)
                 0x0000000000000168                __do_clear_bss
  *(.init4)
  *(.init5)
@@ -226,10 +226,10 @@ LOAD /usr/lib/gcc/avr/4.7.0/avr35/libgcc.a
  *(.init8)
  *(.init8)
  *(.init9)
- .init9         0x0000000000000178        0x4 /usr/lib/gcc/avr/4.7.0/../../../avr/lib/avr35/crtusb162.o
+ .init9         0x0000000000000178        0x4 /usr/lib/gcc/avr/4.7.2/../../../avr/lib/avr35/crtusb162.o
  *(.init9)
  *(.text)
- .text          0x000000000000017c        0x2 /usr/lib/gcc/avr/4.7.0/../../../avr/lib/avr35/crtusb162.o
+ .text          0x000000000000017c        0x2 /usr/lib/gcc/avr/4.7.2/../../../avr/lib/avr35/crtusb162.o
                 0x000000000000017c                __vector_22
                 0x000000000000017c                __vector_28
                 0x000000000000017c                __vector_1
@@ -276,44 +276,44 @@ LOAD /usr/lib/gcc/avr/4.7.0/avr35/libgcc.a
  .text.send     0x00000000000002f8       0x34 catboard.o
                 0x00000000000002f8                send
  .text.key_release
-                0x000000000000032c      0x284 catboard.o
+                0x000000000000032c      0x2ba catboard.o
                 0x000000000000032c                key_release
  .text.key_press
-                0x00000000000005b0      0x336 catboard.o
-                0x00000000000005b0                key_press
+                0x00000000000005e6      0x366 catboard.o
+                0x00000000000005e6                key_press
  .text.repeat_tick
-                0x00000000000008e6      0x10c catboard.o
-                0x00000000000008e6                repeat_tick
- .text.poll     0x00000000000009f2       0xdc catboard.o
-                0x00000000000009f2                poll
+                0x000000000000094c      0x10c catboard.o
+                0x000000000000094c                repeat_tick
+ .text.poll     0x0000000000000a58       0xdc catboard.o
+                0x0000000000000a58                poll
  .text.startup.main
-                0x0000000000000ace       0x2e catboard.o
-                0x0000000000000ace                main
+                0x0000000000000b34       0x2e catboard.o
+                0x0000000000000b34                main
  .text.usb_wait_in_ready
-                0x0000000000000afc        0xa usb_keyboard.o
+                0x0000000000000b62        0xa usb_keyboard.o
  .text.usb_init
-                0x0000000000000b06       0x28 usb_keyboard.o
-                0x0000000000000b06                usb_init
+                0x0000000000000b6c       0x28 usb_keyboard.o
+                0x0000000000000b6c                usb_init
  .text.usb_configured
-                0x0000000000000b2e        0x6 usb_keyboard.o
-                0x0000000000000b2e                usb_configured
+                0x0000000000000b94        0x6 usb_keyboard.o
+                0x0000000000000b94                usb_configured
  .text.usb_keyboard_send
-                0x0000000000000b34       0x74 usb_keyboard.o
-                0x0000000000000b34                usb_keyboard_send
+                0x0000000000000b9a       0x74 usb_keyboard.o
+                0x0000000000000b9a                usb_keyboard_send
  .text.usb_keyboard_press
-                0x0000000000000ba8       0x1a usb_keyboard.o
-                0x0000000000000ba8                usb_keyboard_press
+                0x0000000000000c0e       0x1a usb_keyboard.o
+                0x0000000000000c0e                usb_keyboard_press
  .text.__vector_11
-                0x0000000000000bc2       0xbe usb_keyboard.o
-                0x0000000000000bc2                __vector_11
+                0x0000000000000c28       0xbe usb_keyboard.o
+                0x0000000000000c28                __vector_11
  .text.__vector_12
-                0x0000000000000c80      0x2f0 usb_keyboard.o
-                0x0000000000000c80                __vector_12
-                0x0000000000000f70                . = ALIGN (0x2)
+                0x0000000000000ce6      0x2f0 usb_keyboard.o
+                0x0000000000000ce6                __vector_12
+                0x0000000000000fd6                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x0000000000000f70        0x0 /usr/lib/gcc/avr/4.7.0/avr35/libgcc.a(_exit.o)
-                0x0000000000000f70                exit
-                0x0000000000000f70                _exit
+ .fini9         0x0000000000000fd6        0x0 /usr/lib/gcc/avr/4.7.2/avr35/libgcc.a(_exit.o)
+                0x0000000000000fd6                exit
+                0x0000000000000fd6                _exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -332,11 +332,11 @@ LOAD /usr/lib/gcc/avr/4.7.0/avr35/libgcc.a
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x0000000000000f70        0x4 /usr/lib/gcc/avr/4.7.0/avr35/libgcc.a(_exit.o)
+ .fini0         0x0000000000000fd6        0x4 /usr/lib/gcc/avr/4.7.2/avr35/libgcc.a(_exit.o)
  *(.fini0)
-                0x0000000000000f74                _etext = .
+                0x0000000000000fda                _etext = .
 
-.data           0x0000000000800100      0x15a load address 0x0000000000000f74
+.data           0x0000000000800100      0x132 load address 0x0000000000000fda
                 0x0000000000800100                PROVIDE (__data_start, .)
  *(.data)
  .data          0x0000000000800100        0xd catboard.o
@@ -349,59 +349,51 @@ LOAD /usr/lib/gcc/avr/4.7.0/avr35/libgcc.a
  .data          0x000000000080010d        0x2 usb_keyboard.o
  *(.data*)
  *(.rodata)
- .rodata        0x000000000080010f      0x14a catboard.o
-                0x000000000080010f                macros_press
-                0x0000000000800119                macros5
-                0x0000000000800129                macros4
-                0x000000000080012b                macros3
-                0x000000000080012d                macros2
-                0x000000000080012f                macros1
-                0x0000000000800131                macros_pos
-                0x0000000000800136                layer_fnlock
-                0x0000000000800172                layer_fn
-                0x00000000008001ae                layer1
-                0x00000000008001ea                col_bit
-                0x00000000008001f6                col_pin
-                0x000000000080020e                row_bit
-                0x0000000000800213                row_port
-                0x000000000080021d                layer2
+ .rodata        0x000000000080010f      0x123 catboard.o
+                0x000000000080010f                layer_fnlock
+                0x000000000080014b                layer_fn
+                0x0000000000800187                layer1
+                0x00000000008001c3                col_bit
+                0x00000000008001cf                col_pin
+                0x00000000008001e7                row_bit
+                0x00000000008001ec                row_port
+                0x00000000008001f6                layer2
  *(.rodata*)
  *(.gnu.linkonce.d*)
-                0x000000000080025a                . = ALIGN (0x2)
- *fill*         0x0000000000800259        0x1 00
-                0x000000000080025a                _edata = .
-                0x000000000080025a                PROVIDE (__data_end, .)
+                0x0000000000800232                . = ALIGN (0x2)
+                0x0000000000800232                _edata = .
+                0x0000000000800232                PROVIDE (__data_end, .)
 
-.bss            0x000000000080025a       0x54
-                0x000000000080025a                PROVIDE (__bss_start, .)
+.bss            0x0000000000800232       0x54
+                0x0000000000800232                PROVIDE (__bss_start, .)
  *(.bss)
- .bss           0x000000000080025a        0xd catboard.o
-                0x000000000080025a                repeat_time
-                0x000000000080025c                release_time
-                0x000000000080025e                press_time2
-                0x0000000000800260                press_time
-                0x0000000000800262                locked
-                0x0000000000800263                prev_layer
-                0x0000000000800265                mod_keys
-                0x0000000000800266                caps_lock_led
- .bss           0x0000000000800267        0xb usb_keyboard.o
-                0x0000000000800267                keyboard_modifier_keys
-                0x0000000000800268                keyboard_keys
-                0x000000000080026e                keyboard_leds
+ .bss           0x0000000000800232        0xd catboard.o
+                0x0000000000800232                repeat_time
+                0x0000000000800234                release_time
+                0x0000000000800236                press_time2
+                0x0000000000800238                press_time
+                0x000000000080023a                locked
+                0x000000000080023b                prev_layer
+                0x000000000080023d                mod_keys
+                0x000000000080023e                caps_lock_led
+ .bss           0x000000000080023f        0xb usb_keyboard.o
+                0x000000000080023f                keyboard_modifier_keys
+                0x0000000000800240                keyboard_keys
+                0x0000000000800246                keyboard_leds
  *(.bss*)
  *(COMMON)
- COMMON         0x0000000000800272       0x3c catboard.o
-                0x0000000000800272                pressed
-                0x00000000008002ae                PROVIDE (__bss_end, .)
-                0x0000000000000f74                __data_load_start = LOADADDR (.data)
-                0x00000000000010ce                __data_load_end = (__data_load_start + SIZEOF (.data))
+ COMMON         0x000000000080024a       0x3c catboard.o
+                0x000000000080024a                pressed
+                0x0000000000800286                PROVIDE (__bss_end, .)
+                0x0000000000000fda                __data_load_start = LOADADDR (.data)
+                0x000000000000110c                __data_load_end = (__data_load_start + SIZEOF (.data))
 
-.noinit         0x00000000008002ae        0x0
-                0x00000000008002ae                PROVIDE (__noinit_start, .)
+.noinit         0x0000000000800286        0x0
+                0x0000000000800286                PROVIDE (__noinit_start, .)
  *(.noinit*)
-                0x00000000008002ae                PROVIDE (__noinit_end, .)
-                0x00000000008002ae                _end = .
-                0x00000000008002ae                PROVIDE (__heap_start, .)
+                0x0000000000800286                PROVIDE (__noinit_end, .)
+                0x0000000000800286                _end = .
+                0x0000000000800286                PROVIDE (__heap_start, .)
 
 .eeprom         0x0000000000810000        0x0
  *(.eeprom*)
@@ -421,11 +413,11 @@ LOAD /usr/lib/gcc/avr/4.7.0/avr35/libgcc.a
 
 .stab           0x0000000000000000      0x6cc
  *(.stab)
- .stab          0x0000000000000000      0x6cc /usr/lib/gcc/avr/4.7.0/../../../avr/lib/avr35/crtusb162.o
+ .stab          0x0000000000000000      0x6cc /usr/lib/gcc/avr/4.7.2/../../../avr/lib/avr35/crtusb162.o
 
 .stabstr        0x0000000000000000       0x54
  *(.stabstr)
- .stabstr       0x0000000000000000       0x54 /usr/lib/gcc/avr/4.7.0/../../../avr/lib/avr35/crtusb162.o
+ .stabstr       0x0000000000000000       0x54 /usr/lib/gcc/avr/4.7.2/../../../avr/lib/avr35/crtusb162.o
 
 .stab.excl
  *(.stab.excl)
@@ -469,38 +461,38 @@ LOAD /usr/lib/gcc/avr/4.7.0/avr35/libgcc.a
  .debug_pubnames
                 0x0000000000000000       0xbe usb_keyboard.o
 
-.debug_info     0x0000000000000000     0x1192
+.debug_info     0x0000000000000000     0x10d2
  *(.debug_info)
- .debug_info    0x0000000000000000      0xa8e catboard.o
- .debug_info    0x0000000000000a8e      0x704 usb_keyboard.o
+ .debug_info    0x0000000000000000      0x9ce catboard.o
+ .debug_info    0x00000000000009ce      0x704 usb_keyboard.o
  *(.gnu.linkonce.wi.*)
 
-.debug_abbrev   0x0000000000000000      0x565
+.debug_abbrev   0x0000000000000000      0x54b
  *(.debug_abbrev)
- .debug_abbrev  0x0000000000000000      0x390 catboard.o
- .debug_abbrev  0x0000000000000390      0x1d5 usb_keyboard.o
+ .debug_abbrev  0x0000000000000000      0x376 catboard.o
+ .debug_abbrev  0x0000000000000376      0x1d5 usb_keyboard.o
 
-.debug_line     0x0000000000000000      0xba3
+.debug_line     0x0000000000000000      0xba5
  *(.debug_line)
- .debug_line    0x0000000000000000      0x497 catboard.o
- .debug_line    0x0000000000000497      0x70c usb_keyboard.o
+ .debug_line    0x0000000000000000      0x499 catboard.o
+ .debug_line    0x0000000000000499      0x70c usb_keyboard.o
 
 .debug_frame    0x0000000000000000      0x1b0
  *(.debug_frame)
  .debug_frame   0x0000000000000000      0x130 catboard.o
  .debug_frame   0x0000000000000130       0x80 usb_keyboard.o
 
-.debug_str      0x0000000000000000      0x5d4
+.debug_str      0x0000000000000000      0x594
  *(.debug_str)
- .debug_str     0x0000000000000000      0x389 catboard.o
-                                        0x3e4 (size before relaxing)
- .debug_str     0x0000000000000389      0x24b usb_keyboard.o
+ .debug_str     0x0000000000000000      0x349 catboard.o
+                                        0x3a4 (size before relaxing)
+ .debug_str     0x0000000000000349      0x24b usb_keyboard.o
                                         0x353 (size before relaxing)
 
-.debug_loc      0x0000000000000000     0x1023
+.debug_loc      0x0000000000000000     0x10a8
  *(.debug_loc)
- .debug_loc     0x0000000000000000      0x874 catboard.o
- .debug_loc     0x0000000000000874      0x7af usb_keyboard.o
+ .debug_loc     0x0000000000000000      0x8f9 catboard.o
+ .debug_loc     0x00000000000008f9      0x7af usb_keyboard.o
 
 .debug_macinfo
  *(.debug_macinfo)
@@ -519,61 +511,61 @@ LOAD linker stubs
 Cross Reference Table
 
 Symbol                                            File
-__bad_interrupt                                   /usr/lib/gcc/avr/4.7.0/../../../avr/lib/avr35/crtusb162.o
-__bss_end                                         /usr/lib/gcc/avr/4.7.0/avr35/libgcc.a(_clear_bss.o)
-__bss_start                                       /usr/lib/gcc/avr/4.7.0/avr35/libgcc.a(_clear_bss.o)
-__data_end                                        /usr/lib/gcc/avr/4.7.0/avr35/libgcc.a(_copy_data.o)
-__data_load_start                                 /usr/lib/gcc/avr/4.7.0/avr35/libgcc.a(_copy_data.o)
-__data_start                                      /usr/lib/gcc/avr/4.7.0/avr35/libgcc.a(_copy_data.o)
-__do_clear_bss                                    /usr/lib/gcc/avr/4.7.0/avr35/libgcc.a(_clear_bss.o)
+__bad_interrupt                                   /usr/lib/gcc/avr/4.7.2/../../../avr/lib/avr35/crtusb162.o
+__bss_end                                         /usr/lib/gcc/avr/4.7.2/avr35/libgcc.a(_clear_bss.o)
+__bss_start                                       /usr/lib/gcc/avr/4.7.2/avr35/libgcc.a(_clear_bss.o)
+__data_end                                        /usr/lib/gcc/avr/4.7.2/avr35/libgcc.a(_copy_data.o)
+__data_load_start                                 /usr/lib/gcc/avr/4.7.2/avr35/libgcc.a(_copy_data.o)
+__data_start                                      /usr/lib/gcc/avr/4.7.2/avr35/libgcc.a(_copy_data.o)
+__do_clear_bss                                    /usr/lib/gcc/avr/4.7.2/avr35/libgcc.a(_clear_bss.o)
                                                   usb_keyboard.o
                                                   catboard.o
-__do_copy_data                                    /usr/lib/gcc/avr/4.7.0/avr35/libgcc.a(_copy_data.o)
+__do_copy_data                                    /usr/lib/gcc/avr/4.7.2/avr35/libgcc.a(_copy_data.o)
                                                   usb_keyboard.o
                                                   catboard.o
-__heap_end                                        /usr/lib/gcc/avr/4.7.0/../../../avr/lib/avr35/crtusb162.o
-__init                                            /usr/lib/gcc/avr/4.7.0/../../../avr/lib/avr35/crtusb162.o
-__stack                                           /usr/lib/gcc/avr/4.7.0/../../../avr/lib/avr35/crtusb162.o
-__vector_1                                        /usr/lib/gcc/avr/4.7.0/../../../avr/lib/avr35/crtusb162.o
-__vector_10                                       /usr/lib/gcc/avr/4.7.0/../../../avr/lib/avr35/crtusb162.o
+__heap_end                                        /usr/lib/gcc/avr/4.7.2/../../../avr/lib/avr35/crtusb162.o
+__init                                            /usr/lib/gcc/avr/4.7.2/../../../avr/lib/avr35/crtusb162.o
+__stack                                           /usr/lib/gcc/avr/4.7.2/../../../avr/lib/avr35/crtusb162.o
+__vector_1                                        /usr/lib/gcc/avr/4.7.2/../../../avr/lib/avr35/crtusb162.o
+__vector_10                                       /usr/lib/gcc/avr/4.7.2/../../../avr/lib/avr35/crtusb162.o
 __vector_11                                       usb_keyboard.o
-                                                  /usr/lib/gcc/avr/4.7.0/../../../avr/lib/avr35/crtusb162.o
+                                                  /usr/lib/gcc/avr/4.7.2/../../../avr/lib/avr35/crtusb162.o
 __vector_12                                       usb_keyboard.o
-                                                  /usr/lib/gcc/avr/4.7.0/../../../avr/lib/avr35/crtusb162.o
-__vector_13                                       /usr/lib/gcc/avr/4.7.0/../../../avr/lib/avr35/crtusb162.o
-__vector_14                                       /usr/lib/gcc/avr/4.7.0/../../../avr/lib/avr35/crtusb162.o
-__vector_15                                       /usr/lib/gcc/avr/4.7.0/../../../avr/lib/avr35/crtusb162.o
-__vector_16                                       /usr/lib/gcc/avr/4.7.0/../../../avr/lib/avr35/crtusb162.o
-__vector_17                                       /usr/lib/gcc/avr/4.7.0/../../../avr/lib/avr35/crtusb162.o
-__vector_18                                       /usr/lib/gcc/avr/4.7.0/../../../avr/lib/avr35/crtusb162.o
-__vector_19                                       /usr/lib/gcc/avr/4.7.0/../../../avr/lib/avr35/crtusb162.o
-__vector_2                                        /usr/lib/gcc/avr/4.7.0/../../../avr/lib/avr35/crtusb162.o
-__vector_20                                       /usr/lib/gcc/avr/4.7.0/../../../avr/lib/avr35/crtusb162.o
-__vector_21                                       /usr/lib/gcc/avr/4.7.0/../../../avr/lib/avr35/crtusb162.o
-__vector_22                                       /usr/lib/gcc/avr/4.7.0/../../../avr/lib/avr35/crtusb162.o
-__vector_23                                       /usr/lib/gcc/avr/4.7.0/../../../avr/lib/avr35/crtusb162.o
-__vector_24                                       /usr/lib/gcc/avr/4.7.0/../../../avr/lib/avr35/crtusb162.o
-__vector_25                                       /usr/lib/gcc/avr/4.7.0/../../../avr/lib/avr35/crtusb162.o
-__vector_26                                       /usr/lib/gcc/avr/4.7.0/../../../avr/lib/avr35/crtusb162.o
-__vector_27                                       /usr/lib/gcc/avr/4.7.0/../../../avr/lib/avr35/crtusb162.o
-__vector_28                                       /usr/lib/gcc/avr/4.7.0/../../../avr/lib/avr35/crtusb162.o
-__vector_3                                        /usr/lib/gcc/avr/4.7.0/../../../avr/lib/avr35/crtusb162.o
-__vector_4                                        /usr/lib/gcc/avr/4.7.0/../../../avr/lib/avr35/crtusb162.o
-__vector_5                                        /usr/lib/gcc/avr/4.7.0/../../../avr/lib/avr35/crtusb162.o
-__vector_6                                        /usr/lib/gcc/avr/4.7.0/../../../avr/lib/avr35/crtusb162.o
-__vector_7                                        /usr/lib/gcc/avr/4.7.0/../../../avr/lib/avr35/crtusb162.o
-__vector_8                                        /usr/lib/gcc/avr/4.7.0/../../../avr/lib/avr35/crtusb162.o
-__vector_9                                        /usr/lib/gcc/avr/4.7.0/../../../avr/lib/avr35/crtusb162.o
-__vector_default                                  /usr/lib/gcc/avr/4.7.0/../../../avr/lib/avr35/crtusb162.o
-__vectors                                         /usr/lib/gcc/avr/4.7.0/../../../avr/lib/avr35/crtusb162.o
-_exit                                             /usr/lib/gcc/avr/4.7.0/avr35/libgcc.a(_exit.o)
+                                                  /usr/lib/gcc/avr/4.7.2/../../../avr/lib/avr35/crtusb162.o
+__vector_13                                       /usr/lib/gcc/avr/4.7.2/../../../avr/lib/avr35/crtusb162.o
+__vector_14                                       /usr/lib/gcc/avr/4.7.2/../../../avr/lib/avr35/crtusb162.o
+__vector_15                                       /usr/lib/gcc/avr/4.7.2/../../../avr/lib/avr35/crtusb162.o
+__vector_16                                       /usr/lib/gcc/avr/4.7.2/../../../avr/lib/avr35/crtusb162.o
+__vector_17                                       /usr/lib/gcc/avr/4.7.2/../../../avr/lib/avr35/crtusb162.o
+__vector_18                                       /usr/lib/gcc/avr/4.7.2/../../../avr/lib/avr35/crtusb162.o
+__vector_19                                       /usr/lib/gcc/avr/4.7.2/../../../avr/lib/avr35/crtusb162.o
+__vector_2                                        /usr/lib/gcc/avr/4.7.2/../../../avr/lib/avr35/crtusb162.o
+__vector_20                                       /usr/lib/gcc/avr/4.7.2/../../../avr/lib/avr35/crtusb162.o
+__vector_21                                       /usr/lib/gcc/avr/4.7.2/../../../avr/lib/avr35/crtusb162.o
+__vector_22                                       /usr/lib/gcc/avr/4.7.2/../../../avr/lib/avr35/crtusb162.o
+__vector_23                                       /usr/lib/gcc/avr/4.7.2/../../../avr/lib/avr35/crtusb162.o
+__vector_24                                       /usr/lib/gcc/avr/4.7.2/../../../avr/lib/avr35/crtusb162.o
+__vector_25                                       /usr/lib/gcc/avr/4.7.2/../../../avr/lib/avr35/crtusb162.o
+__vector_26                                       /usr/lib/gcc/avr/4.7.2/../../../avr/lib/avr35/crtusb162.o
+__vector_27                                       /usr/lib/gcc/avr/4.7.2/../../../avr/lib/avr35/crtusb162.o
+__vector_28                                       /usr/lib/gcc/avr/4.7.2/../../../avr/lib/avr35/crtusb162.o
+__vector_3                                        /usr/lib/gcc/avr/4.7.2/../../../avr/lib/avr35/crtusb162.o
+__vector_4                                        /usr/lib/gcc/avr/4.7.2/../../../avr/lib/avr35/crtusb162.o
+__vector_5                                        /usr/lib/gcc/avr/4.7.2/../../../avr/lib/avr35/crtusb162.o
+__vector_6                                        /usr/lib/gcc/avr/4.7.2/../../../avr/lib/avr35/crtusb162.o
+__vector_7                                        /usr/lib/gcc/avr/4.7.2/../../../avr/lib/avr35/crtusb162.o
+__vector_8                                        /usr/lib/gcc/avr/4.7.2/../../../avr/lib/avr35/crtusb162.o
+__vector_9                                        /usr/lib/gcc/avr/4.7.2/../../../avr/lib/avr35/crtusb162.o
+__vector_default                                  /usr/lib/gcc/avr/4.7.2/../../../avr/lib/avr35/crtusb162.o
+__vectors                                         /usr/lib/gcc/avr/4.7.2/../../../avr/lib/avr35/crtusb162.o
+_exit                                             /usr/lib/gcc/avr/4.7.2/avr35/libgcc.a(_exit.o)
 caps_lock_change_layer                            catboard.o
 caps_lock_led                                     catboard.o
 change_layout                                     catboard.o
 col_bit                                           catboard.o
 col_pin                                           catboard.o
-exit                                              /usr/lib/gcc/avr/4.7.0/avr35/libgcc.a(_exit.o)
-                                                  /usr/lib/gcc/avr/4.7.0/../../../avr/lib/avr35/crtusb162.o
+exit                                              /usr/lib/gcc/avr/4.7.2/avr35/libgcc.a(_exit.o)
+                                                  /usr/lib/gcc/avr/4.7.2/../../../avr/lib/avr35/crtusb162.o
 get_code                                          catboard.o
 init                                              catboard.o
 init_ports                                        catboard.o
@@ -593,15 +585,8 @@ layer_fnlock                                      catboard.o
 layout                                            catboard.o
 led                                               catboard.o
 locked                                            catboard.o
-macros1                                           catboard.o
-macros2                                           catboard.o
-macros3                                           catboard.o
-macros4                                           catboard.o
-macros5                                           catboard.o
-macros_pos                                        catboard.o
-macros_press                                      catboard.o
 main                                              catboard.o
-                                                  /usr/lib/gcc/avr/4.7.0/../../../avr/lib/avr35/crtusb162.o
+                                                  /usr/lib/gcc/avr/4.7.2/../../../avr/lib/avr35/crtusb162.o
 mod_keys                                          catboard.o
 os_mode                                           catboard.o
 poll                                              catboard.o
